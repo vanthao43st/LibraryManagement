@@ -25,11 +25,11 @@ public class LoginController implements Initializable {
 
     @FXML
     private void handleLoginAction() {
-        if (usernameField.getText().trim().equals("admin") || passwordField.getText().trim().equals("admin")) {
+        if (usernameField.getText().trim().equals("admin") && passwordField.getText().trim().equals("admin")) {
             try {
                 Stage stage = (Stage) usernameField.getScene().getWindow();
                 Parent root = FXMLLoader.load(getClass().getResource("/Views/LibraryManagement.fxml"));
-                Scene scene = new Scene(root);
+                Scene scene = new Scene(root, 900, 600);
                 stage.setScene(scene);
                 stage.show();
             } catch (Exception e) {
