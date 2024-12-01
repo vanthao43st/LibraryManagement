@@ -8,96 +8,100 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0"
-            prefWidth="900.0"
-            styleClass="root"
-            stylesheets="@../../../../../../Documents/Course3/oop/DictionaryApp/src/main/resources/Utils/style.css"
-            fx:controller="org.uet.controllers.LibraryManagementController"
-            xmlns="http://javafx.com/javafx/23"
-            xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="root" stylesheets="@../Utils/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.uet.controllers.LibraryManagementController">
    <children>
-      <Button fx:id="closeButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="540.0"
-              mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="exit-button"
-              stylesheets="@../../../../../../Documents/Course3/oop/DictionaryApp/src/main/resources/Utils/style.css"
-              text="Exit">
+      <ImageView fitHeight="600.0" fitWidth="900.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Utils/images/library_background.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="closeButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="540.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="exit-button" stylesheets="@../Utils/style.css" text="Exit">
          <graphic>
             <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../../Documents/Course3/oop/DictionaryApp/src/main/resources/Utils/icons/icons8_exit_32px.png"/>
+                  <Image url="@../Utils/icons/icons8-exit-50.png" />
                </image>
             </ImageView>
          </graphic>
          <tooltip>
-            <Tooltip fx:id="tooltip4" text="Exit"/>
+            <Tooltip fx:id="tooltip4" text="Exit" />
          </tooltip>
          <cursor>
-            <Cursor fx:constant="HAND"/>
+            <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="userButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="122.0"
-              mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item"
-              stylesheets="@../../../../../../Documents/Course3/oop/DictionaryApp/src/main/resources/Utils/style.css"
-              text="Student">
+      <Button fx:id="userButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="100.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item" stylesheets="@../Utils/style.css" text="Student">
          <font>
-            <Font name="System Bold" size="12.0"/>
+            <Font name="System Bold" size="12.0" />
          </font>
          <cursor>
-            <Cursor fx:constant="HAND"/>
+            <Cursor fx:constant="HAND" />
          </cursor>
          <tooltip>
-            <Tooltip fx:id="tooltip1" text="Manage user"/>
+            <Tooltip fx:id="tooltip1" text="User" />
          </tooltip>
          <graphic>
             <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../Utils/icons/icons8-student-50.png"/>
+                  <Image url="@../Utils/icons/icons8-student-50.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="bookButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="254.0"
-              mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item"
-              stylesheets="@../../../../../../Documents/Course3/oop/DictionaryApp/src/main/resources/Utils/style.css"
-              text="Book">
+      <Button fx:id="bookButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="205.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item" stylesheets="@../Utils/style.css" text="Book">
          <font>
-            <Font name="System Bold" size="12.0"/>
+            <Font name="System Bold" size="12.0" />
          </font>
          <cursor>
-            <Cursor fx:constant="HAND"/>
+            <Cursor fx:constant="HAND" />
          </cursor>
          <tooltip>
-            <Tooltip fx:id="tooltip2" text="Manager book"/>
+            <Tooltip fx:id="tooltip2" text="Document" />
          </tooltip>
          <graphic>
             <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../Utils/icons/icons8-book-50.png"/>
+                  <Image url="@../Utils/icons/icons8-document-50.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="libraryButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0"
-              layoutY="386.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item"
-              stylesheets="@../../../../../../Documents/Course3/oop/DictionaryApp/src/main/resources/Utils/style.css"
-              text="Transfer">
+      <Button fx:id="libraryButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="291.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item" stylesheets="@../Utils/style.css" text="Transfer">
          <font>
-            <Font name="System Bold" size="12.0"/>
+            <Font name="System Bold" size="12.0" />
          </font>
          <cursor>
-            <Cursor fx:constant="HAND"/>
+            <Cursor fx:constant="HAND" />
          </cursor>
          <tooltip>
-            <Tooltip fx:id="tooltip3" text="Manage library"/>
+            <Tooltip fx:id="tooltip3" text="Library" />
          </tooltip>
          <graphic>
             <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../Utils/icons/icons8-transfer-50.png"/>
+                  <Image url="@../Utils/icons/icons8-transfer-50.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <AnchorPane fx:id="container" layoutX="52.0" layoutY="9.0" prefHeight="580.0" prefWidth="834.0"
-                  styleClass="container"/>
+      <AnchorPane fx:id="container" layoutX="62.0" layoutY="9.0" prefHeight="582.0" prefWidth="834.0" styleClass="container" />
+      <Button fx:id="bookApiButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="393.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item" stylesheets="@../Utils/style.css" text="Book">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <tooltip>
+            <Tooltip fx:id="tooltip21" text="Book API" />
+         </tooltip>
+         <graphic>
+            <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Utils/icons/icons8-book-50.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
    </children>
 </AnchorPane>

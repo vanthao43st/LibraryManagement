@@ -6,9 +6,7 @@ public class User {
     private String id;
     private String name;
     private Gender gender;
-    private String birthDate;
     private String className;
-    private String address;
     private String major;
     private String phoneNumber;
     private String email;
@@ -16,14 +14,12 @@ public class User {
     public User() {
     }
 
-    public User(String id, String name, Gender gender, String birthDate, String className,
-                String address, String major, String phoneNumber, String email) {
+    public User(String id, String name, Gender gender, String className,
+                String major, String phoneNumber, String email) {
         this.id = id;
         this.name = name;
         this.gender = gender;
-        this.birthDate = birthDate;
         this.className = className;
-        this.address = address;
         this.major = major;
         this.phoneNumber = phoneNumber;
         this.email = email;
@@ -53,28 +49,12 @@ public class User {
         this.gender = gender;
     }
 
-    public String getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
-    }
-
     public String getClassName() {
         return className;
     }
 
     public void setClassName(String className) {
         this.className = className;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getMajor() {
@@ -99,5 +79,17 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "{id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", gender=" + gender +
+                ", className='" + className + '\'' +
+                ", major='" + major + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

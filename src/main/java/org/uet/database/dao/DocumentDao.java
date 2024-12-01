@@ -2,10 +2,8 @@ package org.uet.database.dao;
 
 import org.uet.database.connection.DBConnection;
 import org.uet.entity.Document;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.util.ArrayList;
 
 public class DocumentDao {
@@ -22,32 +20,33 @@ public class DocumentDao {
                 document = new Document();
                 document.setCode(resultSet.getString("document_code"));
                 document.setTitle(resultSet.getString("document_title"));
+                document.setDescription(resultSet.getString("document_description"));
                 document.setCategory(resultSet.getString("document_category"));
                 document.setAuthor(resultSet.getString("document_author"));
-                document.setPublisher(resultSet.getString("document_publisher"));
                 document.setPrice(resultSet.getDouble("document_price"));
                 document.setQuantity(resultSet.getInt("document_quantity"));
 
                 documents.add(document);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
         return documents;
     }
 
     public void addDocument(Document document) throws SQLException {
-        String query = "INSERT INTO document (document_code, document_title, document_category, document_author, " +
-                "document_publisher, document_price, document_quantity) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO document (document_code, document_title, document_description, " +
+                "document_category, document_author, document_price, document_quantity) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
 
             ps.setString(1, document.getCode());
             ps.setString(2, document.getTitle());
-            ps.setString(3, document.getCategory());
-            ps.setString(4, document.getAuthor());
-            ps.setString(5, document.getPublisher());
+            ps.setString(3, document.getDescription());
+            ps.setString(4, document.getCategory());
+            ps.setString(5, document.getAuthor());
             ps.setDouble(6, document.getPrice());
             ps.setInt(7, document.getQuantity());
 
@@ -56,18 +55,48 @@ public class DocumentDao {
         }
     }
 
+    public Document getDocumentByCode(String documentCode) {
+        Document document = null;
+        String query = "SELECT * FROM document WHERE document_code = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.setString(1, documentCode);
+
+            try (ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()) {
+                    document = new Document();
+                    document.setCode(resultSet.getString("document_code"));
+                    document.setTitle(resultSet.getString("document_title"));
+                    document.setDescription(resultSet.getString("document_description"));
+                    document.setCategory(resultSet.getString("document_category"));
+                    document.setAuthor(resultSet.getString("document_author"));
+                    document.setPrice(resultSet.getDouble("document_price"));
+                    document.setQuantity(resultSet.getInt("document_quantity"));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return document;
+    }
+
     public void updateDocument(Document document) throws SQLException {
-        String query = "UPDATE document SET document_title = ?, document_category = ?, " +
-                "document_author = ?, document_publisher = ?, document_price = ?, document_quantity = ? " +
+        String query = "UPDATE document SET document_title = ?, document_description = ?, " +
+                "document_category = ?, " +
+                "document_author = ?, document_price = ?, document_quantity = ? " +
                 "WHERE document_code = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
 
             ps.setString(1, document.getTitle());
-            ps.setString(2, document.getCategory());
-            ps.setString(3, document.getAuthor());
-            ps.setString(4, document.getPublisher());
+            ps.setString(2, document.getDescription());
+            ps.setString(3, document.getCategory());
+            ps.setString(4, document.getAuthor());
             ps.setDouble(5, document.getPrice());
             ps.setInt(6, document.getQuantity());
             ps.setString(7, document.getCode());
@@ -77,7 +106,7 @@ public class DocumentDao {
         }
     }
 
-    public void deleteBorrowRecord(String documentCode) {
+    public void deleteDocument(String documentCode) {
         String query = "DELETE FROM document WHERE document_code = ?";
 
         try (Connection connection = DBConnection.getConnection();
@@ -88,8 +117,57 @@ public class DocumentDao {
             int rowsAffected = preparedStatement.executeUpdate();
             System.out.println(rowsAffected + " row(s) deleted.");
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
+    public ArrayList<Document> searchDocuments(String title, String author, String category) {
+        ArrayList<Document> result = new ArrayList<>();
+        String query = "SELECT * FROM document WHERE 1=1";
+
+        if (title != null && !title.isEmpty()) {
+            query += " AND document_title LIKE ?";
+        }
+        if (author != null && !author.isEmpty()) {
+            query += " AND document_author LIKE ?";
+        }
+        if (category != null && !category.isEmpty()) {
+            query += " AND document_category LIKE ?";
+        }
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            int paramIndex = 1;
+
+            // Gán giá trị tham số
+            if (title != null && !title.isEmpty()) {
+                ps.setString(paramIndex++, "%" + title + "%");
+            }
+            if (author != null && !author.isEmpty()) {
+                ps.setString(paramIndex++, "%" + author + "%");
+            }
+            if (category != null && !category.isEmpty()) {
+                ps.setString(paramIndex++, "%" + category + "%");
+            }
+
+            // Thực thi truy vấn
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                Document document = new Document();
+                document.setCode(resultSet.getString("document_code"));
+                document.setTitle(resultSet.getString("document_title"));
+                document.setDescription(resultSet.getString("document_description"));
+                document.setCategory(resultSet.getString("document_category"));
+                document.setAuthor(resultSet.getString("document_author"));
+                document.setPrice(resultSet.getDouble("document_price"));
+                document.setQuantity(resultSet.getInt("document_quantity"));
+                result.add(document);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return result;
+    }
 }

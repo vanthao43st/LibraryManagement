@@ -15,6 +15,7 @@
     -fx-text-fill: #fff;
     -fx-font-weight: bold;
     -fx-font-size: 25px;
+
 }
 .buttonClose {
     -fx-background-color: transparent
@@ -26,4 +27,7 @@
     -fx-text-fill: #fff;
     -fx-font-weight: 700;
     -fx-font-size: 22px;
+}
+.formInput {
+    -fx-border-color: #32CED6;
 }

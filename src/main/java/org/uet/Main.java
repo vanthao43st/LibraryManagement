@@ -9,18 +9,21 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.uet.database.dao.DocumentDao;
+import org.uet.entity.Document;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class Main extends Application {
     private double xOffset = 0;
     private double yOffset = 0;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
     @Override
     public void start(final Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/Views/Login.fxml"));
+        Parent root = FXMLLoader.load(
+                Objects.requireNonNull(getClass().getResource("/Views/Login.fxml"))
+        );
         stage.setTitle("Library Management");
         stage.initStyle(StageStyle.TRANSPARENT);
         root.setOnMousePressed(new EventHandler<MouseEvent>() {

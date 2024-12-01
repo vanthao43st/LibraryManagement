@@ -3,21 +3,29 @@ package org.uet.entity;
 public class Document {
     private String code;
     private String title;
+    private String description;
     private String category;
     private String author;
-    private String publisher;
     private double price;
     private int quantity;
 
     public Document() {
+        this.code = "0001";
+        this.title = "";
+        this.description = "";
+        this.category = "";
+        this.author = "";
+        this.price = 0;
+        this.quantity = 0;
     }
 
-    public Document(String code, String title, String category, String author, String publisher, double price, int quantity) {
+    public Document(String code, String title, String description, String category,
+                    String author, double price, int quantity) {
         this.code = code;
         this.title = title;
+        this.description = description;
         this.category = category;
         this.author = author;
-        this.publisher = publisher;
         this.price = price;
         this.quantity = quantity;
     }
@@ -38,6 +46,14 @@ public class Document {
         this.title = title;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getCategory() {
         return category;
     }
@@ -54,14 +70,6 @@ public class Document {
         this.author = author;
     }
 
-    public String getPublisher() {
-        return publisher;
-    }
-
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
-    }
-
     public double getPrice() {
         return price;
     }
@@ -76,5 +84,18 @@ public class Document {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "Document{" +
+                "code='" + code + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", category='" + category + '\'' +
+                ", author='" + author + '\'' +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                '}';
     }
 }
