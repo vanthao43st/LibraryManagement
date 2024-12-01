@@ -1,4 +1,4 @@
-package org.uet.Service;
+package org.uet.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

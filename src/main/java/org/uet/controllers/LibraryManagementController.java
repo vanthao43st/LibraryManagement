@@ -12,6 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -38,11 +39,11 @@ public class LibraryManagementController implements Initializable {
         container.setOnMousePressed(this::onMousePressed);
         container.setOnMouseDragged(this::onMouseDragged);
 
-        userButton.setOnAction(actionEvent -> showComponent("/Views/UserManagement.fxml"));
-
-        bookApiButton.setOnAction(actionEvent -> {
-            showComponent("/Views/BookAPI.fxml");
-        });
+        // Gắn sự kiện highlight cho các nút
+        attachHighlightToButton(userButton, "/Views/UserManagement.fxml");
+        attachHighlightToButton(bookButton, "/Views/BookManagement.fxml");
+        attachHighlightToButton(libraryButton, "/Views/LibraryManagement.fxml");
+        attachHighlightToButton(bookApiButton, "/Views/BookAPI.fxml");
 
         tooltip1.setShowDelay(Duration.seconds(0.5));
         tooltip2.setShowDelay(Duration.seconds(0.5));
@@ -66,6 +67,23 @@ public class LibraryManagementController implements Initializable {
         Stage stage = (Stage) container.getScene().getWindow();
         stage.setX(event.getScreenX() + xOffset);
         stage.setY(event.getScreenY() + yOffset);
+    }
+
+    // Highlight nút khi được nhấn
+    private void attachHighlightToButton(Button button, String fxmlPath) {
+        button.setOnAction(actionEvent -> {
+            removeHighlightFromAllButtons(); // Loại bỏ highlight từ tất cả các nút
+            button.getStyleClass().add("highlighted-button"); // Thêm class highlight vào nút hiện tại
+            showComponent(fxmlPath);
+        });
+    }
+
+    // Loại bỏ highlight từ tất cả các nút
+    private void removeHighlightFromAllButtons() {
+        Button[] buttons = {bookButton, userButton, libraryButton, bookApiButton};
+        for (Button btn : buttons) {
+            btn.getStyleClass().remove("highlighted-button");
+        }
     }
 
 

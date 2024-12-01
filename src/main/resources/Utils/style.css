@@ -31,3 +31,12 @@
 .formInput {
     -fx-border-color: #32CED6;
 }
+
+.button:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+.highlighted-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: #fff;
+}
