@@ -1,0 +1,5 @@
+StudentId,Name,Gender,StudentClass,Major,Phone,Email,Password
+23021596,Pham Cong Khanh,Nam,I-CS2,Khoa hoc may tinh,0363999999,pck310305@gmail.com,23021596
+23021597,Nguyen Van A,Nam,I-CS1,Cong nghe thong tin,0123456789,nguyenvana@example.com,123456
+23021598,Tran Thi B,Female,I-CS2,Khoa hoc du lieu,0987654321,tranthib@example.com,654321
+23021599,Le Van C,Nam,I-CS2,Cong nghe phan mem,0234567890,levanc@example.com,abcdef

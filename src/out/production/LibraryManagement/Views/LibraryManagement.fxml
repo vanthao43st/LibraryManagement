@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0"
+            prefWidth="900.0"
+            styleClass="root"
+            stylesheets="@/Utils/style.css"
+            fx:controller="org.uet.controllers.LibraryManagementController"
+            xmlns="http://javafx.com/javafx/23"
+            xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button fx:id="closeButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="540.0"
+              mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="exit-button"
+              stylesheets="@/Utils/style.css"
+              text="Exit">
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@/Utils/icons/icons8_exit_32px.png"/>
+               </image>
+            </ImageView>
+         </graphic>
+         <tooltip>
+            <Tooltip fx:id="tooltip4" text="Exit"/>
+         </tooltip>
+         <cursor>
+            <Cursor fx:constant="HAND"/>
+         </cursor>
+      </Button>
+      <Button fx:id="userButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="122.0"
+              mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item"
+              stylesheets="@/Utils/style.css"
+              text="Student">
+         <font>
+            <Font name="System Bold" size="12.0"/>
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND"/>
+         </cursor>
+         <tooltip>
+            <Tooltip fx:id="tooltip1" text="Manage user"/>
+         </tooltip>
+         <graphic>
+            <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@/Utils/icons/icons8-student-50.png"/>
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button fx:id="bookButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="254.0"
+              mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item"
+              stylesheets="@/Utils/style.css"
+              text="Book">
+         <font>
+            <Font name="System Bold" size="12.0"/>
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND"/>
+         </cursor>
+         <tooltip>
+            <Tooltip fx:id="tooltip2" text="Manager book"/>
+         </tooltip>
+         <graphic>
+            <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Utils/icons/icons8-book-50.png"/>
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button fx:id="libraryButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0"
+              layoutY="386.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item"
+              stylesheets="@/Utils/style.css"
+              text="Transfer">
+         <font>
+            <Font name="System Bold" size="12.0"/>
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND"/>
+         </cursor>
+         <tooltip>
+            <Tooltip fx:id="tooltip3" text="Manage library"/>
+         </tooltip>
+         <graphic>
+            <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Utils/icons/icons8-transfer-50.png"/>
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <AnchorPane fx:id="container" layoutX="52.0" layoutY="9.0" prefHeight="580.0" prefWidth="834.0"
+                  styleClass="container"/>
+   </children>
+</AnchorPane>

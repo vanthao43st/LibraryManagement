@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane minHeight="331.0" minWidth="900.0" prefHeight="600.0" prefWidth="758.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.uet.controllers.StudentSearchController">
+    <children>
+        <VBox layoutX="21.0" layoutY="110.0" prefHeight="418.0" prefWidth="859.0" spacing="10.0">
+
+            <TableView fx:id="studentTable" depthTest="DISABLE" prefHeight="466.0" prefWidth="868.0">
+                <columns>
+                    <TableColumn fx:id="colSTT" prefWidth="32.80002021789551">
+                        <graphic>
+                            <VBox depthTest="ENABLE" prefHeight="51.0" prefWidth="36.0" spacing="5.0">
+                                <Label contentDisplay="CENTER" depthTest="DISABLE" prefHeight="89.0" prefWidth="29.0" text="STT" textAlignment="CENTER">
+                           <font>
+                              <Font name="Arial" size="13.0" />
+                           </font></Label>
+                            </VBox>
+                        </graphic>
+                    </TableColumn>
+                    <TableColumn fx:id="colStudentId" prefWidth="83.99999237060547">
+                        <graphic>
+                            <VBox prefHeight="51.0" prefWidth="48.0" spacing="5.0">
+                                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="95.0" text="Mã SV" textAlignment="CENTER">
+                           <font>
+                              <Font name="Arial" size="13.0" />
+                           </font></Label>
+                                <TextField fx:id="txtStudentId" onAction="#sortList" />
+                            </VBox>
+                        </graphic>
+                    </TableColumn>
+                    <TableColumn fx:id="colName" prefWidth="118.39996337890625">
+                        <graphic>
+                            <VBox prefHeight="51.0" prefWidth="34.0" spacing="5.0">
+                                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="158.0" text="Tên sinh viên" textAlignment="CENTER">
+                           <font>
+                              <Font name="Arial" size="13.0" />
+                           </font></Label>
+                                <TextField fx:id="txtName" onAction="#sortList" />
+                            </VBox>
+                        </graphic>
+                    </TableColumn>
+                    <TableColumn fx:id="colGender" prefWidth="88.79998779296875">
+                        <graphic>
+                            <VBox prefHeight="51.0" prefWidth="38.0" spacing="5.0">
+                                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="120.0" text="Giới tính" textAlignment="CENTER">
+                           <font>
+                              <Font name="Arial" size="13.0" />
+                           </font></Label>
+                                <TextField fx:id="txtGender" onAction="#sortList" />
+                            </VBox>
+                        </graphic>
+                    </TableColumn>
+                    <TableColumn fx:id="colClass" prefWidth="91.99993896484375">
+                        <graphic>
+                            <VBox spacing="5.0">
+                                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="113.0" text="Lớp" textAlignment="CENTER">
+                           <font>
+                              <Font name="Arial" size="13.0" />
+                           </font></Label>
+                                <TextField fx:id="txtStudentClass" onAction="#sortList" />
+                            </VBox>
+                        </graphic>
+                    </TableColumn>
+                    <TableColumn fx:id="colMajor" prefWidth="120.80001831054688">
+                        <graphic>
+                            <VBox spacing="5.0">
+                                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="140.0" text="Chuyên ngành" textAlignment="CENTER">
+                           <font>
+                              <Font name="Arial" size="13.0" />
+                           </font></Label>
+                                <TextField fx:id="txtMajor" onAction="#sortList" />
+                            </VBox>
+                        </graphic>
+                    </TableColumn>
+                    <TableColumn fx:id="colPhone" prefWidth="98.4000244140625">
+                        <graphic>
+                            <VBox spacing="5.0">
+                                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="112.0" text="SĐT" textAlignment="CENTER">
+                           <font>
+                              <Font name="Arial" size="13.0" />
+                           </font></Label>
+                                <TextField fx:id="txtPhone" onAction="#sortList" />
+                            </VBox>
+                        </graphic>
+                    </TableColumn>
+                    <TableColumn fx:id="colEmail" prefWidth="90.4000244140625">
+                        <graphic>
+                            <VBox prefHeight="51.0" prefWidth="123.0" spacing="5.0">
+                                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="111.0" text="Email" textAlignment="CENTER">
+                           <font>
+                              <Font name="Arial" size="13.0" />
+                           </font></Label>
+                                <TextField fx:id="txtEmail" onAction="#sortList" />
+                            </VBox>
+                        </graphic>
+                    </TableColumn>
+                    <TableColumn fx:id="colPassword" minWidth="0.0" prefWidth="127.2000732421875">
+                        <graphic>
+                            <VBox prefHeight="51.0" prefWidth="88.0" spacing="5.0">
+                                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="132.0" text="Mật khẩu" textAlignment="CENTER">
+                           <font>
+                              <Font name="Arial" size="13.0" />
+                           </font></Label>
+                                <TextField fx:id="txtPassword" onAction="#sortList" prefHeight="26.0" prefWidth="74.0" />
+                            </VBox>
+                        </graphic>
+                    </TableColumn>
+                </columns>
+            </TableView>
+        </VBox>
+         <Label alignment="CENTER" layoutX="182.0" layoutY="23.0" prefHeight="75.0" prefWidth="534.0" text="TRA CỨU DANH SÁCH SINH VIÊN" textAlignment="CENTER" AnchorPane.bottomAnchor="502.0" AnchorPane.leftAnchor="182.0" AnchorPane.rightAnchor="184.0" AnchorPane.topAnchor="23.0">
+         <font>
+            <Font name="Arial Bold" size="28.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>

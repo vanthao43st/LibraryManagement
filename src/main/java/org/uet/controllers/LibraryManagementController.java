@@ -12,7 +12,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+<<<<<<< Updated upstream
 
+=======
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
+>>>>>>> Stashed changes
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -34,6 +39,7 @@ public class LibraryManagementController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+<<<<<<< Updated upstream
 
         // Xử lý sự kiện di chuyển ứng dụng
         container.setOnMousePressed(this::onMousePressed);
@@ -44,17 +50,40 @@ public class LibraryManagementController implements Initializable {
         attachHighlightToButton(bookButton, "/Views/BookManagement.fxml");
         attachHighlightToButton(libraryButton, "/Views/LibraryManagement.fxml");
         attachHighlightToButton(bookApiButton, "/Views/BookAPI.fxml");
+=======
+        userButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showComponent("/Views/UserManagement.fxml");
+            }
+        });
+>>>>>>> Stashed changes
 
-        tooltip1.setShowDelay(Duration.seconds(0.5));
-        tooltip2.setShowDelay(Duration.seconds(0.5));
-        tooltip3.setShowDelay(Duration.seconds(0.5));
-        tooltip4.setShowDelay(Duration.seconds(0.5));
+        bookButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showComponent("/Views/BookManagement.fxml");
+            }
+        });
+
+        libraryButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showComponent("/Views/StudentSearch.fxml");
+            }
+        });
+
+        setTooltipDelay(tooltip1, Duration.seconds(0.5));
+        setTooltipDelay(tooltip2, Duration.seconds(0.5));
+        setTooltipDelay(tooltip3, Duration.seconds(0.5));
+        setTooltipDelay(tooltip4, Duration.seconds(0.5));
 
         closeButton.setOnMouseClicked(e -> {
             System.exit(-1);
         });
     }
 
+<<<<<<< Updated upstream
     // Ghi lại tọa độ chuột khi nhấn
     private void onMousePressed(MouseEvent event) {
         Stage stage = (Stage) container.getScene().getWindow();
@@ -86,6 +115,12 @@ public class LibraryManagementController implements Initializable {
         }
     }
 
+=======
+    private void setTooltipDelay(Tooltip tooltip, Duration delay) {
+        Timeline timeline = new Timeline(new KeyFrame(delay, e -> tooltip.hide()));
+        tooltip.setOnShown(event -> timeline.playFromStart());
+    }
+>>>>>>> Stashed changes
 
     private void setNode(Node node) {
         container.getChildren().clear();
@@ -95,7 +130,9 @@ public class LibraryManagementController implements Initializable {
     @FXML
     public void showComponent(String path) {
         try {
-            AnchorPane component = FXMLLoader.load(getClass().getResource(path));
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource(path));
+            AnchorPane component = loader.load();
             setNode(component);
         } catch (IOException e) {
             e.printStackTrace();

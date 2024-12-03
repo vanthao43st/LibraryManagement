@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
+<<<<<<< Updated upstream
 <AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="root" stylesheets="@../Utils/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.uet.controllers.LibraryManagementController">
    <children>
       <ImageView fitHeight="600.0" fitWidth="900.0" pickOnBounds="true" preserveRatio="true">
@@ -20,6 +21,24 @@
             <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../Utils/icons/icons8-exit-50.png" />
+=======
+<AnchorPane prefHeight="600.0"
+            prefWidth="900.0"
+            styleClass="root"
+            stylesheets="@/Utils/style.css"
+            fx:controller="org.uet.controllers.LibraryManagementController"
+            xmlns="http://javafx.com/javafx/23"
+            xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button fx:id="closeButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="540.0"
+              mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="exit-button"
+              stylesheets="@/Utils/style.css"
+              text="Exit">
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@/Utils/icons/icons8_exit_32px.png"/>
+>>>>>>> Stashed changes
                </image>
             </ImageView>
          </graphic>
@@ -30,7 +49,14 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
+<<<<<<< Updated upstream
       <Button fx:id="userButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="100.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item" stylesheets="@../Utils/style.css" text="Student">
+=======
+      <Button fx:id="userButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="122.0"
+              mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item"
+              stylesheets="@/Utils/style.css"
+              text="Student">
+>>>>>>> Stashed changes
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
@@ -43,12 +69,23 @@
          <graphic>
             <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
+<<<<<<< Updated upstream
                   <Image url="@../Utils/icons/icons8-student-50.png" />
+=======
+                  <Image url="@/Utils/icons/icons8-student-50.png"/>
+>>>>>>> Stashed changes
                </image>
             </ImageView>
          </graphic>
       </Button>
+<<<<<<< Updated upstream
       <Button fx:id="bookButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="205.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item" stylesheets="@../Utils/style.css" text="Book">
+=======
+      <Button fx:id="bookButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="254.0"
+              mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item"
+              stylesheets="@/Utils/style.css"
+              text="Book">
+>>>>>>> Stashed changes
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
@@ -66,7 +103,14 @@
             </ImageView>
          </graphic>
       </Button>
+<<<<<<< Updated upstream
       <Button fx:id="libraryButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="291.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item" stylesheets="@../Utils/style.css" text="Transfer">
+=======
+      <Button fx:id="libraryButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0"
+              layoutY="386.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item"
+              stylesheets="@/Utils/style.css"
+              text="Transfer">
+>>>>>>> Stashed changes
          <font>
             <Font name="System Bold" size="12.0" />
          </font>

@@ -16,6 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<<<<<<< Updated upstream
 <AnchorPane prefHeight="582.0" prefWidth="834.0"
             style="-fx-border-color: black; -fx-border-width: 1; -fx-border-radius: 5; -fx-border-color: rgba(0, 0, 0, 0.3);"
             xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
@@ -137,4 +138,49 @@
             </HBox>
         </bottom>
     </BorderPane>
+=======
+<AnchorPane fx:id="container"
+            fx:controller="org.uet.controllers.UserManagementController"
+            prefHeight="580.0"
+            prefWidth="834.0"
+            styleClass="container"
+            xmlns="http://javafx.com/javafx/23"
+            xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button layoutX="314.0" layoutY="467.0" onAction="#handleUpdate" text="Cập nhật"/>
+      <TextField fx:id="txtEmail" layoutX="104.0" layoutY="195.0"/>
+      <Label layoutX="47.0" layoutY="199.0" text="Email:"/>
+      <TextField fx:id="txtPhone" layoutX="419.0" layoutY="63.0"/>
+      <Label layoutX="373.0" layoutY="67.0" text="SĐT:"/>
+      <ComboBox fx:id="cmbMajor" layoutX="627.0" layoutY="145.0"/>
+      <Label layoutX="529.0" layoutY="154.0" text="Chuyên ngành:"/>
+      <ComboBox fx:id="cmbClass" layoutX="419.0" layoutY="145.0"/>
+      <Label layoutX="373.0" layoutY="154.0" text="Lớp:"/>
+      <RadioButton layoutX="419.0" layoutY="109.0" text="Nam">
+         <toggleGroup>
+            <ToggleGroup fx:id="genderGroup"/>
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton layoutX="504.0" layoutY="109.0" text="Nữ" toggleGroup="$genderGroup"/>
+      <TextField fx:id="txtStudentName" layoutX="104.0" layoutY="105.0"/>
+      <HBox layoutX="-20.0" layoutY="36.0"/>
+      <Label layoutX="349.0" layoutY="109.0" text="Giới tính:"/>
+      <Label layoutX="41.0" layoutY="109.0" text="Tên SV:"/>
+      <TextField fx:id="txtStudentId" layoutX="104.0" layoutY="63.0"/>
+      <Label layoutX="43.0" layoutY="67.0" text="Mã SV:"/>
+      <AnchorPane prefHeight="46.0" prefWidth="834.0" styleClass="studentTitleContainer"
+                  stylesheets="@../Utils/style.css">
+         <children>
+            <Label layoutX="293.0" layoutY="7.0" styleClass="studentTitle" stylesheets="@../Utils/style.css"
+                   text="Quản lý Sinh Viên">
+               <font>
+                  <Font size="23.0"/>
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <Button layoutX="138.0" layoutY="467.0" onAction="#handleUpdate" text="Thêm"/>
+      <Button layoutX="504.0" layoutY="467.0" onAction="#handleUpdate" text="Xoá"/>
+   </children>
+>>>>>>> Stashed changes
 </AnchorPane>
