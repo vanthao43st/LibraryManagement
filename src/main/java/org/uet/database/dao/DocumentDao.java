@@ -170,4 +170,20 @@ public class DocumentDao {
 
         return result;
     }
+
+    public boolean isBorrowedBook(String documentCode) {
+        String query = "SELECT 1 FROM library WHERE library_document_code = ? AND library_quantity > 0 AND library_status = 'Chưa trả' LIMIT 1";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.setString(1, documentCode);
+            ResultSet resultSet = ps.executeQuery();
+
+            return resultSet.next();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
