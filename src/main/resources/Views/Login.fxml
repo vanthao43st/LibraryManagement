@@ -17,9 +17,9 @@
                 <Image url="@../Utils/images/background.png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="111.0" fitWidth="212.0" layoutX="14.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="111.0" fitWidth="212.0" layoutX="14.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@../Utils/images/Logo%20-%20UET%20-%20VNU.png" />
+                <Image url="@../Utils/images/VNULogo.png" />
             </image>
         </ImageView>
         <Label alignment="CENTER" layoutX="471.0" layoutY="321.0" prefHeight="73.0" prefWidth="365.0" style="-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 45px; -fx-text-fill: black;" text="WELCOME TO" textAlignment="CENTER" />
