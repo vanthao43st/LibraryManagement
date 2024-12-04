@@ -27,8 +27,8 @@
         <top>
             <HBox alignment="CENTER_LEFT" prefHeight="79.0" prefWidth="800.0" spacing="10"
                   style="-fx-background-color: #f4f4f4; -fx-padding: 10;">
-                <Label prefHeight="18.0" prefWidth="84.0" text="Tìm kiếm theo:"/>
-                <ComboBox fx:id="searchCriteria" prefWidth="150.0" promptText="Chọn tiêu chí">
+                <Label prefHeight="18.0" prefWidth="84.0" text="Search by:"/>
+                <ComboBox fx:id="searchCriteria" prefWidth="150.0" promptText="Select criteria">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
                             <String fx:value="ID"/>
@@ -37,9 +37,9 @@
                         </FXCollections>
                     </items>
                 </ComboBox>
-                <TextField fx:id="searchField" prefHeight="26.0" prefWidth="341.0" promptText="Nhập từ khóa..."/>
-                <Button fx:id="searchButton" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
-                        text="Tìm kiếm" onAction="#onSearch"/>
+                <TextField fx:id="searchField" prefHeight="26.0" prefWidth="341.0" promptText="Enter keyword ..."/>
+                <Button fx:id="searchButton" onAction="#onSearch"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Search"/>
             </HBox>
         </top>
 
@@ -128,12 +128,12 @@
         <!-- Bottom: Buttons Section -->
         <bottom>
             <HBox alignment="CENTER" prefHeight="50.0" prefWidth="800.0" spacing="10" style="-fx-padding: 10;">
-                <Button fx:id="addButton" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
-                        text="Thêm Người Dùng" onAction="#onAdd"/>
-                <Button fx:id="editButton" style="-fx-background-color: #FFA500; -fx-text-fill: white;"
-                        text="Sửa Người Dùng" onAction="#onEdit"/>
-                <Button fx:id="deleteButton" style="-fx-background-color: #FF6347; -fx-text-fill: white;"
-                        text="Xóa Người Dùng" onAction="#onDelete"/>
+                <Button fx:id="addButton" onAction="#onAdd" prefHeight="26.0" prefWidth="82.0"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Add user"/>
+                <Button fx:id="editButton" onAction="#onEdit" prefHeight="26.0" prefWidth="79.0"
+                        style="-fx-background-color: #FFA500; -fx-text-fill: white;" text="Edit User"/>
+                <Button fx:id="deleteButton" onAction="#onDelete"
+                        style="-fx-background-color: #FF6347; -fx-text-fill: white;" text="Delete User"/>
             </HBox>
         </bottom>
     </BorderPane>

@@ -53,13 +53,11 @@ public class GoogleBooksAPI {
             }
             reader.close();
 
-//            System.out.println(response);
-
             // Xử lý JSON
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response.toString());
 
-//            System.out.println(jsonNode);
+            System.out.println(jsonNode);
 
             // Kiểm tra kết quả trả về
             if (!jsonNode.has("items") || jsonNode.get("items").isEmpty()) {
@@ -88,7 +86,21 @@ public class GoogleBooksAPI {
                     description = volumeInfo.get("description").asText();
                 }
 
-                documents.add(new Document(id, title, description, category, author, 50000, 10));
+                // Lấy giá tiền
+                long price = 50000; // Mặc định nếu không có giá
+                if (item.has("saleInfo") && item.get("saleInfo").has("offers")) {
+                    JsonNode offers = item.get("saleInfo").get("offers");
+                    if (offers.isArray() && !offers.isEmpty()) {
+                        JsonNode firstOffer = offers.get(0);
+                        if (firstOffer.has("retailPrice") && firstOffer.get("retailPrice").has("amountInMicros")) {
+                            price = firstOffer.get("retailPrice").get("amountInMicros").asLong() / 1_000_000; // Convert từ micros về đơn vị VND
+                        } else if (firstOffer.has("listPrice") && firstOffer.get("listPrice").has("amountInMicros")) {
+                            price = firstOffer.get("listPrice").get("amountInMicros").asLong() / 1_000_000; // Convert từ micros về đơn vị VND
+                        }
+                    }
+                }
+
+                documents.add(new Document(id, title, description, category, author, price, 10));
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());

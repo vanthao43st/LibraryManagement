@@ -119,8 +119,34 @@ public class LibraryDao {
         }
     }
 
+    public boolean isUserExisted(String userId) {
+        String query = "SELECT 1 FROM user WHERE user_id = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, userId);
+            ResultSet resultSet = ps.executeQuery();
+            return resultSet.next(); // Trả về true nếu tìm thấy user_id
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean isDocumentExisted(String documentCode) {
+        String query = "SELECT 1 FROM document WHERE document_code = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, documentCode);
+            ResultSet resultSet = ps.executeQuery();
+            return resultSet.next(); // Trả về true nếu tìm thấy document_code
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
     public boolean returnDocument(String userId, String documentCode, int returnQuantity, String returnDate) {
-        String checkQuery = "SELECT library_quantity, library_due_date FROM library WHERE library_user_id = ? AND library_document_code = ? AND library_status = 'Chưa trả'";
+        String checkQuery = "SELECT library_quantity, library_due_date FROM library WHERE library_user_id = ? AND library_document_code = ?";
         String updateLibraryQuery = "UPDATE library SET library_quantity = library_quantity - ?, library_return_date = ?, library_status = ?, library_late_days = ?, library_fine = ? " +
                 "WHERE library_user_id = ? AND library_document_code = ?";
         String updateDocumentQuery = "UPDATE document SET document_quantity = document_quantity + ? WHERE document_code = ?";

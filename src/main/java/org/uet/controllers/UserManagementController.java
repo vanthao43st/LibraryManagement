@@ -183,11 +183,17 @@ public class UserManagementController {
 
     @FXML
     private void onDelete(ActionEvent event) {
-        if (selectedUser != null) { // Xóa sinh viên được chọn
+        if (selectedUser != null) {
             userData.remove(selectedUser);
-            deleteFromDatabase(selectedUser); // Gọi hàm xóa khỏi cơ sở dữ liệu
+            deleteFromDatabase(selectedUser);
+
+            userTable.setItems(FXCollections.observableArrayList(userData));
+            userTable.refresh();
+
             clearForm();
             selectedUser = null;
+
+            showAlert("Thông báo", "Xóa thành công!", Alert.AlertType.INFORMATION);
         } else {
             showAlert("Thông báo", "Hãy chọn một sinh viên để xóa!", Alert.AlertType.WARNING);
         }
@@ -257,7 +263,6 @@ public class UserManagementController {
         System.out.println("Xóa khỏi cơ sở dữ liệu: " + user);
     }
     //----------------------------------------------------
-
 
 
     // Hiển thị thông báo Alert

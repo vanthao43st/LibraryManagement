@@ -51,7 +51,7 @@ public class LoginController implements Initializable {
                 Stage stage = (Stage) usernameField.getScene().getWindow();
                 Parent root = FXMLLoader.load(
                         Objects.requireNonNull(
-                                getClass().getResource("/Views/LibraryManagement.fxml")
+                                getClass().getResource("/Views/Home.fxml")
                         )
                 );
                 Scene scene = new Scene(root, 900, 600);
@@ -62,9 +62,9 @@ public class LoginController implements Initializable {
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Login Failed");
-            alert.setHeaderText("Incorrect username or password");
-            alert.setContentText("Please try again.");
+            alert.setTitle("Đăng nhập thất bại");
+            alert.setHeaderText("username hoặc passowrd khng hợp lệ!");
+            alert.setContentText("Hãy thử lại!");
             alert.showAndWait();
         }
     }

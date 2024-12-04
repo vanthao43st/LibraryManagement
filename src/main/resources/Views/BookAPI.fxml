@@ -23,7 +23,7 @@
         <top>
             <HBox alignment="CENTER_LEFT" prefHeight="82.0" prefWidth="800.0" spacing="10"
                   style="-fx-background-color: #f4f4f4;-fx-margin: 0 5 0 5">
-                <Label text="Tìm kiếm theo:" style="-fx-padding: 0 0 0 10;"/>
+                <Label text="Search by:" style="-fx-padding: 0 0 0 10;"/>
                 <ComboBox fx:id="searchCriteria" prefHeight="26.0" prefWidth="141.0" promptText="Chọn tiêu chí">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
@@ -32,9 +32,9 @@
                         </FXCollections>
                     </items>
                 </ComboBox>
-                <TextField fx:id="searchField" prefHeight="26.0" prefWidth="320.0" promptText="Nhập từ khóa..."/>
+                <TextField fx:id="searchField" prefHeight="26.0" prefWidth="320.0" promptText="Enter keyword ..."/>
                 <Button fx:id="searchButton" onAction="#onSearch" prefHeight="26.0" prefWidth="82.0"
-                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Tìm kiếm"/>
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Search"/>
             </HBox>
         </top>
 
@@ -42,13 +42,13 @@
         <center>
             <TableView fx:id="documentTable" prefHeight="400" prefWidth="800">
                 <columns>
-                    <TableColumn fx:id="codeColumn" prefWidth="100" text="Mã Sách"/>
-                    <TableColumn fx:id="titleColumn" prefWidth="150" text="Tiêu Đề"/>
-                    <TableColumn fx:id="descriptionColumn" prefWidth="250" text="Mô Tả"/>
-                    <TableColumn fx:id="categoryColumn" prefWidth="100" text="Thể Loại"/>
-                    <TableColumn fx:id="authorColumn" prefWidth="150" text="Tác Giả"/>
-                    <TableColumn fx:id="priceColumn" prefWidth="100" text="Giá"/>
-                    <TableColumn fx:id="quantityColumn" prefWidth="100" text="Số Lượng"/>
+                    <TableColumn fx:id="codeColumn" prefWidth="100" text="Code"/>
+                    <TableColumn fx:id="titleColumn" prefWidth="150" text="Title"/>
+                    <TableColumn fx:id="descriptionColumn" prefWidth="250" text="Description"/>
+                    <TableColumn fx:id="categoryColumn" prefWidth="100" text="Category"/>
+                    <TableColumn fx:id="authorColumn" prefWidth="150" text="Author"/>
+                    <TableColumn fx:id="priceColumn" prefWidth="100" text="Price"/>
+                    <TableColumn fx:id="quantityColumn" prefWidth="100" text="Quantity"/>
                 </columns>
             </TableView>
         </center>
@@ -57,9 +57,9 @@
         <bottom>
             <HBox alignment="CENTER" prefHeight="73.0" prefWidth="800.0" spacing="20" style="-fx-padding: 10;">
                 <Button fx:id="addButton" onAction="#onAdd" prefHeight="26.0" prefWidth="120.0"
-                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Thêm"/>
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Add"/>
                 <Button fx:id="detailsButton" onAction="#onShowDetails"
-                        style="-fx-background-color: #FF6347; -fx-text-fill: white;" text="Thông tin chi tiết"/>
+                        style="-fx-background-color: #FF6347; -fx-text-fill: white;" text="Document detail"/>
             </HBox>
         </bottom>
     </BorderPane>

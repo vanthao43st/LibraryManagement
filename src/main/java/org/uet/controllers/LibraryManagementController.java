@@ -1,104 +1,281 @@
 package org.uet.controllers;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Tooltip;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+import javafx.stage.StageStyle;
+import org.uet.database.dao.LibraryDao;
+import org.uet.entity.Library;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.List;
 
-public class LibraryManagementController implements Initializable {
-
-    @FXML
-    private Button bookButton, userButton, libraryButton, bookApiButton, closeButton;
+public class LibraryManagementController {
 
     @FXML
-    private Tooltip tooltip1, tooltip2, tooltip3, tooltip4;
+    private ComboBox<String> searchCriteria;
 
     @FXML
-    private AnchorPane container;
+    private TextField searchField, userIdField, documentCodeField, quantityField;
 
-    // Tọa độ chuột để tính toán di chuyển
-    private double xOffset = 0;
-    private double yOffset = 0;
+    @FXML
+    private Button searchButton, borrowButton, returnButton, deleteButton, statisticButton;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    @FXML
+    private TableView<Library> libraryTable;
 
-        // Xử lý sự kiện di chuyển ứng dụng
-        container.setOnMousePressed(this::onMousePressed);
-        container.setOnMouseDragged(this::onMouseDragged);
+    @FXML
+    private TableColumn<Library, String> userIdColumn, documentCodeColumn, borrowDateColumn, dueDateColumn, returnDateColumn, statusColumn;
 
-        // Gắn sự kiện highlight cho các nút
-        attachHighlightToButton(userButton, "/Views/UserManagement.fxml");
-        attachHighlightToButton(bookButton, "/Views/BookManagement.fxml");
-        attachHighlightToButton(libraryButton, "/Views/LibraryManagement.fxml");
-        attachHighlightToButton(bookApiButton, "/Views/BookAPI.fxml");
+    @FXML
+    private TableColumn<Library, Integer> quantityColumn, lateDaysColumn;
 
-        tooltip1.setShowDelay(Duration.seconds(0.5));
-        tooltip2.setShowDelay(Duration.seconds(0.5));
-        tooltip3.setShowDelay(Duration.seconds(0.5));
-        tooltip4.setShowDelay(Duration.seconds(0.5));
+    @FXML
+    private TableColumn<Library, Double> fineColumn;
 
-        closeButton.setOnMouseClicked(e -> {
-            System.exit(-1);
-        });
+    private static final LibraryDao libraryDao = new LibraryDao();
+
+    private final ObservableList<Library> libraryData = FXCollections.observableArrayList();
+
+    @FXML
+    public void initialize() {
+        // Initialize search criteria
+        searchCriteria.setItems(FXCollections.observableArrayList("User ID", "Document Code", "Status"));
+
+        // Link table columns to Library fields
+        userIdColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getUserId()));
+        documentCodeColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDocumentCode()));
+        quantityColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getQuantity()));
+        borrowDateColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getBorrowDate()));
+        dueDateColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDueDate()));
+        returnDateColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getReturnDate()));
+        statusColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getStatus()));
+        lateDaysColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getLateDays()));
+        fineColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getFine()));
+
+        // Assign data to the table
+        libraryTable.setItems(libraryData);
+
+        // Add click event to table rows
+        libraryTable.setOnMouseClicked(this::onTableClick);
+
+        // Load initial data
+        loadLibraryData();
     }
 
-    // Ghi lại tọa độ chuột khi nhấn
-    private void onMousePressed(MouseEvent event) {
-        Stage stage = (Stage) container.getScene().getWindow();
-        xOffset = stage.getX() - event.getScreenX();
-        yOffset = stage.getY() - event.getScreenY();
-    }
-
-    // Cập nhật vị trí ứng dụng khi kéo
-    private void onMouseDragged(MouseEvent event) {
-        Stage stage = (Stage) container.getScene().getWindow();
-        stage.setX(event.getScreenX() + xOffset);
-        stage.setY(event.getScreenY() + yOffset);
-    }
-
-    // Highlight nút khi được nhấn
-    private void attachHighlightToButton(Button button, String fxmlPath) {
-        button.setOnAction(actionEvent -> {
-            removeHighlightFromAllButtons(); // Loại bỏ highlight từ tất cả các nút
-            button.getStyleClass().add("highlighted-button"); // Thêm class highlight vào nút hiện tại
-            showComponent(fxmlPath);
-        });
-    }
-
-    // Loại bỏ highlight từ tất cả các nút
-    private void removeHighlightFromAllButtons() {
-        Button[] buttons = {bookButton, userButton, libraryButton, bookApiButton};
-        for (Button btn : buttons) {
-            btn.getStyleClass().remove("highlighted-button");
+    @FXML
+    private void onTableClick(MouseEvent event) {
+        Library selectedLibrary = libraryTable.getSelectionModel().getSelectedItem();
+        if (selectedLibrary != null) {
+            userIdField.setText(selectedLibrary.getUserId());
+            documentCodeField.setText(selectedLibrary.getDocumentCode());
+            quantityField.setText(String.valueOf(selectedLibrary.getQuantity()));
         }
     }
 
+    private void clearForm() {
+        userIdField.clear();
+        documentCodeField.clear();
+        quantityField.clear();
+    }
 
-    private void setNode(Node node) {
-        container.getChildren().clear();
-        container.getChildren().add(node);
+    private void loadLibraryData() {
+        List<Library> records = libraryDao.getAllLibraryRecords();
+        libraryData.setAll(records);
     }
 
     @FXML
-    public void showComponent(String path) {
+    private void onBorrow(ActionEvent event) {
         try {
-            AnchorPane component = FXMLLoader.load(getClass().getResource(path));
-            setNode(component);
+            if (incompleteInfo()) {
+                showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin vào tất cả các trường!", Alert.AlertType.WARNING);
+                return;
+            }
+
+            String userId = userIdField.getText();
+            String documentCode = documentCodeField.getText();
+            int quantity;
+
+            // Kiểm tra sự tồn tại của user_id và document_code
+            if (!libraryDao.isUserExisted(userId)) {
+                showAlert("Lỗi", "User không tồn tại! Vui lòng nhập User ID hợp lệ.", Alert.AlertType.WARNING);
+                return;
+            }
+
+            if (!libraryDao.isDocumentExisted(documentCode)) {
+                showAlert("Lỗi", "Document không tồn tại! Vui lòng nhập Document Code hợp lệ.", Alert.AlertType.WARNING);
+                return;
+            }
+
+            if (isLibraryRecordExisted(userId, documentCode)) {
+                showAlert("Lỗi", "Bản ghi đã tồn tại! Vui lòng nhập bản ghi khác.", Alert.AlertType.WARNING);
+                return;
+            }
+
+            try {
+                quantity = Integer.parseInt(quantityField.getText());
+                if (quantity <= 0) {
+                    showAlert("Lỗi", "Số lượng mượn phải lớn hơn 0!", Alert.AlertType.WARNING);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                showAlert("Lỗi", "Số lượng mượn phải là một số nguyên!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            boolean success = libraryDao.borrowDocument(userId, documentCode, quantity);
+            if (success) {
+                loadLibraryData();
+                showAlert("Thành công", "Mượn tài liệu thành công!", Alert.AlertType.INFORMATION);
+                clearForm();
+            } else {
+                showAlert("Lỗi", "Lỗi mượn tài liệu. Kiểm tra số lượng có sẵn!", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            showAlert("Lỗi", "Đã xảy ra lỗi: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    // Kiểm tra xem bản ghi có tồn tại trong bảng hay chưa thông qua user_id và document_code
+    private boolean isLibraryRecordExisted(String userId, String documentCode) {
+        for (Library library : libraryData) {
+            if (library.getUserId().equals(userId)
+                    && library.getDocumentCode().equals(documentCode)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @FXML
+    private void onReturn(ActionEvent event) {
+        try {
+            if (incompleteInfo()) {
+                showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin vào tất cả các trường!", Alert.AlertType.WARNING);
+                return;
+            }
+
+            String userId = userIdField.getText();
+            String documentCode = documentCodeField.getText();
+            int quantity;
+            String returnDate = java.time.LocalDate.now().toString();
+
+            try {
+                quantity = Integer.parseInt(quantityField.getText());
+                if (quantity <= 0) {
+                    showAlert("Lỗi", "Số lượng mượn phải lớn hơn 0!", Alert.AlertType.WARNING);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                showAlert("Lỗi", "Số lượng mượn phải là một số nguyên!", Alert.AlertType.ERROR);
+                return;
+            }
+
+            boolean success = libraryDao.returnDocument(userId, documentCode, quantity, returnDate);
+            if (success) {
+                loadLibraryData();
+                showAlert("Thành công", "Trả tài liệu thành công!", Alert.AlertType.INFORMATION);
+                clearForm();
+            } else {
+                showAlert("Lỗi", "Lỗi trả tài liệu!", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            showAlert("Lỗi", "Đã xảy ra lỗi: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    @FXML
+    private void onDelete(ActionEvent event) {
+        libraryDao.deleteLibraryRecord();
+        loadLibraryData();
+        clearForm();
+        showAlert("Thành công", "Đã xoá các bản ghi không cần thiết!", Alert.AlertType.INFORMATION);
+    }
+
+    @FXML
+    private void onSearch(ActionEvent event) {
+        String criteria = searchCriteria.getValue();
+        String keyword = searchField.getText().trim();
+
+        if (criteria == null || keyword.isEmpty()) {
+            showAlert("Lỗi", "Hãy chọn 1 trường tìm kiếm và nhập từ khoá cần tìm!", Alert.AlertType.WARNING);
+            return;
+        }
+
+        ObservableList<Library> filteredData = libraryData.filtered(record -> switch (criteria) {
+            case "User ID" -> record.getUserId().toLowerCase().contains(keyword.toLowerCase());
+            case "Document Code" -> record.getDocumentCode().toLowerCase().contains(keyword.toLowerCase());
+            case "Status" -> record.getStatus().toLowerCase().contains(keyword.toLowerCase());
+            default -> false;
+        });
+
+        libraryTable.setItems(filteredData);
+    }
+
+    private boolean incompleteInfo() {
+        return userIdField.getText().isBlank()
+                || documentCodeField.getText().isBlank()
+                || quantityField.getText().isBlank();
+    }
+
+    @FXML
+    private void onStatistic(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/StatisticManagement.fxml"));
+            DialogPane dialogPane = loader.load();
+
+            StatisticManagementController controller = loader.getController();
+            controller.setStatisticDetails();
+
+            // Tạo Stage cho DialogPane
+            Stage stage = new Stage(StageStyle.UNDECORATED); // Stage không có thanh tiêu đề
+            Scene scene = new Scene(dialogPane);
+            stage.setScene(scene);
+
+            // Kích hoạt tính năng kéo
+            enableDragging(stage, dialogPane);
+
+            stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    private void enableDragging(Stage stage, DialogPane dialogPane) {
+        final LibraryManagementController.Delta dragDelta = new LibraryManagementController.Delta();
+
+        // Ghi lại vị trí khi nhấn chuột
+        dialogPane.setOnMousePressed(event -> {
+            dragDelta.x = stage.getX() - event.getScreenX();
+            dragDelta.y = stage.getY() - event.getScreenY();
+        });
+
+        // Cập nhật vị trí khi kéo chuột
+        dialogPane.setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() + dragDelta.x);
+            stage.setY(event.getScreenY() + dragDelta.y);
+        });
+    }
+
+    // Class để lưu vị trí chuột
+    private static class Delta {
+        double x, y;
+    }
+
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 }
