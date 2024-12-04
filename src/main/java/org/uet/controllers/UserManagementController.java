@@ -5,12 +5,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.uet.database.dao.UserDao;
+import org.uet.entity.Document;
 import org.uet.entity.User;
 import org.uet.enums.Gender;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -23,7 +29,7 @@ public class UserManagementController {
     private TextField searchField, userIdField, userNameField, userClassField, userPhoneField, userEmailField;
 
     @FXML
-    private Button searchButton, addButton, editButton, deleteButton;
+    private Button searchButton, addButton, editButton, deleteButton, showDetailButton;
 
     @FXML
     private TableView<User> userTable;
@@ -184,6 +190,11 @@ public class UserManagementController {
     @FXML
     private void onDelete(ActionEvent event) {
         if (selectedUser != null) {
+            if (userDao.hasUnreturnedBooks(selectedUser.getId())) {
+                showAlert("Thông báo", "Không thể xoá người dùng! Người dùng đang mượn sách!", Alert.AlertType.WARNING);
+                return;
+            }
+
             userData.remove(selectedUser);
             deleteFromDatabase(selectedUser);
 
@@ -271,5 +282,58 @@ public class UserManagementController {
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @FXML
+    public void onShowDetail(ActionEvent event) {
+        User selectedUser = userTable.getSelectionModel().getSelectedItem();
+        if (selectedUser == null) {
+            showAlert("Thông báo", "Vui lòng chọn người dùng!", Alert.AlertType.WARNING);
+            return;
+        }
+        showUserDetails(selectedUser);
+    }
+
+    private void showUserDetails(User user) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/UserDetailsDialog.fxml"));
+            DialogPane dialogPane = loader.load();
+
+            UserDetailsDialogController controller = loader.getController();
+            controller.setUserDetails(user);
+
+            // Tạo Stage cho DialogPane
+            Stage stage = new Stage(StageStyle.UNDECORATED); // Stage không có thanh tiêu đề
+            Scene scene = new Scene(dialogPane);
+            stage.setScene(scene);
+
+            // Kích hoạt tính năng kéo
+            enableDragging(stage, dialogPane);
+
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void enableDragging(Stage stage, DialogPane dialogPane) {
+        final UserManagementController.Delta dragDelta = new UserManagementController.Delta();
+
+        // Ghi lại vị trí khi nhấn chuột
+        dialogPane.setOnMousePressed(event -> {
+            dragDelta.x = stage.getX() - event.getScreenX();
+            dragDelta.y = stage.getY() - event.getScreenY();
+        });
+
+        // Cập nhật vị trí khi kéo chuột
+        dialogPane.setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() + dragDelta.x);
+            stage.setY(event.getScreenY() + dragDelta.y);
+        });
+    }
+
+    // Class để lưu vị trí chuột
+    private static class Delta {
+        double x, y;
     }
 }

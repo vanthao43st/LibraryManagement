@@ -63,7 +63,7 @@ public class LoginController implements Initializable {
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Đăng nhập thất bại");
-            alert.setHeaderText("username hoặc passowrd khng hợp lệ!");
+            alert.setHeaderText("username hoặc passowrd không hợp lệ!");
             alert.setContentText("Hãy thử lại!");
             alert.showAndWait();
         }

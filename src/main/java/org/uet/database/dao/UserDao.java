@@ -175,4 +175,20 @@ public class UserDao {
         }
         return users;
     }
+
+    public boolean hasUnreturnedBooks(String userId) {
+        String query = "SELECT 1 FROM library WHERE library_user_id = ? AND library_quantity > 0 AND library_status = 'Chưa trả' LIMIT 1";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.setString(1, userId);
+            ResultSet resultSet = ps.executeQuery();
+
+            return resultSet.next();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

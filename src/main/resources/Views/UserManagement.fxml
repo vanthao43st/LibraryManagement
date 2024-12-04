@@ -134,6 +134,8 @@
                         style="-fx-background-color: #FFA500; -fx-text-fill: white;" text="Edit User"/>
                 <Button fx:id="deleteButton" onAction="#onDelete"
                         style="-fx-background-color: #FF6347; -fx-text-fill: white;" text="Delete User"/>
+                <Button fx:id="showDetailButton" onAction="#onShowDetail"
+                        style="-fx-background-color: #FF6347; -fx-text-fill: white;" text="Show Detail User"/>
             </HBox>
         </bottom>
     </BorderPane>
