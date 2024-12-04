@@ -11,25 +11,25 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="root" stylesheets="@../Utils/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.uet.controllers.HomeController">
    <children>
-      <ImageView fitHeight="600.0" fitWidth="900.0" layoutX="0.0" layoutY="167.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="492.0" fitWidth="858.0" layoutX="42.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Utils/images/background3.png" />
          </image>
       </ImageView>
-      <Button fx:id="closeButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" layoutX="-6.0" layoutY="541.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="35.0" styleClass="exit-button" stylesheets="@../Utils/style.css" text="Exit">
-         <graphic>
-            <ImageView fitHeight="35.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../Utils/icons/icons8-exit-100.png" />
-               </image>
-            </ImageView>
-         </graphic>
+      <Button fx:id="closeButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" layoutX="9.0" layoutY="555.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="35.0" styleClass="exit-button" stylesheets="@../Utils/style.css" text="Exit">
          <tooltip>
             <Tooltip fx:id="tooltip4" text="Exit" />
          </tooltip>
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
+         <graphic>
+            <ImageView fitHeight="29.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Utils/icons/icons8-exit-100.png" />
+               </image>
+            </ImageView>
+         </graphic>
       </Button>
       <Button fx:id="userButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="100.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item" stylesheets="@../Utils/style.css" text="Student">
          <font>
@@ -85,15 +85,15 @@
             </ImageView>
          </graphic>
       </Button>
-      <AnchorPane fx:id="container" layoutX="62.0" layoutY="9.0" prefHeight="582.0" prefWidth="834.0" styleClass="container">
+      <AnchorPane fx:id="container" layoutX="41.0" layoutY="1.0" prefHeight="600.0" prefWidth="858.0" styleClass="container">
          <children>
-            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="31.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="81.0" fitWidth="81.0" layoutX="24.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../Utils/images/Logo - UET - VNU.png" />
                </image>
             </ImageView>
-            <TextField layoutX="266.0" layoutY="205.0" prefHeight="43.0" prefWidth="302.0" styleClass="home_welcome" stylesheets="@../Utils/style.css" text="Chào mừng đến với thư viện" />
-            <TextField layoutX="163.0" layoutY="247.0" prefHeight="43.0" prefWidth="532.0" styleClass="home_welcome" stylesheets="@../Utils/style.css" text="Trường đại học Công nghệ - Đại học Quốc Gia Hà Nội" />
+            <TextField layoutX="105.0" layoutY="11.0" prefHeight="43.0" prefWidth="302.0" styleClass="home_welcome" stylesheets="@../Utils/style.css" text="LIBRARY SYSTEM" />
+            <TextField layoutX="105.0" layoutY="48.0" prefHeight="43.0" prefWidth="532.0" styleClass="home_welcome" stylesheets="@../Utils/style.css" text="UNIVERSITY OF ENGINEER AND TECHNOLOGY" />
          </children></AnchorPane>
       <Button fx:id="bookApiButton" alignment="BASELINE_LEFT" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="393.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" styleClass="menu-item" stylesheets="@../Utils/style.css" text="Book">
          <font>
