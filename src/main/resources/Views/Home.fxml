@@ -11,9 +11,9 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="root" stylesheets="@../Utils/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.uet.controllers.HomeController">
    <children>
-      <ImageView fitHeight="600.0" fitWidth="900.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="600.0" fitWidth="900.0" layoutX="0.0" layoutY="167.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../Utils/images/library_background.png" />
+            <Image url="@../Utils/images/background3.png" />
          </image>
       </ImageView>
       <Button fx:id="closeButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" layoutX="-6.0" layoutY="541.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="35.0" styleClass="exit-button" stylesheets="@../Utils/style.css" text="Exit">
@@ -89,7 +89,7 @@
          <children>
             <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="31.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../Utils/images/Logo%20-%20UET%20-%20VNU.png" />
+                  <Image url="@../Utils/images/Logo - UET - VNU.png" />
                </image>
             </ImageView>
             <TextField layoutX="266.0" layoutY="205.0" prefHeight="43.0" prefWidth="302.0" styleClass="home_welcome" stylesheets="@../Utils/style.css" text="Chào mừng đến với thư viện" />

@@ -33,6 +33,7 @@ public class Document {
         this.index = 0;
     }
 
+    // Getter và Setter cho thuộc tính index
     public int getIndex() {
         return index;
     }
@@ -41,6 +42,7 @@ public class Document {
         this.index = index;
     }
 
+    // Các getter và setter khác
     public String getCode() {
         return code;
     }
@@ -107,6 +109,7 @@ public class Document {
                 ", author='" + author + '\'' +
                 ", price=" + price +
                 ", quantity=" + quantity +
+                ", index=" + index +
                 '}';
     }
 }
