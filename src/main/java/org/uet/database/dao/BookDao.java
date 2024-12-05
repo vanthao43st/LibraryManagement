@@ -6,7 +6,7 @@ import org.uet.entity.Document;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class DocumentDao {
+public class BookDao {
     public ArrayList<Document> getAllDocument() {
         ArrayList<Document> documents = new ArrayList<>();
         String query = "SELECT * FROM document";
@@ -17,7 +17,7 @@ public class DocumentDao {
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                document = new Document();
+                document = new Document(code, title, description, author);
                 document.setCode(resultSet.getString("document_code"));
                 document.setTitle(resultSet.getString("document_title"));
                 document.setDescription(resultSet.getString("document_description"));
@@ -66,7 +66,7 @@ public class DocumentDao {
 
             try (ResultSet resultSet = ps.executeQuery()) {
                 if (resultSet.next()) {
-                    document = new Document();
+                    document = new Document(code, title, description, author);
                     document.setCode(resultSet.getString("document_code"));
                     document.setTitle(resultSet.getString("document_title"));
                     document.setDescription(resultSet.getString("document_description"));
@@ -154,7 +154,7 @@ public class DocumentDao {
             ResultSet resultSet = ps.executeQuery();
 
             while (resultSet.next()) {
-                Document document = new Document();
+                Document document = new Document(code, title, description, author);
                 document.setCode(resultSet.getString("document_code"));
                 document.setTitle(resultSet.getString("document_title"));
                 document.setDescription(resultSet.getString("document_description"));

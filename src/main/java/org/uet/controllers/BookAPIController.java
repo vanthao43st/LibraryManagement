@@ -13,7 +13,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.uet.service.GoogleBooksAPI;
-import org.uet.database.dao.DocumentDao;
+import org.uet.database.dao.BookDao;
 import org.uet.entity.Document;
 
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class BookAPIController {
 
     private final ObservableList<Document> documentData = FXCollections.observableArrayList();
 
-    private static final DocumentDao documentDao = new DocumentDao();
+    private static final BookDao BOOK_DAO = new BookDao();
 
     @FXML
     public void initialize() {
@@ -113,7 +113,7 @@ public class BookAPIController {
     }
 
     private void saveToDatabase(Document document) throws SQLException {
-        documentDao.addDocument(document);
+        BOOK_DAO.addDocument(document);
         System.out.println("Sách được lưu vào database: " + document);
     }
 

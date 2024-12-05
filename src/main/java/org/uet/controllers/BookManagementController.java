@@ -12,9 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.uet.database.dao.DocumentDao;
+import org.uet.database.dao.BookDao;
 import org.uet.entity.Document;
-import org.uet.entity.User;
 
 import java.io.IOException;
 import java.util.List;
@@ -46,7 +45,7 @@ public class BookManagementController {
 
     private Document selectedDocument;
 
-    private final DocumentDao documentDao = new DocumentDao();
+    private final BookDao bookDao = new BookDao();
 
     @FXML
     public void initialize() {
@@ -65,7 +64,7 @@ public class BookManagementController {
     }
 
     private void loadDocument() {
-        List<Document> books = documentDao.getAllDocument();
+        List<Document> books = bookDao.getAllDocument();
         documentData.setAll(books);
         documentTable.setItems(documentData);
     }
@@ -109,7 +108,7 @@ public class BookManagementController {
 
         try {
             Document document = getDocument();
-            documentDao.addDocument(document);
+            bookDao.addDocument(document);
             documentData.add(document);
             documentTable.refresh();
             documentTable.setItems(documentData);
@@ -167,7 +166,7 @@ public class BookManagementController {
             selectedDocument.setQuantity(Integer.parseInt(documentQuantityField.getText()));
             selectedDocument.setDescription(documentDescriptionField.getText());
 
-            documentDao.updateDocument(selectedDocument);
+            bookDao.updateDocument(selectedDocument);
             documentTable.refresh();
 
             clearInputFields();
@@ -184,12 +183,12 @@ public class BookManagementController {
             return;
         }
 
-        if (documentDao.isBorrowedBook(selectedDocument.getCode())) {
+        if (bookDao.isBorrowedBook(selectedDocument.getCode())) {
             showAlert("Thông báo", "Tài liệu đang được mượn! Không thể xoá được!", Alert.AlertType.WARNING);
             return;
         }
 
-        documentDao.deleteDocument(selectedDocument.getCode());
+        bookDao.deleteDocument(selectedDocument.getCode());
         documentData.remove(selectedDocument);
         clearInputFields();
         showAlert("Thành công", "Xoá sách thành công!", Alert.AlertType.INFORMATION);
