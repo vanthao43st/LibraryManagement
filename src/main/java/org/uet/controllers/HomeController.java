@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 public class HomeController implements Initializable {
 
     @FXML
-    private Button bookButton, userButton, libraryButton, bookApiButton, closeButton;
+    private Button documentButton, userButton, libraryButton, bookApiButton, closeButton;
 
     @FXML
     private Tooltip tooltip1, tooltip2, tooltip3, tooltip4;
@@ -40,7 +40,7 @@ public class HomeController implements Initializable {
 
         // Gắn sự kiện highlight cho các nút
         attachHighlightToButton(userButton, "/Views/UserManagement.fxml");
-        attachHighlightToButton(bookButton, "/Views/BookManagement.fxml");
+        attachHighlightToButton(documentButton, "/Views/DocumentManagement.fxml");
         attachHighlightToButton(libraryButton, "/Views/LibraryManagement.fxml");
         attachHighlightToButton(bookApiButton, "/Views/BookAPI.fxml");
 
@@ -79,7 +79,7 @@ public class HomeController implements Initializable {
 
     // Loại bỏ highlight từ tất cả các nút
     private void removeHighlightFromAllButtons() {
-        Button[] buttons = {bookButton, userButton, libraryButton, bookApiButton};
+        Button[] buttons = {documentButton, userButton, libraryButton, bookApiButton};
         for (Button btn : buttons) {
             btn.getStyleClass().remove("highlighted-button");
         }

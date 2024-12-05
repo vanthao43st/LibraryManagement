@@ -1,6 +1,7 @@
 package org.uet.test;
 
 import org.uet.database.dao.BookDao;
+import org.uet.entity.Book;
 import org.uet.entity.Document;
 
 import java.sql.SQLException;
@@ -10,9 +11,9 @@ public class TestDocument {
     private static final BookDao BOOK_DAO = new BookDao();
 
     private static void getAllDocument() {
-        ArrayList<Document> documents = BOOK_DAO.getAllDocument();
-        for (Document document : documents) {
-            System.out.println(document.toString());
+        ArrayList<Book> books = BOOK_DAO.getAllBook();
+        for (Book book : books) {
+            System.out.println(book.toString());
         }
     }
 
@@ -22,20 +23,20 @@ public class TestDocument {
     }
 
     private static void updateDocument() throws SQLException {
-        Document document = new Document("0001", "Bài tập đại số tuyến tính",
+        Book book = new Book("0001", "Bài tập đại số tuyến tính",
                 "Ôn tập lý thuyết và thực hành thông qua các bài tập về đại số",
                 "Toán học", "Dennis Ritchie", 50000, 20);
-        BOOK_DAO.updateDocument(document);
+        BOOK_DAO.updateBook(book);
     }
 
     private static void deleteDocument() {
-        BOOK_DAO.deleteDocument("0005");
+        BOOK_DAO.deleteBook("0005");
     }
 
     private static void searchDocuments() {
-        ArrayList<Document> documents = BOOK_DAO.searchDocuments("j", null, null);
-        for (Document document : documents) {
-            System.out.println(document.toString());
+        ArrayList<Book> books = BOOK_DAO.searchBooks("j", null, null);
+        for (Book book : books) {
+            System.out.println(books.toString());
         }
     }
 

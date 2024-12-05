@@ -4,23 +4,24 @@ public class Thesis extends Document {
     private String supervisor;
     private String university;
     private String degree;
-    private String submission_year;
+    private int submissionYear;
     private String major;
 
-    public Thesis(String degree, String major, String submission_year, String supervisor, String university) {
+    public Thesis() {
         super();
-        this.degree = degree;
-        this.major = major;
-        this.submission_year = submission_year;
-        this.supervisor = supervisor;
-        this.university = university;
+        this.degree = "";
+        this.major = "";
+        this.submissionYear = 0;
+        this.supervisor = "";
+        this.university = "";
     }
 
-    public Thesis(String author, String code, String description, String title, String degree, String major, String submission_year, String supervisor, String university) {
+    public Thesis(String author, String code, String description, String title,
+                  String degree, String major, int submissionYear, String supervisor, String university) {
         super(author, code, description, title);
         this.degree = degree;
         this.major = major;
-        this.submission_year = submission_year;
+        this.submissionYear = submissionYear;
         this.supervisor = supervisor;
         this.university = university;
     }
@@ -41,12 +42,12 @@ public class Thesis extends Document {
         this.major = major;
     }
 
-    public String getSubmission_year() {
-        return submission_year;
+    public int getSubmissionYear() {
+        return submissionYear;
     }
 
-    public void setSubmission_year(String submission_year) {
-        this.submission_year = submission_year;
+    public void setSubmissionYear(int submissionYear) {
+        this.submissionYear = submissionYear;
     }
 
     public String getSupervisor() {

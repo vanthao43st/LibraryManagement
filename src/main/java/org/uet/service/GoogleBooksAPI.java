@@ -2,6 +2,7 @@ package org.uet.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.uet.entity.Book;
 import org.uet.entity.Document;
 
 import java.io.BufferedReader;
@@ -17,17 +18,17 @@ public class GoogleBooksAPI {
     private static final String API_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
     // Tìm kiếm tài liệu bằng ISBN
-    public static ArrayList<Document> searchBookByISBN(String isbn) {
+    public static ArrayList<Book> searchBookByISBN(String isbn) {
         return fetchBookData("isbn:" + isbn);
     }
 
     // Tìm kiếm tài liệu bằng tiêu đề
-    public static ArrayList<Document> searchBookByTitle(String title) {
+    public static ArrayList<Book> searchBookByTitle(String title) {
         return fetchBookData("intitle:" + title);
     }
 
-    private static ArrayList<Document> fetchBookData(String query) {
-        ArrayList<Document> documents = new ArrayList<>();
+    private static ArrayList<Book> fetchBookData(String query) {
+        ArrayList<Book> books = new ArrayList<>();
 
         try {
             // Mã hóa URL
@@ -100,14 +101,14 @@ public class GoogleBooksAPI {
                     }
                 }
 
-                documents.add(new Document(id, title, description, category, author, price, 10));
+                books.add(new Book(id, title, description, category, author, price, 10));
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
 
-        return documents;
+        return books;
     }
 }
 

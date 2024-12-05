@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.uet.entity.Book;
 import org.uet.service.GoogleBooksAPI;
 import org.uet.database.dao.BookDao;
 import org.uet.entity.Document;
@@ -32,20 +33,20 @@ public class BookAPIController {
     private Button searchButton, addButton, detailsButton;
 
     @FXML
-    private TableView<Document> documentTable;
+    private TableView<Book> bookTable;
 
     @FXML
-    private TableColumn<Document, String> codeColumn, titleColumn, descriptionColumn, categoryColumn, authorColumn;
+    private TableColumn<Book, String> codeColumn, titleColumn, descriptionColumn, categoryColumn, authorColumn;
 
     @FXML
-    private TableColumn<Document, Double> priceColumn;
+    private TableColumn<Book, Double> priceColumn;
 
     @FXML
-    private TableColumn<Document, Integer> quantityColumn;
+    private TableColumn<Book, Integer> quantityColumn;
 
-    private final ObservableList<Document> documentData = FXCollections.observableArrayList();
+    private final ObservableList<Book> bookData = FXCollections.observableArrayList();
 
-    private static final BookDao BOOK_DAO = new BookDao();
+    private static final BookDao bookDao = new BookDao();
 
     @FXML
     public void initialize() {
@@ -68,31 +69,31 @@ public class BookAPIController {
             return;
         }
 
-        documentData.clear();
+        bookData.clear();
 
         //Search theo tieu chi
-        List<Document> documents;
+        List<Book> books;
         try {
             switch (criteria) {
                 case "ISBN":
-                    documents = GoogleBooksAPI.searchBookByISBN(keyword);
+                    books = GoogleBooksAPI.searchBookByISBN(keyword);
                     break;
                 case "Title":
-                    documents = GoogleBooksAPI.searchBookByTitle(keyword);
+                    books = GoogleBooksAPI.searchBookByTitle(keyword);
                     break;
                 default:
                     showAlert("Lỗi", "Tiêu chí không hợp lệ!", Alert.AlertType.ERROR);
                     return;
             }
 
-            if (documents == null || documents.isEmpty()) {
+            if (books == null || books.isEmpty()) {
                 showAlert("Thông báo", "Không tìm thấy kết quả nào phù hợp!", Alert.AlertType.INFORMATION);
                 return;
             }
 
             // Thêm dữ liệu vào danh sách
-            documentData.addAll(documents);
-            documentTable.setItems(documentData);
+            bookData.addAll(books);
+            bookTable.setItems(bookData);
 
         } catch (Exception e) {
             showAlert("Lỗi", "Đã xảy ra lỗi khi tìm kiếm: " + e.getMessage(), Alert.AlertType.ERROR);
@@ -102,38 +103,38 @@ public class BookAPIController {
 
     @FXML
     private void onAdd(ActionEvent event) throws SQLException {
-        Document selectedDocument = documentTable.getSelectionModel().getSelectedItem();
-        if (selectedDocument == null) {
+        Book selectedBook = bookTable.getSelectionModel().getSelectedItem();
+        if (selectedBook == null) {
             showAlert("Lỗi", "Vui lòng chọn một cuốn sách để thêm!", AlertType.WARNING);
             return;
         }
 
-        saveToDatabase(selectedDocument);
+        saveToDatabase(selectedBook);
         showAlert("Thành công", "Sách đã được thêm vào cơ sở dữ liệu!", AlertType.INFORMATION);
     }
 
-    private void saveToDatabase(Document document) throws SQLException {
-        BOOK_DAO.addDocument(document);
-        System.out.println("Sách được lưu vào database: " + document);
+    private void saveToDatabase(Book book) throws SQLException {
+        bookDao.addBook(book);
+        System.out.println("Sách được lưu vào database: " + book);
     }
 
     @FXML
     private void onShowDetails(ActionEvent event) {
-        Document selectedDocument = documentTable.getSelectionModel().getSelectedItem();
-        if (selectedDocument == null) {
+        Book selectedBook = bookTable.getSelectionModel().getSelectedItem();
+        if (selectedBook == null) {
             showAlert("Thông báo", "Vui lòng chọn một cuốn sách!", AlertType.WARNING);
             return;
         }
-        showDocumentDetails(selectedDocument);
+        showBookDetails(selectedBook);
     }
 
-    private void showDocumentDetails(Document document) {
+    private void showBookDetails(Book book) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/BookDetailsDialog.fxml"));
             DialogPane dialogPane = loader.load();
 
             BookDetailsDialogController controller = loader.getController();
-            controller.setBookDetails(document);
+            controller.setBookDetails(book);
 
             // Tạo Stage cho DialogPane
             Stage stage = new Stage(StageStyle.UNDECORATED); // Stage không có thanh tiêu đề

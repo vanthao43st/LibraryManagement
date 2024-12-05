@@ -13,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.uet.database.dao.BookDao;
+import org.uet.entity.Book;
 import org.uet.entity.Document;
 
 import java.io.IOException;
@@ -21,29 +22,29 @@ import java.util.List;
 public class BookManagementController {
 
     @FXML
-    private TextField documentCodeField, documentTitleField,
-            documentCategoryField, documentAuthorField,
-            documentPriceField, documentQuantityField,
-            documentDescriptionField, searchField;
+    private TextField bookCodeField, bookTitleField,
+            bookCategoryField, bookAuthorField,
+            bookPriceField, bookQuantityField,
+            bookDescriptionField, searchField;
 
     @FXML
     private ComboBox<String> searchCriteria;
 
     @FXML
-    private TableView<Document> documentTable;
+    private TableView<Book> bookTable;
 
     @FXML
-    private TableColumn<Document, String> codeColumn, titleColumn, categoryColumn, authorColumn, descriptionColumn;
+    private TableColumn<Book, String> codeColumn, titleColumn, categoryColumn, authorColumn, descriptionColumn;
 
     @FXML
-    private TableColumn<Document, Double> priceColumn;
+    private TableColumn<Book, Double> priceColumn;
 
     @FXML
-    private TableColumn<Document, Integer> quantityColumn;
+    private TableColumn<Book, Integer> quantityColumn;
 
-    private final ObservableList<Document> documentData = FXCollections.observableArrayList();
+    private final ObservableList<Book> bookData = FXCollections.observableArrayList();
 
-    private Document selectedDocument;
+    private Book selectedBook;
 
     private final BookDao bookDao = new BookDao();
 
@@ -60,37 +61,37 @@ public class BookManagementController {
 
         loadDocument();
 
-        documentTable.setOnMouseClicked(this::onTableClick);
+        bookTable.setOnMouseClicked(this::onTableClick);
     }
 
     private void loadDocument() {
-        List<Document> books = bookDao.getAllDocument();
-        documentData.setAll(books);
-        documentTable.setItems(documentData);
+        List<Book> books = bookDao.getAllBook();
+        bookData.setAll(books);
+        bookTable.setItems(bookData);
     }
 
     @FXML
     private void onTableClick(MouseEvent event) {
-        selectedDocument = documentTable.getSelectionModel().getSelectedItem();
-        if (selectedDocument != null) {
-            documentCodeField.setText(selectedDocument.getCode());
-            documentTitleField.setText(selectedDocument.getTitle());
-            documentCategoryField.setText(selectedDocument.getCategory());
-            documentAuthorField.setText(selectedDocument.getAuthor());
-            documentPriceField.setText(String.valueOf(selectedDocument.getPrice()));
-            documentQuantityField.setText(String.valueOf(selectedDocument.getQuantity()));
-            documentDescriptionField.setText(selectedDocument.getDescription());
+        selectedBook = bookTable.getSelectionModel().getSelectedItem();
+        if (selectedBook != null) {
+            bookCodeField.setText(selectedBook.getCode());
+            bookTitleField.setText(selectedBook.getTitle());
+            bookCategoryField.setText(selectedBook.getCategory());
+            bookAuthorField.setText(selectedBook.getAuthor());
+            bookPriceField.setText(String.valueOf(selectedBook.getPrice()));
+            bookQuantityField.setText(String.valueOf(selectedBook.getQuantity()));
+            bookDescriptionField.setText(selectedBook.getDescription());
         }
     }
 
     private void clearInputFields() {
-        documentCodeField.clear();
-        documentTitleField.clear();
-        documentCategoryField.clear();
-        documentAuthorField.clear();
-        documentPriceField.clear();
-        documentQuantityField.clear();
-        documentDescriptionField.clear();
+        bookCodeField.clear();
+        bookTitleField.clear();
+        bookCategoryField.clear();
+        bookAuthorField.clear();
+        bookPriceField.clear();
+        bookQuantityField.clear();
+        bookDescriptionField.clear();
     }
 
     @FXML
@@ -100,18 +101,18 @@ public class BookManagementController {
             return;
         }
 
-        String documentCode = documentCodeField.getText();
-        if (isDocumentExisted(documentCode)) {
-            showAlert("Lỗi", "Tài liệu đã tồn tại! Vui lòng nhập mã tài liệu khác.", Alert.AlertType.WARNING);
+        String documentCode = bookCodeField.getText();
+        if (isBookExisted(documentCode)) {
+            showAlert("Lỗi", "Sách đã tồn tại! Vui lòng nhập mã sách khác.", Alert.AlertType.WARNING);
             return;
         }
 
         try {
-            Document document = getDocument();
-            bookDao.addDocument(document);
-            documentData.add(document);
-            documentTable.refresh();
-            documentTable.setItems(documentData);
+            Book book = getBook();
+            bookDao.addBook(book);
+            bookData.add(book);
+            bookTable.refresh();
+            bookTable.setItems(bookData);
 
             clearInputFields();
             showAlert("Thành công", "Sách được thêm thành công!", Alert.AlertType.INFORMATION);
@@ -120,30 +121,30 @@ public class BookManagementController {
         }
     }
 
-    private Document getDocument() {
-        String code = documentCodeField.getText();
-        String title = documentTitleField.getText();
-        String category = documentCategoryField.getText();
-        String author = documentAuthorField.getText();
-        double price = Double.parseDouble(documentPriceField.getText());
-        int quantity = Integer.parseInt(documentQuantityField.getText());
-        String description = documentDescriptionField.getText();
+    private Book getBook() {
+        String code = bookCodeField.getText();
+        String title = bookTitleField.getText();
+        String category = bookCategoryField.getText();
+        String author = bookAuthorField.getText();
+        double price = Double.parseDouble(bookPriceField.getText());
+        int quantity = Integer.parseInt(bookQuantityField.getText());
+        String description = bookDescriptionField.getText();
 
-        return new Document(code, title, description, category, author, price, quantity);
+        return new Book(code, title, description, category, author, price, quantity);
     }
 
     private boolean inCompleteInfo() {
-        return documentCodeField.getText().isBlank() ||
-                documentTitleField.getText().isBlank() ||
-                documentCategoryField.getText().isBlank() ||
-                documentAuthorField.getText().isBlank() ||
-                documentQuantityField.getText().isBlank() ||
-                documentPriceField.getText().isBlank();
+        return bookCodeField.getText().isBlank() ||
+                bookTitleField.getText().isBlank() ||
+                bookCategoryField.getText().isBlank() ||
+                bookAuthorField.getText().isBlank() ||
+                bookQuantityField.getText().isBlank() ||
+                bookPriceField.getText().isBlank();
     }
 
-    private boolean isDocumentExisted(String documentCode) {
-        for (Document document : documentData) {
-            if (document.getCode().equals(documentCode)) {
+    private boolean isBookExisted(String bookCode) {
+        for (Book book : bookData) {
+            if (book.getCode().equals(bookCode)) {
                 return true;
             }
         }
@@ -152,22 +153,22 @@ public class BookManagementController {
 
     @FXML
     private void onEdit(ActionEvent event) {
-        if (selectedDocument == null) {
-            showAlert("Cảnh báo", "Hãy chọn 1 tài liệu để cập nhật!", Alert.AlertType.WARNING);
+        if (selectedBook == null) {
+            showAlert("Cảnh báo", "Hãy chọn 1 sách để cập nhật!", Alert.AlertType.WARNING);
             return;
         }
 
         try {
-            selectedDocument.setCode(documentCodeField.getText());
-            selectedDocument.setTitle(documentTitleField.getText());
-            selectedDocument.setCategory(documentCategoryField.getText());
-            selectedDocument.setAuthor(documentAuthorField.getText());
-            selectedDocument.setPrice(Double.parseDouble(documentPriceField.getText()));
-            selectedDocument.setQuantity(Integer.parseInt(documentQuantityField.getText()));
-            selectedDocument.setDescription(documentDescriptionField.getText());
+            selectedBook.setCode(bookCodeField.getText());
+            selectedBook.setTitle(bookTitleField.getText());
+            selectedBook.setCategory(bookCategoryField.getText());
+            selectedBook.setAuthor(bookAuthorField.getText());
+            selectedBook.setPrice(Double.parseDouble(bookPriceField.getText()));
+            selectedBook.setQuantity(Integer.parseInt(bookQuantityField.getText()));
+            selectedBook.setDescription(bookDescriptionField.getText());
 
-            bookDao.updateDocument(selectedDocument);
-            documentTable.refresh();
+            bookDao.updateBook(selectedBook);
+            bookTable.refresh();
 
             clearInputFields();
             showAlert("Thành công", "Cập nhật tài liệu thành công!", Alert.AlertType.INFORMATION);
@@ -178,18 +179,18 @@ public class BookManagementController {
 
     @FXML
     private void onDelete(ActionEvent event) {
-        if (selectedDocument == null) {
+        if (selectedBook == null) {
             showAlert("Cảnh báo", "Hãy chọn 1 tài liệu để xoá!", Alert.AlertType.WARNING);
             return;
         }
 
-        if (bookDao.isBorrowedBook(selectedDocument.getCode())) {
+        if (bookDao.isBorrowedBook(selectedBook.getCode())) {
             showAlert("Thông báo", "Tài liệu đang được mượn! Không thể xoá được!", Alert.AlertType.WARNING);
             return;
         }
 
-        bookDao.deleteDocument(selectedDocument.getCode());
-        documentData.remove(selectedDocument);
+        bookDao.deleteBook(selectedBook.getCode());
+        bookData.remove(selectedBook);
         clearInputFields();
         showAlert("Thành công", "Xoá sách thành công!", Alert.AlertType.INFORMATION);
     }
@@ -204,22 +205,22 @@ public class BookManagementController {
             return;
         }
 
-        ObservableList<Document> filteredDocuments = FXCollections.observableArrayList();
-        for (Document document : documentData) {
+        ObservableList<Book> filteredBooks = FXCollections.observableArrayList();
+        for (Book book : bookData) {
             switch (criteria) {
                 case "Code":
-                    if (document.getCode().toLowerCase().contains(keyword.toLowerCase())) {
-                        filteredDocuments.add(document);
+                    if (book.getCode().toLowerCase().contains(keyword.toLowerCase())) {
+                        filteredBooks.add(book);
                     }
                     break;
                 case "Title":
-                    if (document.getTitle().toLowerCase().contains(keyword.toLowerCase())) {
-                        filteredDocuments.add(document);
+                    if (book.getTitle().toLowerCase().contains(keyword.toLowerCase())) {
+                        filteredBooks.add(book);
                     }
                     break;
                 case "Category":
-                    if (document.getCategory().toLowerCase().contains(keyword.toLowerCase())) {
-                        filteredDocuments.add(document);
+                    if (book.getCategory().toLowerCase().contains(keyword.toLowerCase())) {
+                        filteredBooks.add(book);
                     }
                     break;
                 default:
@@ -228,8 +229,8 @@ public class BookManagementController {
             }
         }
 
-        documentTable.setItems(filteredDocuments);
-        if (filteredDocuments.isEmpty()) {
+        bookTable.setItems(filteredBooks);
+        if (filteredBooks.isEmpty()) {
             showAlert("Thông báo", "Không có kết quả nào!", Alert.AlertType.INFORMATION);
         }
     }
@@ -244,21 +245,21 @@ public class BookManagementController {
 
     @FXML
     public void onShowDetail(ActionEvent event) {
-        Document selectedDocument = documentTable.getSelectionModel().getSelectedItem();
-        if (selectedDocument == null) {
+        Book selectedBook = bookTable.getSelectionModel().getSelectedItem();
+        if (selectedBook == null) {
             showAlert("Thông báo", "Vui lòng chọn một cuốn sách!", Alert.AlertType.WARNING);
             return;
         }
-        showDocumentDetails(selectedDocument);
+        showBookDetails(selectedBook);
     }
 
-    private void showDocumentDetails(Document document) {
+    private void showBookDetails(Book book) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/BookDetailsDialog.fxml"));
             DialogPane dialogPane = loader.load();
 
             BookDetailsDialogController controller = loader.getController();
-            controller.setBookDetails(document);
+            controller.setBookDetails(book);
 
             // Tạo Stage cho DialogPane
             Stage stage = new Stage(StageStyle.UNDECORATED); // Stage không có thanh tiêu đề

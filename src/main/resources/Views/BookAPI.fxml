@@ -40,7 +40,7 @@
 
         <!-- Phần giữa: Bảng hiển thị dữ liệu -->
         <center>
-            <TableView fx:id="documentTable" prefHeight="400" prefWidth="800">
+            <TableView fx:id="bookTable" prefHeight="400" prefWidth="800">
                 <columns>
                     <TableColumn fx:id="codeColumn" prefWidth="100" text="Code"/>
                     <TableColumn fx:id="titleColumn" prefWidth="150" text="Title"/>
