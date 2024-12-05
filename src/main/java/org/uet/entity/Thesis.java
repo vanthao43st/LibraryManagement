@@ -17,8 +17,8 @@ public class Thesis extends Document {
     }
 
     public Thesis(String author, String code, String description, String title,
-                  String degree, String major, int submissionYear, String supervisor, String university) {
-        super(author, code, description, title);
+                  String degree, String major, int quantity, int submissionYear, String supervisor, String university) {
+        super(author, code, description, title, quantity);
         this.degree = degree;
         this.major = major;
         this.submissionYear = submissionYear;

@@ -5,19 +5,22 @@ public abstract class Document {
     private String title;
     private String description;
     private String author;
+    private int quantity;
 
     public Document() {
         this.code = "";
         this.title = "";
         this.description = "";
         this.author = "";
+        this.quantity = 0;
     }
 
-    public Document(String author, String code, String description, String title) {
+    public Document(String author, String code, String description, String title, int quantity) {
         this.author = author;
         this.code = code;
         this.description = description;
         this.title = title;
+        this.quantity = quantity;
     }
 
     public String getCode() {
@@ -50,6 +53,14 @@ public abstract class Document {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public abstract String toString();

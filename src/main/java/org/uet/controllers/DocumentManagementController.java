@@ -1,6 +1,5 @@
 package org.uet.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,7 +23,7 @@ public class DocumentManagementController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Gắn sự kiện highlight cho các nút
         attachHighlightToButton(showBookButton, "/Views/BookManagement.fxml");
-        attachHighlightToButton(showThesisButton, "/Views/BookManagement.fxml");
+        attachHighlightToButton(showThesisButton, "/Views/ThesisManagement.fxml");
     }
 
     // Highlight nút khi được nhấn

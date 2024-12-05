@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import org.uet.entity.Book;
-import org.uet.entity.Document;
 
 public class BookDetailsDialogController {
 

@@ -27,6 +27,7 @@ public class ThesisDao {
                 thesis.setDegree(resultSet.getString("thesis_degree"));
                 thesis.setSubmissionYear(resultSet.getInt("thesis_submission_year"));
                 thesis.setMajor(resultSet.getString("thesis_major"));
+                thesis.setQuantity(resultSet.getInt("thesis_quantity"));
 
                 theses.add(thesis);
             }
@@ -39,7 +40,8 @@ public class ThesisDao {
 
     public void addThesis(Thesis thesis) throws SQLException {
         String query = "INSERT INTO thesis (thesis_code, thesis_title, thesis_description, " +
-                "thesis_author, thesis_supervisor, thesis_university, thesis_degree, thesis_submission_year, thesis_major) " +
+                "thesis_author, thesis_supervisor, thesis_university, " +
+                "thesis_degree, thesis_submission_year, thesis_major, thesis_quantity) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
@@ -53,6 +55,7 @@ public class ThesisDao {
             ps.setString(7, thesis.getDegree());
             ps.setInt(8, thesis.getSubmissionYear());
             ps.setString(9, thesis.getMajor());
+            ps.setInt(10, thesis.getQuantity());
 
             int rowsAffected = ps.executeUpdate();
             System.out.println(rowsAffected + " row(s) inserted.");
@@ -80,6 +83,7 @@ public class ThesisDao {
                     thesis.setDegree(resultSet.getString("thesis_degree"));
                     thesis.setSubmissionYear(resultSet.getInt("thesis_submission_year"));
                     thesis.setMajor(resultSet.getString("thesis_major"));
+                    thesis.setQuantity(resultSet.getInt("thesis_quantity"));
                 }
             }
 
@@ -92,7 +96,8 @@ public class ThesisDao {
 
     public void updateThesis(Thesis thesis) throws SQLException {
         String query = "UPDATE thesis SET thesis_title = ?, thesis_description = ?, thesis_author = ?, " +
-                "thesis_supervisor = ?, thesis_university = ?, thesis_degree = ?, thesis_submission_year = ?, thesis_major = ? " +
+                "thesis_supervisor = ?, thesis_university = ?, thesis_degree = ?, thesis_submission_year = ?, " +
+                "thesis_major = ?, thesis_quantity = ? " +
                 "WHERE thesis_code = ?";
 
         try (Connection connection = DBConnection.getConnection();
@@ -106,7 +111,8 @@ public class ThesisDao {
             ps.setString(6, thesis.getDegree());
             ps.setInt(7, thesis.getSubmissionYear());
             ps.setString(8, thesis.getMajor());
-            ps.setString(9, thesis.getCode());
+            ps.setInt(9, thesis.getQuantity());
+            ps.setString(10, thesis.getCode());
 
             int rowsAffected = ps.executeUpdate();
             System.out.println(rowsAffected + " row(s) updated.");
@@ -169,6 +175,7 @@ public class ThesisDao {
                 thesis.setDegree(resultSet.getString("thesis_degree"));
                 thesis.setSubmissionYear(resultSet.getInt("thesis_submission_year"));
                 thesis.setMajor(resultSet.getString("thesis_major"));
+                thesis.setQuantity(resultSet.getInt("thesis_quantity"));
                 result.add(thesis);
             }
         } catch (Exception e) {

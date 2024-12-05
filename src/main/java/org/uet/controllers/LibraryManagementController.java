@@ -110,7 +110,7 @@ public class LibraryManagementController {
                 return;
             }
 
-            if (!libraryDao.isDocumentExisted(documentCode)) {
+            if (!libraryDao.isCodeExisted(documentCode)) {
                 showAlert("Lỗi", "Document không tồn tại! Vui lòng nhập Document Code hợp lệ.", Alert.AlertType.WARNING);
                 return;
             }
@@ -277,5 +277,4 @@ public class LibraryManagementController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
 }
