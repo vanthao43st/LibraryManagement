@@ -108,15 +108,7 @@ public class BookManagementController {
         }
 
         try {
-            String code = documentCodeField.getText();
-            String title = documentTitleField.getText();
-            String category = documentCategoryField.getText();
-            String author = documentAuthorField.getText();
-            double price = Double.parseDouble(documentPriceField.getText());
-            int quantity = Integer.parseInt(documentQuantityField.getText());
-            String description = documentDescriptionField.getText();
-
-            Document document = new Document(code, title, description, category, author, price, quantity);
+            Document document = getDocument();
             documentDao.addDocument(document);
             documentData.add(document);
             documentTable.refresh();
@@ -125,8 +117,20 @@ public class BookManagementController {
             clearInputFields();
             showAlert("Thành công", "Sách được thêm thành công!", Alert.AlertType.INFORMATION);
         } catch (Exception e) {
-            showAlert("Lỗi", "Invalid input. Please fill all fields correctly.", Alert.AlertType.ERROR);
+            showAlert("Lỗi", "NHập vào không hợp lệ. Hãy nhập các trường chính xác!", Alert.AlertType.ERROR);
         }
+    }
+
+    private Document getDocument() {
+        String code = documentCodeField.getText();
+        String title = documentTitleField.getText();
+        String category = documentCategoryField.getText();
+        String author = documentAuthorField.getText();
+        double price = Double.parseDouble(documentPriceField.getText());
+        int quantity = Integer.parseInt(documentQuantityField.getText());
+        String description = documentDescriptionField.getText();
+
+        return new Document(code, title, description, category, author, price, quantity);
     }
 
     private boolean inCompleteInfo() {
