@@ -3,6 +3,7 @@ package org.uet.entity;
 public class Library {
     private String userId;
     private String documentCode;
+    private String documentType;
     private int quantity;
     private String borrowDate;
     private String returnDate;
@@ -14,6 +15,7 @@ public class Library {
     public Library() {
         this.userId = "21010938";
         this.documentCode = "0001";
+        this.documentType = "Sách";
         this.quantity = 0;
         this.borrowDate = "";
         this.returnDate = "";
@@ -23,17 +25,16 @@ public class Library {
         this.fine = 0;
     }
 
-    public Library(String userId, String documentCode, int quantity, String borrowDate,
+    public Library(String userId, String documentCode, String documentType, int quantity, String borrowDate,
                    String returnDate, String dueDate, String status) {
         this.userId = userId;
         this.documentCode = documentCode;
+        this.documentType = documentType;
         this.quantity = quantity;
         this.borrowDate = borrowDate;
         this.returnDate = returnDate;
         this.dueDate = dueDate;
         this.status = status;
-
-        checkStatus(this.status);
     }
 
     public String getUserId() {
@@ -50,6 +51,14 @@ public class Library {
 
     public void setDocumentCode(String documentCode) {
         this.documentCode = documentCode;
+    }
+
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
     }
 
     public int getQuantity() {

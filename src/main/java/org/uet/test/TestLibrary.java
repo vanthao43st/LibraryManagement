@@ -16,11 +16,11 @@ public class TestLibrary {
     }
 
     private static void borrowDocuments() {
-        if (libraryDao.borrowDocument("14020604", "0001", 19)) {
-            System.out.println("Đã mượn thành công.");
-        } else {
-            System.out.println("Không mượn được.");
-        }
+//        if (libraryDao.borrowDocument("14020604", "0001", 19)) {
+//            System.out.println("Đã mượn thành công.");
+//        } else {
+//            System.out.println("Không mượn được.");
+//        }
     }
 
     private static void returnDocuments() {

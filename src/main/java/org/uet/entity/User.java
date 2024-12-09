@@ -4,25 +4,40 @@ import org.uet.enums.Gender;
 
 public class User {
     private String id;
-    private String name;
+    private String fullname;
     private Gender gender;
-    private String className;
+    private String classname;
     private String major;
-    private String phoneNumber;
+    private String phonenumber;
     private String email;
+    private String username;
+    private String password;
 
     public User() {
     }
 
-    public User(String id, String name, Gender gender, String className,
-                String major, String phoneNumber, String email) {
+    public User(String id, String fullname, Gender gender, String classname,
+                String major, String phonenumber, String email) {
         this.id = id;
-        this.name = name;
+        this.fullname = fullname;
         this.gender = gender;
-        this.className = className;
+        this.classname = classname;
         this.major = major;
-        this.phoneNumber = phoneNumber;
+        this.phonenumber = phonenumber;
         this.email = email;
+    }
+
+    public User(String id, String fullname, Gender gender, String classname,
+                String major, String phonenumber, String email, String username, String password) {
+        this.id = id;
+        this.fullname = fullname;
+        this.gender = gender;
+        this.classname = classname;
+        this.major = major;
+        this.phonenumber = phonenumber;
+        this.email = email;
+        this.username = username;
+        this.password = password;
     }
 
     public String getId() {
@@ -33,12 +48,12 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFullname() {
+        return fullname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
     public Gender getGender() {
@@ -49,12 +64,12 @@ public class User {
         this.gender = gender;
     }
 
-    public String getClassName() {
-        return className;
+    public String getClassname() {
+        return classname;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
+    public void setClassname(String classname) {
+        this.classname = classname;
     }
 
     public String getMajor() {
@@ -65,12 +80,12 @@ public class User {
         this.major = major;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhonenumber() {
+        return phonenumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
     }
 
     public String getEmail() {
@@ -81,15 +96,34 @@ public class User {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @Override
     public String toString() {
-        return "{id='" + id + '\'' +
-                ", name='" + name + '\'' +
+        return "User{" +
+                "classname='" + classname + '\'' +
+                ", id='" + id + '\'' +
+                ", fullname='" + fullname + '\'' +
                 ", gender=" + gender +
-                ", className='" + className + '\'' +
                 ", major='" + major + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
+                ", phonenumber='" + phonenumber + '\'' +
                 ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

@@ -101,7 +101,7 @@ public class GoogleBooksAPI {
                     }
                 }
 
-                books.add(new Book(id, title, description, category, author, price, 10));
+                books.add(new Book(id, title, description, author, category, price, 10));
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());

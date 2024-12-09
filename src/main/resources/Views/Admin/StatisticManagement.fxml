@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<DialogPane prefHeight="281.0" prefWidth="385.0" style="-fx-background-color: #73dbd6; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 8;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.uet.controllers.admin.StatisticManagementController">
+    <content>
+        <VBox spacing="15" style="-fx-padding: 20;">
+            <!-- Tiêu đề -->
+            <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #333;" text="Thống kê mượn trả" />
+            <Separator style="-fx-background-color: #cccccc;" />
+
+            <!-- Nội dung thông tin -->
+            <GridPane hgap="20" style="-fx-padding: 10;" vgap="15">
+                <Label style="-fx-text-fill: #000;-fx-font-weight: bold;" text="Tổng số lượng sách:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <Label fx:id="totalBooksLabel" prefWidth="300" style="-fx-text-fill: #000;" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                <Label prefHeight="18.0" prefWidth="275.0" style="-fx-text-fill: #000;-fx-font-weight: bold;" text="Tổng số lượng sách đang mượn:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <Label fx:id="borrowedBooksLabel" prefWidth="300" style="-fx-text-fill: #000;" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <Label style="-fx-text-fill: #000;-fx-font-weight: bold;" text="Tổng số lượng sách còn trong kho:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <Label fx:id="availableBooksLabel" prefWidth="300" style="-fx-text-fill: #000;" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <columnConstraints>
+               <ColumnConstraints maxWidth="221.99997558593748" minWidth="153.19998779296873" prefWidth="221.99997558593748" />
+               <ColumnConstraints maxWidth="149.20001220703122" minWidth="80.40002441406247" prefWidth="80.40002441406247" />
+            </columnConstraints>
+            <rowConstraints>
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+            </rowConstraints>
+            </GridPane>
+
+            <!-- Nút đóng -->
+            <HBox alignment="CENTER" spacing="20">
+                <Button onAction="#onClose" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-radius: 8; -fx-padding: 10 20;" text="Đóng" />
+            </HBox>
+        </VBox>
+    </content>
+</DialogPane>

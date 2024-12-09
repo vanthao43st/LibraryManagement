@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefHeight="582.0" prefWidth="834.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.uet.controllers.admin.DocumentManagementController">
+
+    <AnchorPane fx:id="container" layoutX="-2.0" prefHeight="582.0" prefWidth="834.0" style="-fx-background-color: #f0f0f0;">
+      <children>
+      
+                <HBox alignment="CENTER" layoutX="22.0" layoutY="279.0" prefHeight="50.0" prefWidth="800.0" spacing="10" style="-fx-padding: 10;">
+              <Button fx:id="showBookButton" prefHeight="26.0" prefWidth="145.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Management Book" />
+              <Button fx:id="showThesisButton" prefHeight="26.0" prefWidth="140.0" style="-fx-background-color: #FFA500; -fx-text-fill: white;" text="Management Thesis" />
+          </HBox>
+      </children></AnchorPane>
+</AnchorPane>

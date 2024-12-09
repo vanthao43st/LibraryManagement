@@ -9,7 +9,20 @@ public class DBConnection {
     private static final String USER = "root";
     private static final String PASSWORD = "123456";
 
+    private static DBConnection instance;
+
+    private DBConnection() {
+    }
+
     public static Connection getConnection() throws SQLException {
+        if (instance == null) {
+            synchronized (DBConnection.class) {
+                if (instance == null) {
+                    instance = new DBConnection();
+                }
+            }
+        }
+
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 }

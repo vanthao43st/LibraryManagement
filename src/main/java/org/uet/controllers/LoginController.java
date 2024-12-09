@@ -10,20 +10,24 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.uet.database.connection.DBConnection;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
-    private static final String USERNAME = "admin";
-    private static final String PASSWORD = "admin";
+    private static final String ADMIN_USERNAME = "admin";
+    private static final String ADMIN_PASSWORD = "admin";
 
     private double xOffset = 0;
     private double yOffset = 0;
 
     @FXML
-    private Button closeButton, loginButton;
+    private Button closeButton;
 
     @FXML
     private TextField usernameField;
@@ -45,13 +49,16 @@ public class LoginController implements Initializable {
 
     @FXML
     private void handleLoginAction() {
-        if (usernameField.getText().trim().equals(USERNAME)
-                && passwordField.getText().trim().equals(PASSWORD)) {
+        String username = usernameField.getText().trim();
+        String password = passwordField.getText().trim();
+
+        if (username.equals(ADMIN_USERNAME) && password.equals(ADMIN_PASSWORD)) {
+            // Tài khoản admin, giữ nguyên giao diện Home.fxml
             try {
                 Stage stage = (Stage) usernameField.getScene().getWindow();
                 Parent root = FXMLLoader.load(
                         Objects.requireNonNull(
-                                getClass().getResource("/Views/Home.fxml")
+                                getClass().getResource("/Views/Admin/Home.fxml")
                         )
                 );
                 Scene scene = new Scene(root, 900, 600);
@@ -61,12 +68,43 @@ public class LoginController implements Initializable {
                 System.out.println(e.getMessage());
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Đăng nhập thất bại");
-            alert.setHeaderText("username hoặc passowrd không hợp lệ!");
-            alert.setContentText("Hãy thử lại!");
-            alert.showAndWait();
+            // Kiểm tra tài khoản user trong cơ sở dữ liệu
+            String query = "SELECT * FROM user WHERE user_username = ? AND user_password = ?";
+
+            try (Connection connection = DBConnection.getConnection();
+                 PreparedStatement ps = connection.prepareStatement(query);) {
+
+                ps.setString(1, username);
+                ps.setString(2, password);
+                ResultSet resultSet = ps.executeQuery();
+
+                if (resultSet.next()) {
+                    // Đăng nhập thành công, chuyển sang giao diện User.fxml
+                    Stage stage = (Stage) usernameField.getScene().getWindow();
+                    Parent root = FXMLLoader.load(
+                            Objects.requireNonNull(
+                                    getClass().getResource("/Views/User/Home.fxml")
+                            )
+                    );
+                    Scene scene = new Scene(root, 900, 600);
+                    stage.setScene(scene);
+                    stage.show();
+                } else {
+                    // Đăng nhập thất bại
+                    showErrorAlert("username hoặc password không hợp lệ!");
+                }
+            } catch (Exception e) {
+                System.out.println("Lỗi khi kết nối cơ sở dữ liệu: " + e.getMessage());
+            }
         }
+    }
+
+    private void showErrorAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Đăng nhập thất bại");
+        alert.setHeaderText(message);
+        alert.setContentText("Hãy thử lại!");
+        alert.showAndWait();
     }
 
     private void addDraggableFeature() {

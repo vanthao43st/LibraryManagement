@@ -20,6 +20,7 @@ public class LibraryDao {
                 item = new Library();
                 item.setUserId(resultSet.getString("library_user_id"));
                 item.setDocumentCode(resultSet.getString("library_document_code"));
+                item.setDocumentType(resultSet.getString("library_document_type"));
                 item.setQuantity(resultSet.getInt("library_quantity"));
                 item.setBorrowDate(resultSet.getString("library_borrow_date"));
                 item.setReturnDate(resultSet.getString("library_return_date"));
@@ -37,20 +38,73 @@ public class LibraryDao {
         return items;
     }
 
+    public boolean borrowDocument(String userId, String code, String type, int quantity) {
+        // Kiểm tra xem tài liệu có phải là sách hoặc luận văn không
+        boolean isBook = checkIfBook(code);
+//        boolean isThesis = !isBook && checkIfThesis(code);
+
+//        if (!isBook && !isThesis) {
+//            System.out.println("Mã không hợp lệ. Không tìm thấy sách hoặc luận văn tương ứng.");
+//            return false;
+//        }
+
+        // Kiểm tra sự khả dụng của tài liệu trước khi thực hiện mượn
+        if (!checkAvailability(code, quantity)) {
+            System.out.println("Không đủ tài liệu để mượn.");
+            return false;
+        }
+
+        // Thêm thông tin mượn vào bảng library
+        String insertLibraryQuery = "INSERT INTO library (library_user_id, library_document_code, library_document_type, " +
+                "library_quantity, " +
+                "library_borrow_date, library_due_date, library_status) " +
+                "VALUES (?, ?, ?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 90 DAY), ?)";
+
+        // Cập nhật số lượng tài liệu trong bảng book hoặc thesis
+        String updateQuery = isBook
+                ? "UPDATE book SET book_quantity = book_quantity - ? WHERE book_code = ?"
+                : "UPDATE thesis SET thesis_quantity = thesis_quantity - ? WHERE thesis_code = ?";
+
+        try (
+                Connection connection = DBConnection.getConnection();
+                PreparedStatement insertLibraryPs = connection.prepareStatement(insertLibraryQuery);
+                PreparedStatement updatePs = connection.prepareStatement(updateQuery);
+        ) {
+            // Thêm thông tin mượn vào bảng library
+            insertLibraryPs.setString(1, userId);
+            insertLibraryPs.setString(2, code);
+            insertLibraryPs.setString(3, type);
+            insertLibraryPs.setInt(4, quantity);
+            insertLibraryPs.setString(5, "Chưa trả");
+            insertLibraryPs.executeUpdate();
+
+            // Cập nhật số lượng tài liệu (sách hoặc luận văn)
+            updatePs.setInt(1, quantity);
+            updatePs.setString(2, code);
+            updatePs.executeUpdate();
+
+            System.out.println("Mượn " + (isBook ? "sách" : "luận văn") + " thành công!");
+            return true;
+        } catch (Exception e) {
+            System.out.println("Đã xảy ra lỗi: " + e.getMessage());
+            return false;
+        }
+    }
+
     // Kiểm tra số lượng tài liệu hoặc luận văn còn lại
     public boolean checkAvailability(String code, int requestedQuantity) {
-        String documentQuery = "SELECT book_quantity FROM book WHERE book_code = ?";
+        String bookQuery = "SELECT book_quantity FROM book WHERE book_code = ?";
         String thesisQuery = "SELECT thesis_quantity FROM thesis WHERE thesis_code = ?";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement documentPs = connection.prepareStatement(documentQuery);
+             PreparedStatement bookPs = connection.prepareStatement(bookQuery);
              PreparedStatement thesisPs = connection.prepareStatement(thesisQuery)) {
 
             // Kiểm tra trong bảng tài liệu
-            documentPs.setString(1, code);
-            ResultSet documentResultSet = documentPs.executeQuery();
-            if (documentResultSet.next()) {
-                int availableQuantity = documentResultSet.getInt("document_quantity");
+            bookPs.setString(1, code);
+            ResultSet bookResultSet = bookPs.executeQuery();
+            if (bookResultSet.next()) {
+                int availableQuantity = bookResultSet.getInt("book_quantity");
                 return availableQuantity >= requestedQuantity; // Đủ số lượng để mượn
             }
 
@@ -71,55 +125,37 @@ public class LibraryDao {
         }
     }
 
-    public boolean borrowDocument(String userId, String code, int quantity) {
-        boolean isBook = checkIfBook(code);
-        boolean isThesis = !isBook && checkIfThesis(code);
+    public String getDocumentType(String documentCode) {
+        String sqlBookCheck = "SELECT COUNT(*) FROM book WHERE book_code = ?";
+        String sqlThesisCheck = "SELECT COUNT(*) FROM thesis WHERE thesis_code = ?";
 
-        if (!isBook && !isThesis) {
-            System.out.println("Mã không hợp lệ. Không tìm thấy document hoặc thesis tương ứng.");
-            return false;
+        try (Connection connection = DBConnection.getConnection()) {
+            // Kiểm tra tài liệu là sách
+            try (PreparedStatement ps = connection.prepareStatement(sqlBookCheck)) {
+                ps.setString(1, documentCode);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return "Sách";  // Nếu tài liệu tồn tại trong bảng book
+                }
+            }
+
+            // Kiểm tra tài liệu là luận văn
+            try (PreparedStatement ps = connection.prepareStatement(sqlThesisCheck)) {
+                ps.setString(1, documentCode);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return "Luận văn";  // Nếu tài liệu tồn tại trong bảng thesis
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-        if (!checkAvailability(code, quantity)) {
-            System.out.println("Không đủ tài liệu để mượn.");
-            return false;
-        }
-
-        // Thực hiện mượn tài liệu hoặc luận văn
-        String updateQuery = isBook
-                ? "UPDATE book SET book_quantity = book_quantity - ? WHERE book_code = ?"
-                : "UPDATE thesis SET thesis_quantity = thesis_quantity - ? WHERE thesis_code = ?";
-
-        String insertLibraryQuery = "INSERT INTO library (library_user_id, library_document_code, library_quantity, " +
-                "library_borrow_date, library_due_date, library_status) " +
-                "VALUES (?, ?, ?, CURDATE(), CURDATE() + INTERVAL 90 DAY, ?)";
-
-        try (
-                Connection connection = DBConnection.getConnection();
-                PreparedStatement updatePs = connection.prepareStatement(updateQuery);
-                PreparedStatement insertLibraryPs = connection.prepareStatement(insertLibraryQuery)
-        ) {
-            // Cập nhật số lượng tài liệu hoặc luận văn
-            updatePs.setInt(1, quantity);
-            updatePs.setString(2, code);
-            updatePs.executeUpdate();
-
-            // Thêm thông tin mượn tài liệu hoặc luận văn
-            insertLibraryPs.setString(1, userId);
-            insertLibraryPs.setString(2, code);
-            insertLibraryPs.setInt(3, quantity);
-            insertLibraryPs.setString(4, "Chưa trả");
-            insertLibraryPs.executeUpdate();
-
-            System.out.println("Mượn " + (isBook ? "sách" : "luận văn") + " thành công!");
-            return true;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
+        return null;
     }
 
-    private boolean checkIfBook(String code) {
+    public boolean checkIfBook(String code) {
         String query = "SELECT 1 FROM book WHERE book_code = ? LIMIT 1";
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
@@ -191,7 +227,7 @@ public class LibraryDao {
         boolean isThesis = !isBook && checkIfThesis(code);
 
         if (!isBook && !isThesis) {
-            System.out.println("Mã không hợp lệ. Không tìm thấy document hoặc thesis tương ứng.");
+            System.out.println("Mã không hợp lệ. Không tìm thấy sách hoặc luận văn tương ứng.");
             return false;
         }
 
@@ -262,7 +298,7 @@ public class LibraryDao {
                 updateStmt.setString(2, code);
                 updateStmt.executeUpdate();
 
-                System.out.println("Trả " + (isBook ? "document" : "luận văn") + " thành công! Trạng thái: " + status);
+                System.out.println("Trả " + (isBook ? "sách" : "luận văn") + " thành công! Trạng thái: " + status);
                 return true;
             } else {
                 System.out.println("Không tìm thấy sách hoặc luận văn cần trả hoặc đã được trả.");

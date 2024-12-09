@@ -42,7 +42,7 @@ public class ThesisDao {
         String query = "INSERT INTO thesis (thesis_code, thesis_title, thesis_description, " +
                 "thesis_author, thesis_supervisor, thesis_university, " +
                 "thesis_degree, thesis_submission_year, thesis_major, thesis_quantity) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
 
