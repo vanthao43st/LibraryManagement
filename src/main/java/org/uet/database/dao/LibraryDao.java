@@ -8,6 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class LibraryDao {
+    //Lấy hết bản ghi được mượn trong bảng library (dành cho admin)
     public ArrayList<Library> getAllLibraryRecords() {
         ArrayList<Library> items = new ArrayList<>();
         String query = "SELECT * FROM library";
@@ -248,16 +249,16 @@ public class LibraryDao {
     }
 
     public boolean isCodeExisted(String code) {
-        String queryDocument = "SELECT 1 FROM book WHERE book_code = ?";
+        String queryBook = "SELECT 1 FROM book WHERE book_code = ?";
         String queryThesis = "SELECT 1 FROM thesis WHERE thesis_code = ?";
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement psDocument = connection.prepareStatement(queryDocument);
+             PreparedStatement psBook = connection.prepareStatement(queryBook);
              PreparedStatement psThesis = connection.prepareStatement(queryThesis)) {
 
             // Check if the code exists in book
-            psDocument.setString(1, code);
-            ResultSet rsDocument = psDocument.executeQuery();
-            if (rsDocument.next()) {
+            psBook.setString(1, code);
+            ResultSet rsBook = psBook.executeQuery();
+            if (rsBook.next()) {
                 return true;
             }
 
@@ -272,7 +273,7 @@ public class LibraryDao {
         }
     }
 
-    public boolean returnDocument(String userId, String code, int returnQuantity, String returnDate) {
+    public boolean returnDocument(String userId, String code, int returnQuantity, String returnDate, int libraryId) {
         boolean isBook = checkIfBook(code);
         boolean isThesis = !isBook && checkIfThesis(code);
 
@@ -281,12 +282,13 @@ public class LibraryDao {
             return false;
         }
 
-        String checkQuery = "SELECT library_quantity, library_due_date FROM library WHERE library_user_id = ? AND library_document_code = ?";
+        String checkQuery = "SELECT library_quantity, library_due_date FROM library " +
+                "WHERE library_user_id = ? AND library_document_code = ? AND library_id = ?";
 
         String updateLibraryQuery = "UPDATE library SET library_quantity = library_quantity - ?, library_return_date = ?, library_status = ?, library_late_days = ?, library_fine = ? " +
-                "WHERE library_user_id = ? AND library_document_code = ?";
+                "WHERE library_id = ?";
 
-        String updateQuery = isBook
+        String updateDocumentQuery = isBook
                 ? "UPDATE book SET book_quantity = book_quantity + ? WHERE book_code = ?"
                 : "UPDATE thesis SET thesis_quantity = thesis_quantity + ? WHERE thesis_code = ?";
 
@@ -294,11 +296,12 @@ public class LibraryDao {
                 Connection connection = DBConnection.getConnection();
                 PreparedStatement checkStmt = connection.prepareStatement(checkQuery);
                 PreparedStatement updateLibraryStmt = connection.prepareStatement(updateLibraryQuery);
-                PreparedStatement updateStmt = connection.prepareStatement(updateQuery)
+                PreparedStatement updateDocumentStmt = connection.prepareStatement(updateDocumentQuery)
         ) {
-            // Kiểm tra thông tin mượn tài liệu hoặc luận văn
+            // Kiểm tra thông tin của library_id
             checkStmt.setString(1, userId);
             checkStmt.setString(2, code);
+            checkStmt.setInt(3, libraryId);
             ResultSet resultSet = checkStmt.executeQuery();
 
             if (resultSet.next()) {
@@ -315,47 +318,40 @@ public class LibraryDao {
                 // Tính số ngày muộn và tiền phạt (nếu có)
                 long lateDays = 0;
                 double fine = 0;
-                String status = "Chưa trả";
+                String status = "Đã trả";
+
                 if (returnDateObj.after(dueDate)) {
                     long lateMillis = returnDateObj.getTime() - dueDate.getTime();
-                    lateDays = lateMillis / (1000 * 60 * 60 * 24); // Tính số ngày muộn
+                    lateDays = lateMillis / (1000 * 60 * 60 * 24);
 
-                    // Tính tiền phạt
                     if (lateDays > 0) {
-                        if (lateDays <= 10) {
-                            fine = lateDays * 1000;
-                        } else if (lateDays <= 20) {
-                            fine = lateDays * 2000;
-                        } else {
-                            fine = lateDays * 3000;
-                        }
+                        fine = lateDays <= 10 ? lateDays * 1000 : lateDays <= 20 ? lateDays * 2000 : lateDays * 3000;
+                        status = "Trả muộn";
                     }
-                    status = "Trả muộn";
-                } else if (returnQuantity == borrowedQuantity) {
-                    status = "Đã trả";
                 }
 
+                // Cập nhật thông tin trong bảng `library`
                 updateLibraryStmt.setInt(1, returnQuantity);
                 updateLibraryStmt.setDate(2, returnDateObj);
                 updateLibraryStmt.setString(3, borrowedQuantity == returnQuantity ? status : "Chưa trả");
                 updateLibraryStmt.setLong(4, lateDays);
                 updateLibraryStmt.setDouble(5, fine);
-                updateLibraryStmt.setString(6, userId);
-                updateLibraryStmt.setString(7, code);
+                updateLibraryStmt.setInt(6, libraryId);
                 updateLibraryStmt.executeUpdate();
 
-                updateStmt.setInt(1, returnQuantity);
-                updateStmt.setString(2, code);
-                updateStmt.executeUpdate();
+                // Cập nhật số lượng trong bảng tài liệu (book/thesis)
+                updateDocumentStmt.setInt(1, returnQuantity);
+                updateDocumentStmt.setString(2, code);
+                updateDocumentStmt.executeUpdate();
 
                 System.out.println("Trả " + (isBook ? "sách" : "luận văn") + " thành công! Trạng thái: " + status);
                 return true;
             } else {
-                System.out.println("Không tìm thấy sách hoặc luận văn cần trả hoặc đã được trả.");
+                System.out.println("Không tìm thấy bản ghi hoặc số lượng không hợp lệ.");
                 return false;
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Lỗi khi trả tài liệu: " + e.getMessage());
             return false;
         }
     }
@@ -376,4 +372,23 @@ public class LibraryDao {
             System.out.println(e.getMessage());
         }
     }
+
+    //Lấy id của bản ghi trong Library (xoá bản ghi tương ứng)
+    public Integer getLibraryId(String userId, String documentCode, int quantity) {
+        String query = "SELECT library_id FROM library WHERE library_user_id = ? AND library_document_code = ? AND library_quantity = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, userId);
+            ps.setString(2, documentCode);
+            ps.setInt(3, quantity);
+            ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("library_id");
+            }
+        } catch (SQLException e) {
+            System.out.println("Lỗi khi lấy library_id: " + e.getMessage());
+        }
+        return null; // Trả về null nếu không tìm thấy
+    }
+
 }

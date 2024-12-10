@@ -149,4 +149,38 @@ public class UserDao {
         }
         return false;
     }
+
+    //Kiểm tra xem user_id đã tồn tại chưa trước khi đăng ký user mới
+    public boolean doesUserIdExist(String userId) {
+        String query = "SELECT COUNT(*) FROM user WHERE user_id = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.setString(1, userId);
+            ResultSet resultSet = ps.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0; // Nếu số lượng > 0, ID đã tồn tại
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi truy vấn database: " + e.getMessage());
+        }
+        return false;
+    }
+
+    //Kiểm tra xem username đã tồn tại chưa trước khi đăng ký user mới
+    public boolean doesUsernameExist(String username) {
+        String query = "SELECT COUNT(*) FROM user WHERE user_username = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, username);
+            ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0; // Nếu số lượng > 0, username đã tồn tại
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi truy vấn database: " + e.getMessage());
+        }
+        return false;
+    }
 }

@@ -23,13 +23,13 @@ public class TestLibrary {
 //        }
     }
 
-    private static void returnDocuments() {
-        if (libraryDao.returnDocument("14020604", "0001", 15, "2025-03-02")) {
-            System.out.println("Đã trả thành công.");
-        } else {
-            System.out.println("Không trả được");
-        }
-    }
+//    private static void returnDocuments() {
+//        if (libraryDao.returnDocument("14020604", "0001", 15, "2025-03-02")) {
+//            System.out.println("Đã trả thành công.");
+//        } else {
+//            System.out.println("Không trả được");
+//        }
+//    }
 
     private static void deleteLibraryRecord() {
         libraryDao.deleteLibraryRecord();
@@ -38,7 +38,7 @@ public class TestLibrary {
     public static void main(String[] args) {
 //        getAllLibraryRecord();
 //        borrowDocuments();
-        returnDocuments();
+//        returnDocuments();
 //        deleteLibraryRecord();
     }
 }

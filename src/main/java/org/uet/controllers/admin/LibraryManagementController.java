@@ -115,34 +115,29 @@ public class LibraryManagementController {
                 return;
             }
 
-            // Kiểm tra sự tồn tại của document_code
+            // Kiểm tra sự tồn tại của document_code trong bảng book hoặc thesis
             if (!libraryDao.isCodeExisted(documentCode)) {
                 showAlert("Lỗi", "Tài liệu không tồn tại! Vui lòng nhập mã tài liệu hợp lệ.", Alert.AlertType.WARNING);
                 return;
             }
 
-            //Check
+            //Kiểm tra xem mã tài liệu có tương ứng với loại tài liệu không
             if ((libraryDao.checkIfBook(documentCode) && !type.equals("Sách"))
                     || !libraryDao.checkIfBook(documentCode) && !type.equals("Luận văn")) {
                 showAlert("Lỗi", "Loại tài liệu không hợp lệ! Hãy xem lại mã tài liệu!", Alert.AlertType.WARNING);
                 return;
             }
 
-//            if (isLibraryRecordExisted(userId, documentCode)) {
-//                showAlert("Lỗi", "Bản ghi đã tồn tại! Vui lòng nhập bản ghi khác.", Alert.AlertType.WARNING);
-//                return;
-//            }
-
-                try {
-                    quantity = Integer.parseInt(quantityField.getText());
-                    if (quantity <= 0) {
-                        showAlert("Lỗi", "Số lượng mượn phải lớn hơn 0!", Alert.AlertType.WARNING);
-                        return;
-                    }
-                } catch (NumberFormatException e) {
-                    showAlert("Lỗi", "Số lượng mượn phải là một số nguyên!", Alert.AlertType.ERROR);
+            try {
+                quantity = Integer.parseInt(quantityField.getText());
+                if (quantity <= 0) {
+                    showAlert("Lỗi", "Số lượng mượn phải lớn hơn 0!", Alert.AlertType.WARNING);
                     return;
                 }
+            } catch (NumberFormatException e) {
+                showAlert("Lỗi", "Số lượng mượn phải là một số nguyên!", Alert.AlertType.ERROR);
+                return;
+            }
 
             boolean success = libraryDao.borrowDocument(userId, documentCode, type, quantity);
             if (success) {
@@ -156,17 +151,6 @@ public class LibraryManagementController {
             showAlert("Lỗi", "Đã xảy ra lỗi: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
-
-    // Kiểm tra xem bản ghi có tồn tại trong bảng hay chưa thông qua user_id và document_code
-//    private boolean isLibraryRecordExisted(String userId, String documentCode) {
-//        for (Library library : libraryData) {
-//            if (library.getUserId().equals(userId)
-//                    && library.getDocumentCode().equals(documentCode)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
 
     @FXML
     private void onReturn(ActionEvent event) {
@@ -184,15 +168,18 @@ public class LibraryManagementController {
             try {
                 quantity = Integer.parseInt(quantityField.getText());
                 if (quantity <= 0) {
-                    showAlert("Lỗi", "Số lượng mượn phải lớn hơn 0!", Alert.AlertType.WARNING);
+                    showAlert("Lỗi", "Số lượng trả phải lớn hơn 0!", Alert.AlertType.WARNING);
                     return;
                 }
             } catch (NumberFormatException e) {
-                showAlert("Lỗi", "Số lượng mượn phải là một số nguyên!", Alert.AlertType.ERROR);
+                showAlert("Lỗi", "Số lượng trả phải là một số nguyên!", Alert.AlertType.ERROR);
                 return;
             }
 
-            boolean success = libraryDao.returnDocument(userId, documentCode, quantity, returnDate);
+
+            int libraryId = libraryDao.getLibraryId(userId, documentCode, quantity);
+
+            boolean success = libraryDao.returnDocument(userId, documentCode, quantity, returnDate, libraryId);
             if (success) {
                 loadLibraryData();
                 showAlert("Thành công", "Trả tài liệu thành công!", Alert.AlertType.INFORMATION);

@@ -122,56 +122,6 @@ public class BookDao {
         }
     }
 
-    public ArrayList<Book> searchBooks(String title, String author, String category) {
-        ArrayList<Book> result = new ArrayList<>();
-        String query = "SELECT * FROM book WHERE 1=1";
-
-        if (title != null && !title.isEmpty()) {
-            query += " AND book_title LIKE ?";
-        }
-        if (author != null && !author.isEmpty()) {
-            query += " AND book_author LIKE ?";
-        }
-        if (category != null && !category.isEmpty()) {
-            query += " AND book_category LIKE ?";
-        }
-
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(query)) {
-            int paramIndex = 1;
-
-            // Gán giá trị tham số
-            if (title != null && !title.isEmpty()) {
-                ps.setString(paramIndex++, "%" + title + "%");
-            }
-            if (author != null && !author.isEmpty()) {
-                ps.setString(paramIndex++, "%" + author + "%");
-            }
-            if (category != null && !category.isEmpty()) {
-                ps.setString(paramIndex++, "%" + category + "%");
-            }
-
-            // Thực thi truy vấn
-            ResultSet resultSet = ps.executeQuery();
-
-            while (resultSet.next()) {
-                Book book = new Book();
-                book.setCode(resultSet.getString("document_code"));
-                book.setTitle(resultSet.getString("document_title"));
-                book.setDescription(resultSet.getString("document_description"));
-                book.setCategory(resultSet.getString("document_category"));
-                book.setAuthor(resultSet.getString("document_author"));
-                book.setPrice(resultSet.getDouble("document_price"));
-                book.setQuantity(resultSet.getInt("document_quantity"));
-                result.add(book);
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        return result;
-    }
-
     public boolean isBorrowedBook(String documentCode) {
         String query = "SELECT 1 FROM library WHERE library_document_code = ? AND library_quantity > 0 AND library_status = 'Chưa trả' LIMIT 1";
         try (Connection connection = DBConnection.getConnection();

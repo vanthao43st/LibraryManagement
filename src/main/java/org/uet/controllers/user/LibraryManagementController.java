@@ -6,17 +6,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.uet.database.dao.LibraryDao;
 import org.uet.entity.Library;
 import org.uet.entity.SessionManager;
 
-import java.io.IOException;
 import java.util.List;
 
 public class LibraryManagementController {
@@ -152,16 +147,19 @@ public class LibraryManagementController {
             try {
                 quantity = Integer.parseInt(quantityField.getText());
                 if (quantity <= 0) {
-                    showAlert("Lỗi", "Số lượng mượn phải lớn hơn 0!", Alert.AlertType.WARNING);
+                    showAlert("Lỗi", "Số lượng trả phải lớn hơn 0!", Alert.AlertType.WARNING);
                     return;
                 }
             } catch (NumberFormatException e) {
-                showAlert("Lỗi", "Số lượng mượn phải là một số nguyên!", Alert.AlertType.ERROR);
+                showAlert("Lỗi", "Số lượng trả phải là một số nguyên!", Alert.AlertType.ERROR);
                 return;
             }
 
+            int libraryId = libraryDao.getLibraryId(SessionManager.getInstance().getCurrentUser().getId(),
+                    documentCode, quantity);
+
             boolean success = libraryDao.returnDocument(SessionManager.getInstance().getCurrentUser().getId(),
-                    documentCode, quantity, returnDate);
+                    documentCode, quantity, returnDate, libraryId);
             if (success) {
                 loadLibraryData();
                 showAlert("Thành công", "Trả tài liệu thành công!", Alert.AlertType.INFORMATION);

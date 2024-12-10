@@ -33,18 +33,10 @@ public class TestDocument {
         BOOK_DAO.deleteBook("0005");
     }
 
-    private static void searchDocuments() {
-        ArrayList<Book> books = BOOK_DAO.searchBooks("j", null, null);
-        for (Book book : books) {
-            System.out.println(books.toString());
-        }
-    }
-
     public static void main(String[] args) throws SQLException {
 //        getAllDocument();
 //        addDocument();
         updateDocument();
 //        deleteDocument();
-//        searchDocuments();
     }
 }
