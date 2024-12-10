@@ -19,8 +19,8 @@ public class TestUser {
 
     public static void getUserById() {
         String userId = "16020587";
-        User user = userDao.getUserById(userId);
-        System.out.println(user.toString());
+//        User user = userDao.getUserById(userId);
+//        System.out.println(user.toString());
     }
 
     public static void addUser() throws SQLException {

@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.uet.database.dao.LibraryDao;
 import org.uet.entity.Library;
+import org.uet.entity.SessionManager;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,7 +25,7 @@ public class LibraryManagementController {
     private ComboBox<String> searchCriteria, documentTypeField;
 
     @FXML
-    private TextField searchField, userIdField, documentCodeField, quantityField;
+    private TextField searchField, documentCodeField, quantityField;
 
     @FXML
     private TableView<Library> libraryTable;
@@ -42,12 +43,14 @@ public class LibraryManagementController {
     @FXML
     public void initialize() {
         // Initialize search criteria
-        searchCriteria.setItems(FXCollections.observableArrayList("User ID", "Document Code", "Status"));
+        searchCriteria.setItems(FXCollections.observableArrayList("Document Code", "Type", "Status"));
         documentTypeField.setItems(FXCollections.observableArrayList("Sách", "Luận văn"));
 
         // Link table columns to Library fields
         documentCodeColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDocumentCode()));
         documentTypeColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDocumentType()));
+        titleColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getTitle()));
+        descriptionColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDescription()));
         quantityColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getQuantity()));
         borrowDateColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getBorrowDate()));
         dueDateColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDueDate()));
@@ -67,7 +70,6 @@ public class LibraryManagementController {
     private void onTableClick(MouseEvent event) {
         Library selectedLibrary = libraryTable.getSelectionModel().getSelectedItem();
         if (selectedLibrary != null) {
-            userIdField.setText(selectedLibrary.getUserId());
             documentCodeField.setText(selectedLibrary.getDocumentCode());
             quantityField.setText(String.valueOf(selectedLibrary.getQuantity()));
             documentTypeField.setValue(selectedLibrary.getDocumentType());
@@ -75,14 +77,13 @@ public class LibraryManagementController {
     }
 
     private void clearForm() {
-        userIdField.clear();
         documentCodeField.clear();
         quantityField.clear();
         documentTypeField.setValue(null);
     }
 
     private void loadLibraryData() {
-        List<Library> records = libraryDao.getAllLibraryRecords();
+        List<Library> records = libraryDao.getAllLibraryRecordsForUser();
         libraryData.setAll(records);
     }
 
@@ -94,16 +95,9 @@ public class LibraryManagementController {
                 return;
             }
 
-            String userId = userIdField.getText();
             String documentCode = documentCodeField.getText();
             int quantity;
             String type = documentTypeField.getValue();
-
-            // Kiểm tra sự tồn tại của user_id
-            if (!libraryDao.isUserExisted(userId)) {
-                showAlert("Lỗi", "User không tồn tại! Vui lòng nhập User ID hợp lệ.", Alert.AlertType.WARNING);
-                return;
-            }
 
             // Kiểm tra sự tồn tại của document_code
             if (!libraryDao.isCodeExisted(documentCode)) {
@@ -118,11 +112,6 @@ public class LibraryManagementController {
                 return;
             }
 
-//            if (isLibraryRecordExisted(userId, documentCode)) {
-//                showAlert("Lỗi", "Bản ghi đã tồn tại! Vui lòng nhập bản ghi khác.", Alert.AlertType.WARNING);
-//                return;
-//            }
-
             try {
                 quantity = Integer.parseInt(quantityField.getText());
                 if (quantity <= 0) {
@@ -134,7 +123,8 @@ public class LibraryManagementController {
                 return;
             }
 
-            boolean success = libraryDao.borrowDocument(userId, documentCode, type, quantity);
+            boolean success = libraryDao.borrowDocument(SessionManager.getInstance().getCurrentUser().getId(),
+                    documentCode, type, quantity);
             if (success) {
                 loadLibraryData();
                 showAlert("Thành công", "Mượn tài liệu thành công!", Alert.AlertType.INFORMATION);
@@ -147,17 +137,6 @@ public class LibraryManagementController {
         }
     }
 
-    // Kiểm tra xem bản ghi có tồn tại trong bảng hay chưa thông qua user_id và document_code
-//    private boolean isLibraryRecordExisted(String userId, String documentCode) {
-//        for (Library library : libraryData) {
-//            if (library.getUserId().equals(userId)
-//                    && library.getDocumentCode().equals(documentCode)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
     @FXML
     private void onReturn(ActionEvent event) {
         try {
@@ -166,7 +145,6 @@ public class LibraryManagementController {
                 return;
             }
 
-            String userId = userIdField.getText();
             String documentCode = documentCodeField.getText();
             int quantity;
             String returnDate = java.time.LocalDate.now().toString();
@@ -182,7 +160,8 @@ public class LibraryManagementController {
                 return;
             }
 
-            boolean success = libraryDao.returnDocument(userId, documentCode, quantity, returnDate);
+            boolean success = libraryDao.returnDocument(SessionManager.getInstance().getCurrentUser().getId(),
+                    documentCode, quantity, returnDate);
             if (success) {
                 loadLibraryData();
                 showAlert("Thành công", "Trả tài liệu thành công!", Alert.AlertType.INFORMATION);
@@ -195,13 +174,13 @@ public class LibraryManagementController {
         }
     }
 
-    @FXML
-    private void onDelete(ActionEvent event) {
-        libraryDao.deleteLibraryRecord();
-        loadLibraryData();
-        clearForm();
-        showAlert("Thành công", "Đã xoá các bản ghi không cần thiết!", Alert.AlertType.INFORMATION);
-    }
+//    @FXML
+//    private void onDelete(ActionEvent event) {
+//        libraryDao.deleteLibraryRecord();
+//        loadLibraryData();
+//        clearForm();
+//        showAlert("Thành công", "Đã xoá các bản ghi không cần thiết!", Alert.AlertType.INFORMATION);
+//    }
 
     @FXML
     private void onSearch(ActionEvent event) {
@@ -214,8 +193,8 @@ public class LibraryManagementController {
         }
 
         ObservableList<Library> filteredData = libraryData.filtered(record -> switch (criteria) {
-            case "User ID" -> record.getUserId().toLowerCase().contains(keyword.toLowerCase());
             case "Document Code" -> record.getDocumentCode().toLowerCase().contains(keyword.toLowerCase());
+            case "Type" -> record.getDocumentType().toLowerCase().contains(keyword.toLowerCase());
             case "Status" -> record.getStatus().toLowerCase().contains(keyword.toLowerCase());
             default -> false;
         });
@@ -224,53 +203,9 @@ public class LibraryManagementController {
     }
 
     private boolean incompleteInfo() {
-        return userIdField.getText().isBlank()
-                || documentCodeField.getText().isBlank()
-                || quantityField.getText().isBlank();
-    }
-
-    @FXML
-    private void onStatistic(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Admin/StatisticManagement.fxml"));
-            DialogPane dialogPane = loader.load();
-
-            StatisticManagementController controller = loader.getController();
-            controller.setStatisticDetails();
-
-            // Tạo Stage cho DialogPane
-            Stage stage = new Stage(StageStyle.UNDECORATED); // Stage không có thanh tiêu đề
-            Scene scene = new Scene(dialogPane);
-            stage.setScene(scene);
-
-            // Kích hoạt tính năng kéo
-            enableDragging(stage, dialogPane);
-
-            stage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void enableDragging(Stage stage, DialogPane dialogPane) {
-        final Delta dragDelta = new Delta();
-
-        // Ghi lại vị trí khi nhấn chuột
-        dialogPane.setOnMousePressed(event -> {
-            dragDelta.x = stage.getX() - event.getScreenX();
-            dragDelta.y = stage.getY() - event.getScreenY();
-        });
-
-        // Cập nhật vị trí khi kéo chuột
-        dialogPane.setOnMouseDragged(event -> {
-            stage.setX(event.getScreenX() + dragDelta.x);
-            stage.setY(event.getScreenY() + dragDelta.y);
-        });
-    }
-
-    // Class để lưu vị trí chuột
-    private static class Delta {
-        double x, y;
+        return documentCodeField.getText().isBlank()
+                || quantityField.getText().isBlank()
+                || documentTypeField.getValue() == null;
     }
 
     private void showAlert(String title, String message, Alert.AlertType type) {

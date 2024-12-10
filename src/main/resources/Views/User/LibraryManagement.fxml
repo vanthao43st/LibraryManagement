@@ -29,7 +29,7 @@
                     <items>
                         <FXCollections fx:factory="observableArrayList">
                             <String fx:value="Document Code"/>
-                            <String fx:value="Title"/>
+                            <String fx:value="Type"/>
                             <String fx:value="Status"/>
                         </FXCollections>
                     </items>

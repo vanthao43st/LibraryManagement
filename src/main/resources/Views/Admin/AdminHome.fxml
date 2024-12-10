@@ -89,19 +89,19 @@
       </Button>
       <AnchorPane fx:id="container" layoutX="62.0" layoutY="9.0" prefHeight="582.0" prefWidth="834.0" styleClass="container">
          <children>
-            <ImageView fitHeight="233.0" fitWidth="412.0" layoutX="211.0" layoutY="175.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="371.0" fitWidth="703.0" layoutX="87.0" layoutY="120.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../Utils/images/background3.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="96.0" fitWidth="96.0" layoutX="23.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="96.0" fitWidth="96.0" layoutX="23.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../Utils/images/Logo%20-%20UET%20-%20VNU.png" />
                </image>
             </ImageView>
             <TextField layoutX="254.0" layoutY="19.0" prefHeight="43.0" prefWidth="302.0" styleClass="home_welcome" stylesheets="@../../Utils/style.css" text="Chào mừng đến với thư viện" />
             <TextField layoutX="151.0" layoutY="61.0" prefHeight="43.0" prefWidth="532.0" styleClass="home_welcome" stylesheets="@../../Utils/style.css" text="Trường đại học Công nghệ - Đại học Quốc Gia Hà Nội" />
-            <StackPane alignment="CENTER" layoutX="0.0" layoutY="480.0" prefWidth="834.0">
+            <StackPane alignment="CENTER" layoutY="514.0" prefWidth="834.0">
                <Label fx:id="welcomeLabel" style="-fx-font-size: 24px; -fx-text-fill: black;" text="Hi Admin!" />
             </StackPane>
          </children></AnchorPane>

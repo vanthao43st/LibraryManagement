@@ -236,7 +236,8 @@ public class LibraryManagementController {
     private boolean incompleteInfo() {
         return userIdField.getText().isBlank()
                 || documentCodeField.getText().isBlank()
-                || quantityField.getText().isBlank();
+                || quantityField.getText().isBlank()
+                || documentTypeField.getValue() == null;
     }
 
     @FXML

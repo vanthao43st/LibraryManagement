@@ -28,18 +28,6 @@ public class User {
     }
 
     public User(String id, String fullname, Gender gender, String classname,
-                String major, String phonenumber, String email, String password) {
-        this.id = id;
-        this.fullname = fullname;
-        this.gender = gender;
-        this.classname = classname;
-        this.major = major;
-        this.phonenumber = phonenumber;
-        this.email = email;
-        this.password = password;
-    }
-
-    public User(String id, String fullname, Gender gender, String classname,
                 String major, String phonenumber, String email, String username, String password) {
         this.id = id;
         this.fullname = fullname;

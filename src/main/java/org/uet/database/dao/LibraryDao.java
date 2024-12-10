@@ -2,6 +2,7 @@ package org.uet.database.dao;
 
 import org.uet.database.connection.DBConnection;
 import org.uet.entity.Library;
+import org.uet.entity.SessionManager;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -33,6 +34,55 @@ public class LibraryDao {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+
+        return items;
+    }
+
+    // Lấy hết các tài liệu đã mượn của user hiện tại
+    public ArrayList<Library> getAllLibraryRecordsForUser() {
+        ArrayList<Library> items = new ArrayList<>();
+        String query = "SELECT l.*, " +
+                "CASE " +
+                "WHEN l.library_document_type = 'Sách' THEN b.book_title " +
+                "WHEN l.library_document_type = 'Luận văn' THEN t.thesis_title " +
+                "END AS title, " +
+                "CASE " +
+                "WHEN l.library_document_type = 'Sách' THEN b.book_description " +
+                "WHEN l.library_document_type = 'Luận văn' THEN t.thesis_description " +
+                "END AS description " +
+                "FROM library l " +
+                "LEFT JOIN book b ON l.library_document_code = b.book_code " +
+                "LEFT JOIN thesis t ON l.library_document_code = t.thesis_code " +
+                "WHERE l.library_user_id = ?";
+        Library item;
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+
+            //User hiện tại
+            ps.setString(1, SessionManager.getInstance().getCurrentUser().getId());
+
+            try (ResultSet resultSet = ps.executeQuery()) {
+                while (resultSet.next()) {
+                    item = new Library();
+                    item.setDocumentCode(resultSet.getString("library_document_code"));
+                    item.setDocumentType(resultSet.getString("library_document_type"));
+                    item.setTitle(resultSet.getString("title"));
+                    item.setDescription(resultSet.getString("description"));
+                    item.setQuantity(resultSet.getInt("library_quantity"));
+                    item.setBorrowDate(resultSet.getString("library_borrow_date"));
+                    item.setReturnDate(resultSet.getString("library_return_date"));
+                    item.setDueDate(resultSet.getString("library_due_date"));
+                    item.setStatus(resultSet.getString("library_status"));
+                    item.setLateDays(resultSet.getInt("library_late_days"));
+                    item.setFine(resultSet.getDouble("library_fine"));
+
+                    items.add(item);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Lỗi truy vấn database: " + e.getMessage());
         }
 
         return items;

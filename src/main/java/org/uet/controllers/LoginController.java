@@ -92,6 +92,7 @@ public class LoginController implements Initializable {
                             resultSet.getString("user_major"),
                             resultSet.getString("user_phone"),
                             resultSet.getString("user_email"),
+                            resultSet.getString("user_username"),
                             resultSet.getString("user_password")
                     );
 
@@ -104,6 +105,7 @@ public class LoginController implements Initializable {
 
                     // Lấy controller của Home User và truyền fullname
                     UserHomeController userController = loader.getController();
+                    System.out.println(user.getFullname());
                     userController.setWelcomeMessage("Hi, " + user.getFullname());
 
                     Stage stage = (Stage) usernameField.getScene().getWindow();

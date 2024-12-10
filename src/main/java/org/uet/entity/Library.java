@@ -11,6 +11,8 @@ public class Library {
     private String status;
     private int lateDays;
     private double fine;
+    private String title;
+    private String description;
 
     public Library() {
         this.userId = "21010938";
@@ -23,6 +25,7 @@ public class Library {
         this.status = "";
         this.lateDays = 0;
         this.fine = 0;
+        this.title = "";
     }
 
     public Library(String userId, String documentCode, String documentType, int quantity, String borrowDate,
@@ -33,6 +36,18 @@ public class Library {
         this.quantity = quantity;
         this.borrowDate = borrowDate;
         this.returnDate = returnDate;
+        this.dueDate = dueDate;
+        this.status = status;
+    }
+
+    public Library(String documentCode, String documentType, String title, String description, int quantity, String borrowDate,
+                   String dueDate, String status) {
+        this.documentCode = documentCode;
+        this.documentType = documentType;
+        this.title = title;
+        this.description = description;
+        this.quantity = quantity;
+        this.borrowDate = borrowDate;
         this.dueDate = dueDate;
         this.status = status;
     }
@@ -117,53 +132,37 @@ public class Library {
         this.fine = fine;
     }
 
-    private void checkStatus(String status) {
-        if ("Trả muộn".equals(status)
-                && this.returnDate != null && !this.returnDate.isEmpty()
-                && this.dueDate != null && !this.dueDate.isEmpty()) {
+    public String getTitle() {
+        return title;
+    }
 
-            // Chuyển ngày mượn, ngày trả và ngày đến hạn thành kiểu Date
-            try {
-                long dueDateMillis = new java.text.SimpleDateFormat("yyyy-MM-dd")
-                        .parse(this.dueDate).getTime();
-                long returnDateMillis = new java.text.SimpleDateFormat("yyyy-MM-dd")
-                        .parse(this.returnDate).getTime();
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-                // Tính số ngày muộn
-                long lateMillis = returnDateMillis - dueDateMillis;
-                this.lateDays = (int) (lateMillis / (1000 * 60 * 60 * 24));  // Chuyển millis thành day
+    public String getDescription() {
+        return description;
+    }
 
-                // Tính tiền phạt
-                if (this.lateDays > 0) {
-                    if (this.lateDays <= 10) {
-                        this.fine = this.lateDays * 1000;
-                    } else if (this.lateDays <= 20) {
-                        this.fine = this.lateDays * 2000;
-                    } else {
-                        this.fine = this.lateDays * 3000;
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        } else {
-            this.lateDays = 0;
-            this.fine = 0;
-        }
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
     public String toString() {
-        return "{userId='" + userId + '\'' +
+        return "Library{" +
+                "borrowDate='" + borrowDate + '\'' +
+                ", userId='" + userId + '\'' +
                 ", documentCode='" + documentCode + '\'' +
+                ", documentType='" + documentType + '\'' +
                 ", quantity=" + quantity +
-                ", borrowDate='" + borrowDate + '\'' +
                 ", returnDate='" + returnDate + '\'' +
                 ", dueDate='" + dueDate + '\'' +
                 ", status='" + status + '\'' +
                 ", lateDays=" + lateDays +
-
                 ", fine=" + fine +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

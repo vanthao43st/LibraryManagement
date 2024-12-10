@@ -14,8 +14,8 @@ import java.sql.SQLException;
 public class UserDetailController {
 
     @FXML
-    private TextField userIdField, userNameField, userClassField,
-            userPhoneField, userEmailField, userPasswordField, userStatusField;
+    private TextField userIdField, userFullNameField, userClassField,
+            userPhoneField, userEmailField, usernameField, userPasswordField, userStatusField;
 
     @FXML
     private ComboBox<String> userGenderField, userMajorField;
@@ -49,14 +49,21 @@ public class UserDetailController {
             if (currentUser != null) {
                 // Gán giá trị cho các trường trong giao diện
                 userIdField.setText(currentUser.getId());
-                userNameField.setText(currentUser.getFullname());
+                userFullNameField.setText(currentUser.getFullname());
                 userGenderField.setValue(currentUser.getGender().toString());
                 userClassField.setText(currentUser.getClassname());
                 userMajorField.setValue(currentUser.getMajor());
                 userPhoneField.setText(currentUser.getPhonenumber());
                 userEmailField.setText(currentUser.getEmail());
+                usernameField.setText(currentUser.getUsername());
                 userPasswordField.setText(currentUser.getPassword());
-//                userStatusField.setText(currentUser.getStatus()); // Trường Status chỉ hiển thị
+
+                if (userDao.hasUnreturnedBooks(currentUser.getId())) {
+                    userStatusField.setText("Chưa trả sách.");
+                } else {
+                    userStatusField.setText("Đã trả sách.");
+                }
+
             } else {
                 showAlert("Lỗi", "Không thể tải thông tin người dùng!", Alert.AlertType.ERROR);
             }
@@ -70,7 +77,7 @@ public class UserDetailController {
         if (currentUser != null) {
             try {
                 // Cập nhật thông tin người dùng từ form
-                currentUser.setFullname(userNameField.getText());
+                currentUser.setFullname(userFullNameField.getText());
                 currentUser.setGender(Gender.valueOf(userGenderField.getValue()));
                 currentUser.setClassname(userClassField.getText());
                 currentUser.setMajor(userMajorField.getValue());

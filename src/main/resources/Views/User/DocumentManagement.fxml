@@ -1,22 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane prefHeight="582.0" prefWidth="834.0" xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.uet.controllers.user.DocumentManagementController">
+<AnchorPane prefHeight="582.0" prefWidth="834.0"
+            style="-fx-background-color: linear-gradient(to bottom, #ffffff, #e6e6e6); -fx-border-color: #d0d0d0; -fx-border-radius: 8;"
+            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.uet.controllers.user.DocumentManagementController">
 
-    <AnchorPane fx:id="container" layoutX="-2.0" prefHeight="582.0" prefWidth="834.0"
-                style="-fx-background-color: #f0f0f0;">
+    <!-- Container -->
+    <AnchorPane fx:id="container" layoutX="0.0" layoutY="0.0" prefHeight="582.0" prefWidth="834.0"
+                style="-fx-background-color: linear-gradient(to bottom, #f9f9f9, #ececec); -fx-padding: 20;">
         <children>
+            <!-- Title -->
+            <Label layoutX="30.0" layoutY="20.0"
+                   style="-fx-text-fill: #333333; -fx-font-size: 28px; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 2, 2);"
+                   text="Document Management"/>
 
-            <HBox alignment="CENTER" layoutX="22.0" layoutY="279.0" prefHeight="50.0" prefWidth="800.0" spacing="10"
-                  style="-fx-padding: 10;">
-                <Button fx:id="showBookButton" prefHeight="26.0" prefWidth="145.0"
-                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Management Book"/>
-                <Button fx:id="showThesisButton" prefHeight="26.0" prefWidth="140.0"
-                        style="-fx-background-color: #FFA500; -fx-text-fill: white;" text="Management Thesis"/>
+            <!-- Buttons Section -->
+            <HBox alignment="CENTER" layoutX="117.0" layoutY="270.0" prefHeight="80.0" prefWidth="600.0" spacing="20.0"
+                  style="-fx-background-color: #ffffff; -fx-border-color: #d0d0d0; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 4);">
+                <!-- Management Book Button -->
+                <Button fx:id="showBookButton" prefHeight="50.0" prefWidth="220.0"
+                        style="-fx-background-color: linear-gradient(to bottom, #4CAF50, #3e8e41); -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 8px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+                        text="Management Book">
+                    <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../Utils/icons/icons8-google-forms-50.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <!-- Management Thesis Button -->
+                <Button fx:id="showThesisButton" prefHeight="50.0" prefWidth="220.0"
+                        style="-fx-background-color: linear-gradient(to bottom, #FFA500, #ff8c00); -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 8px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+                        text="Management Thesis">
+                    <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../Utils/icons/icons8-thesis-50.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
             </HBox>
         </children>
     </AnchorPane>

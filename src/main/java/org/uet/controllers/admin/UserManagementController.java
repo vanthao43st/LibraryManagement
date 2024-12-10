@@ -25,7 +25,8 @@ public class UserManagementController {
     private ComboBox<String> searchCriteria, userGenderField, userMajorField;
 
     @FXML
-    private TextField searchField, userIdField, userFullNameField, userClassField, userPhoneField, userEmailField;
+    private TextField searchField, userIdField, userFullNameField, usernameField,
+            userClassField, userPhoneField, userEmailField, userPasswordField;
 
     @FXML
     private TableView<User> userTable;
@@ -33,7 +34,7 @@ public class UserManagementController {
     @FXML
     private TableColumn<User, String> idColumn, nameColumn, genderColumn,
             classColumn, majorColumn, phoneColumn, emailColumn,
-            userNameColumn, passwordColumn;
+            usernameColumn, passwordColumn;
 
     private static UserDao userDao = new UserDao();
 
@@ -66,7 +67,7 @@ public class UserManagementController {
         majorColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getMajor()));
         phoneColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPhonenumber()));
         emailColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getEmail()));
-        userNameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getUsername()));
+        usernameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getUsername()));
         passwordColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPassword()));
 
         // Gán dữ liệu cho bảng
@@ -90,7 +91,8 @@ public class UserManagementController {
             userMajorField.setValue(selectedUser.getMajor());
             userPhoneField.setText(selectedUser.getPhonenumber());
             userEmailField.setText(selectedUser.getEmail());
-
+            usernameField.setText(selectedUser.getUsername());
+            userPasswordField.setText(selectedUser.getPassword());
         }
     }
 
@@ -102,6 +104,8 @@ public class UserManagementController {
         userMajorField.setValue(null);
         userPhoneField.clear();
         userEmailField.clear();
+        userPasswordField.clear();
+        usernameField.clear();
     }
 
     private void loadSampleData() {
@@ -131,7 +135,9 @@ public class UserManagementController {
                     userClassField.getText(),
                     userMajorField.getValue(),
                     userPhoneField.getText(),
-                    userEmailField.getText()
+                    userEmailField.getText(),
+                    usernameField.getText(),
+                    userPasswordField.getText()
             );
 
             // Thêm vào bảng và database
@@ -153,7 +159,9 @@ public class UserManagementController {
                 userClassField.getText().isBlank() ||
                 userMajorField.getValue() == null ||
                 userPhoneField.getText().isBlank() ||
-                userEmailField.getText().isBlank();
+                userEmailField.getText().isBlank() ||
+                usernameField.getText().isBlank() ||
+                userPasswordField.getText().isBlank();
     }
 
     // Kiểm tra xem user có tồn tại trong bảng hay chưa thông qua ID
@@ -176,6 +184,8 @@ public class UserManagementController {
             selectedUser.setMajor(userMajorField.getValue());
             selectedUser.setPhonenumber(userPhoneField.getText());
             selectedUser.setEmail(userEmailField.getText());
+            selectedUser.setUsername(usernameField.getText());
+            selectedUser.setPassword(userPasswordField.getText());
 
             userTable.refresh();
             updateInDatabase(selectedUser); // Cập nhật vào Database
