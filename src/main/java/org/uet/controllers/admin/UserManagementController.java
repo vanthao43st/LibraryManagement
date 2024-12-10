@@ -25,17 +25,15 @@ public class UserManagementController {
     private ComboBox<String> searchCriteria, userGenderField, userMajorField;
 
     @FXML
-    private TextField searchField, userIdField, userNameField, userClassField, userPhoneField, userEmailField;
-
-    @FXML
-    private Button searchButton, addButton, editButton, deleteButton, showDetailButton;
+    private TextField searchField, userIdField, userFullNameField, userClassField, userPhoneField, userEmailField;
 
     @FXML
     private TableView<User> userTable;
 
     @FXML
     private TableColumn<User, String> idColumn, nameColumn, genderColumn,
-            classColumn, majorColumn, phoneColumn, emailColumn;
+            classColumn, majorColumn, phoneColumn, emailColumn,
+            userNameColumn, passwordColumn;
 
     private static UserDao userDao = new UserDao();
 
@@ -68,6 +66,8 @@ public class UserManagementController {
         majorColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getMajor()));
         phoneColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPhonenumber()));
         emailColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getEmail()));
+        userNameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getUsername()));
+        passwordColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPassword()));
 
         // Gán dữ liệu cho bảng
         userTable.setItems(userData);
@@ -84,18 +84,19 @@ public class UserManagementController {
         selectedUser = userTable.getSelectionModel().getSelectedItem();
         if (selectedUser != null) {
             userIdField.setText(selectedUser.getId());
-            userNameField.setText(selectedUser.getFullname());
+            userFullNameField.setText(selectedUser.getFullname());
             userGenderField.setValue(selectedUser.getGender().toString());
             userClassField.setText(selectedUser.getClassname());
             userMajorField.setValue(selectedUser.getMajor());
             userPhoneField.setText(selectedUser.getPhonenumber());
             userEmailField.setText(selectedUser.getEmail());
+
         }
     }
 
     private void clearForm() {
         userIdField.clear();
-        userNameField.clear();
+        userFullNameField.clear();
         userGenderField.setValue(null);
         userClassField.clear();
         userMajorField.setValue(null);
@@ -125,7 +126,7 @@ public class UserManagementController {
 
             User newUser = new User(
                     userIdField.getText(),
-                    userNameField.getText(),
+                    userFullNameField.getText(),
                     Gender.valueOf(userGenderField.getValue()),
                     userClassField.getText(),
                     userMajorField.getValue(),
@@ -147,7 +148,7 @@ public class UserManagementController {
     // Kiểm tra các trường nhập liệu có bị để trống không
     private boolean inCompleteInfo() {
         return userIdField.getText().isBlank() ||
-                userNameField.getText().isBlank() ||
+                userFullNameField.getText().isBlank() ||
                 userGenderField.getValue() == null ||
                 userClassField.getText().isBlank() ||
                 userMajorField.getValue() == null ||
@@ -169,7 +170,7 @@ public class UserManagementController {
     private void onEdit(ActionEvent event) throws SQLException {
         if (selectedUser != null) {
             selectedUser.setId(userIdField.getText());
-            selectedUser.setFullname(userNameField.getText());
+            selectedUser.setFullname(userFullNameField.getText());
             selectedUser.setGender(Gender.valueOf(userGenderField.getValue()));
             selectedUser.setClassname(userClassField.getText());
             selectedUser.setMajor(userMajorField.getValue());

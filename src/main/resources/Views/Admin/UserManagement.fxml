@@ -61,13 +61,13 @@
                     <TextField fx:id="userIdField" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
                     <Label alignment="CENTER_RIGHT" text="Name:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-                    <TextField fx:id="userNameField" prefHeight="26.0" prefWidth="301.0" GridPane.columnIndex="3"
+                    <TextField fx:id="userFullNameField" prefHeight="26.0" prefWidth="301.0" GridPane.columnIndex="3"
                                GridPane.rowIndex="0"/>
 
                     <!-- Hàng 2 -->
                     <Label alignment="CENTER_RIGHT" text="Gender:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                     <ComboBox fx:id="userGenderField" prefHeight="26.0" prefWidth="283.0" GridPane.columnIndex="1"
-                              GridPane.rowIndex="1">
+                              GridPane.rowIndex="1" promptText="Select Gender">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
                                 <String fx:value="FEMALE"/>
@@ -82,7 +82,8 @@
                     <!-- Hàng 3 -->
                     <Label alignment="CENTER_RIGHT" text="Major:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
                     <ComboBox fx:id="userMajorField" prefHeight="26.0" prefWidth="283.0" GridPane.columnIndex="1"
-                              GridPane.rowIndex="2">
+                              GridPane.rowIndex="2"
+                              promptText="Select Major">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
                                 <String fx:value="Công nghệ thông tin"/>
@@ -120,6 +121,8 @@
                         <TableColumn fx:id="majorColumn" prefWidth="150.0" text="Major"/>
                         <TableColumn fx:id="phoneColumn" prefWidth="150.0" text="Phone"/>
                         <TableColumn fx:id="emailColumn" prefWidth="150.0" text="Email"/>
+                        <TableColumn fx:id="userNameColumn" prefWidth="150.0" text="Username"/>
+                        <TableColumn fx:id="passwordColumn" prefWidth="150.0" text="Password"/>
                     </columns>
                 </TableView>
             </VBox>

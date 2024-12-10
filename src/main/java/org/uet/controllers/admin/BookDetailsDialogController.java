@@ -23,7 +23,7 @@ public class BookDetailsDialogController {
 
         String description = book.getDescription();
         String newDescription;
-        if (description.length() > 200) {
+        if (description!=null && description.length() > 200) {
             newDescription = description.substring(0,200) + " ...";
         } else {
             newDescription = description;

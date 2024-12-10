@@ -7,18 +7,23 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.uet.entity.SessionManager;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class HomeController implements Initializable {
+public class UserHomeController implements Initializable {
+
+    @FXML
+    public Label welcomeLabel;
 
     @FXML
     private Button documentButton, userButton, libraryButton, bookApiButton, closeButton;
@@ -41,7 +46,7 @@ public class HomeController implements Initializable {
         container.setOnMouseDragged(this::onMouseDragged);
 
         // Gắn sự kiện highlight cho các nút
-        attachHighlightToButton(userButton, "/Views/User/UserManagement.fxml");
+        attachHighlightToButton(userButton, "/Views/User/UserDetail.fxml");
         attachHighlightToButton(documentButton, "/Views/User/DocumentManagement.fxml");
         attachHighlightToButton(libraryButton, "/Views/User/LibraryManagement.fxml");
         attachHighlightToButton(bookApiButton, "/Views/User/BookAPI.fxml");
@@ -53,6 +58,7 @@ public class HomeController implements Initializable {
 
         closeButton.setOnMouseClicked(e -> {
             try {
+                SessionManager.getInstance().clearSession();
                 // Tải lại Login.fxml
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Login.fxml"));
                 Parent root = loader.load();
@@ -117,5 +123,9 @@ public class HomeController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setWelcomeMessage(String message) {
+        welcomeLabel.setText(message);
     }
 }

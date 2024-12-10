@@ -16,7 +16,6 @@ public class ThesisDetailsDialogController {
     public void setThesisDetails(Thesis thesis) {
         codeLabel.setText(thesis.getCode());
         titleLabel.setText(thesis.getTitle());
-        descriptionLabel.setText(thesis.getDescription());
         quantityLabel.setText(String.valueOf(thesis.getQuantity()));
         majorLabel.setText(thesis.getMajor());
         authorLabel.setText(thesis.getAuthor());
@@ -24,6 +23,15 @@ public class ThesisDetailsDialogController {
         universityLabel.setText(thesis.getUniversity());
         degreeLabel.setText(thesis.getDegree());
         submissionYearLabel.setText(String.valueOf(thesis.getSubmissionYear()));
+
+        String description = thesis.getDescription();
+        String newDescription;
+        if (description!=null && description.length() > 200) {
+            newDescription = description.substring(0,200) + " ...";
+        } else {
+            newDescription = description;
+        }
+        descriptionLabel.setText(newDescription);
     }
 
     @FXML

@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.uet.database.dao.ThesisDao;
@@ -21,9 +20,7 @@ import java.util.List;
 public class ThesisManagementController {
 
     @FXML
-    private TextField thesisCodeField, thesisTitleField, thesisMajorField, thesisAuthorField,
-            thesisSupervisorField, thesisUniversityField, thesisDegreeField,
-            thesisSubmissionYearField, thesisDescriptionField, searchField, thesisQuantityField;
+    private TextField searchField;
 
     @FXML
     private ComboBox<String> searchCriteria;
@@ -39,8 +36,6 @@ public class ThesisManagementController {
     private TableColumn<Thesis, Integer> submissionYearColumn, quantityColumn;
 
     private final ObservableList<Thesis> thesisData = FXCollections.observableArrayList();
-
-    private Thesis selectedThesis;
 
     private final ThesisDao thesisDao = new ThesisDao();
 
@@ -58,150 +53,12 @@ public class ThesisManagementController {
         quantityColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getQuantity()));
 
         loadTheses();
-
-        thesisTable.setOnMouseClicked(this::onTableClick);
     }
 
     private void loadTheses() {
         List<Thesis> theses = thesisDao.getAllThesis();
         thesisData.setAll(theses);
         thesisTable.setItems(thesisData);
-    }
-
-    @FXML
-    private void onTableClick(MouseEvent event) {
-        selectedThesis = thesisTable.getSelectionModel().getSelectedItem();
-        if (selectedThesis != null) {
-            thesisCodeField.setText(selectedThesis.getCode());
-            thesisTitleField.setText(selectedThesis.getTitle());
-            thesisMajorField.setText(selectedThesis.getMajor());
-            thesisAuthorField.setText(selectedThesis.getAuthor());
-            thesisSupervisorField.setText(selectedThesis.getSupervisor());
-            thesisUniversityField.setText(selectedThesis.getUniversity());
-            thesisDegreeField.setText(selectedThesis.getDegree());
-            thesisSubmissionYearField.setText(String.valueOf(selectedThesis.getSubmissionYear()));
-            thesisDescriptionField.setText(selectedThesis.getDescription());
-            thesisQuantityField.setText(String.valueOf(selectedThesis.getQuantity()));
-        }
-    }
-
-    private void clearInputFields() {
-        thesisCodeField.clear();
-        thesisTitleField.clear();
-        thesisMajorField.clear();
-        thesisAuthorField.clear();
-        thesisSupervisorField.clear();
-        thesisUniversityField.clear();
-        thesisDegreeField.clear();
-        thesisSubmissionYearField.clear();
-        thesisDescriptionField.clear();
-        thesisQuantityField.clear();
-    }
-
-    @FXML
-    private void onAdd(ActionEvent event) {
-        if (inCompleteInfo()) {
-            showAlert("Lỗi", "Hãy điền vào đầy đủ các trường!", Alert.AlertType.WARNING);
-            return;
-        }
-
-        String thesisCode = thesisCodeField.getText();
-        if (isThesisExisted(thesisCode)) {
-            showAlert("Lỗi", "Luận văn đã tồn tại. Hãy sử dụng mã luận văn khác!", Alert.AlertType.WARNING);
-            return;
-        }
-
-        try {
-            Thesis thesis = getThesis();
-            thesisDao.addThesis(thesis);
-            thesisData.add(thesis);
-            thesisTable.refresh();
-
-            clearInputFields();
-            showAlert("Thành công", "Đã thêm luận văn thành công!", Alert.AlertType.INFORMATION);
-        } catch (Exception e) {
-            showAlert("Lỗi", "Nhập vào không hợp lệ! Hãy kiểm tra các dữ liệu nhập vào!", Alert.AlertType.ERROR);
-        }
-    }
-
-    private Thesis getThesis() {
-        String code = thesisCodeField.getText();
-        String title = thesisTitleField.getText();
-        String major = thesisMajorField.getText();
-        String author = thesisAuthorField.getText();
-        String supervisor = thesisSupervisorField.getText();
-        String university = thesisUniversityField.getText();
-        String degree = thesisDegreeField.getText();
-        int submissionYear = Integer.parseInt(thesisSubmissionYearField.getText());
-        String description = thesisDescriptionField.getText();
-        int quantity = Integer.parseInt(thesisQuantityField.getText());
-
-        return new Thesis(author, code, description, title, degree, major,
-                quantity, submissionYear, supervisor, university);
-    }
-
-    private boolean inCompleteInfo() {
-        return thesisCodeField.getText().isBlank() ||
-                thesisTitleField.getText().isBlank() ||
-                thesisMajorField.getText().isBlank() ||
-                thesisAuthorField.getText().isBlank() ||
-                thesisSupervisorField.getText().isBlank() ||
-                thesisUniversityField.getText().isBlank() ||
-                thesisDegreeField.getText().isBlank() ||
-                thesisSubmissionYearField.getText().isBlank() ||
-                thesisDescriptionField.getText().isBlank() ||
-                thesisQuantityField.getText().isBlank();
-    }
-
-    private boolean isThesisExisted(String thesisCode) {
-        for (Thesis thesis : thesisData) {
-            if (thesis.getCode().equals(thesisCode)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @FXML
-    private void onEdit(ActionEvent event) {
-        if (selectedThesis == null) {
-            showAlert("Cảnh báo", "Hãy chọn 1 luận văn để cập nhật!", Alert.AlertType.WARNING);
-            return;
-        }
-
-        try {
-            selectedThesis.setCode(thesisCodeField.getText());
-            selectedThesis.setTitle(thesisTitleField.getText());
-            selectedThesis.setMajor(thesisMajorField.getText());
-            selectedThesis.setAuthor(thesisAuthorField.getText());
-            selectedThesis.setSupervisor(thesisSupervisorField.getText());
-            selectedThesis.setUniversity(thesisUniversityField.getText());
-            selectedThesis.setDegree(thesisDegreeField.getText());
-            selectedThesis.setSubmissionYear(Integer.parseInt(thesisSubmissionYearField.getText()));
-            selectedThesis.setDescription(thesisDescriptionField.getText());
-            selectedThesis.setQuantity(Integer.parseInt(thesisQuantityField.getText()));
-
-            thesisDao.updateThesis(selectedThesis);
-            thesisTable.refresh();
-
-            clearInputFields();
-            showAlert("Thành công", "Thesis updated successfully!", Alert.AlertType.INFORMATION);
-        } catch (Exception e) {
-            showAlert("Lỗi", "Nhập vào không hợp lệ! Hãy kiểm tra các dữ liệu nhập vào!", Alert.AlertType.ERROR);
-        }
-    }
-
-    @FXML
-    private void onDelete(ActionEvent event) {
-        if (selectedThesis == null) {
-            showAlert("Cảnh báo", "Hãy chọn luận văn để xoá!", Alert.AlertType.WARNING);
-            return;
-        }
-
-        thesisDao.deleteThesis(selectedThesis.getCode());
-        thesisData.remove(selectedThesis);
-        clearInputFields();
-        showAlert("Thành công", "Đã xoá luận văn thành công!", Alert.AlertType.INFORMATION);
     }
 
     @FXML
@@ -264,7 +121,7 @@ public class ThesisManagementController {
 
     private void showThesisDetails(Thesis thesis) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Admin/ThesisDetailsDialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/User/ThesisDetailsDialog.fxml"));
             DialogPane dialogPane = loader.load();
 
             ThesisDetailsDialogController controller = loader.getController();

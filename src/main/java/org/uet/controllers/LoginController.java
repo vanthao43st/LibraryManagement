@@ -10,13 +10,18 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.uet.controllers.admin.AdminHomeController;
+import org.uet.controllers.user.UserHomeController;
 import org.uet.database.connection.DBConnection;
+import org.uet.database.dao.UserDao;
+import org.uet.entity.SessionManager;
+import org.uet.entity.User;
+import org.uet.enums.Gender;
 
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
@@ -35,6 +40,8 @@ public class LoginController implements Initializable {
     @FXML
     private PasswordField passwordField;
 
+    private static final UserDao userDao = new UserDao();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         closeButton.setOnMouseClicked(e -> System.exit(-1));
@@ -52,52 +59,67 @@ public class LoginController implements Initializable {
         String username = usernameField.getText().trim();
         String password = passwordField.getText().trim();
 
-        if (username.equals(ADMIN_USERNAME) && password.equals(ADMIN_PASSWORD)) {
-            // Tài khoản admin, giữ nguyên giao diện Home.fxml
-            try {
+        try (Connection connection = DBConnection.getConnection()) {
+            // Kiểm tra nếu tài khoản là admin
+            if (username.equals(ADMIN_USERNAME) && password.equals(ADMIN_PASSWORD)) {
+                // Chuyển sang giao diện Admin
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Admin/AdminHome.fxml"));
+                Parent root = loader.load();
+
+                // Lấy controller của Home Admin và thiết lập dữ liệu nếu cần
+                AdminHomeController adminController = loader.getController();
+                adminController.setWelcomeMessage("Hi, Admin!");
+
                 Stage stage = (Stage) usernameField.getScene().getWindow();
-                Parent root = FXMLLoader.load(
-                        Objects.requireNonNull(
-                                getClass().getResource("/Views/Admin/Home.fxml")
-                        )
-                );
-                Scene scene = new Scene(root, 900, 600);
-                stage.setScene(scene);
+                stage.setScene(new Scene(root));
                 stage.show();
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        } else {
-            // Kiểm tra tài khoản user trong cơ sở dữ liệu
-            String query = "SELECT * FROM user WHERE user_username = ? AND user_password = ?";
+            } else {
+                // Kiểm tra thông tin user trong cơ sở dữ liệu
+                String query = "SELECT * FROM user WHERE user_username = ? AND user_password = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, password);
 
-            try (Connection connection = DBConnection.getConnection();
-                 PreparedStatement ps = connection.prepareStatement(query);) {
-
-                ps.setString(1, username);
-                ps.setString(2, password);
-                ResultSet resultSet = ps.executeQuery();
+                ResultSet resultSet = preparedStatement.executeQuery();
 
                 if (resultSet.next()) {
-                    // Đăng nhập thành công, chuyển sang giao diện User.fxml
-                    Stage stage = (Stage) usernameField.getScene().getWindow();
-                    Parent root = FXMLLoader.load(
-                            Objects.requireNonNull(
-                                    getClass().getResource("/Views/User/Home.fxml")
-                            )
+                    // Lấy thông tin người dùng từ kết quả truy vấn
+                    User user = new User(
+                            resultSet.getString("user_id"),
+                            resultSet.getString("user_fullname"),
+                            Gender.valueOf(resultSet.getString("user_gender")),
+                            resultSet.getString("user_class"),
+                            resultSet.getString("user_major"),
+                            resultSet.getString("user_phone"),
+                            resultSet.getString("user_email"),
+                            resultSet.getString("user_password")
                     );
-                    Scene scene = new Scene(root, 900, 600);
-                    stage.setScene(scene);
+
+                    // Lưu thông tin người dùng vào SessionManager
+                    SessionManager.getInstance().setCurrentUser(user);
+
+                    // Chuyển sang giao diện User
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/User/UserHome.fxml"));
+                    Parent root = loader.load();
+
+                    // Lấy controller của Home User và truyền fullname
+                    UserHomeController userController = loader.getController();
+                    userController.setWelcomeMessage("Hi, " + user.getFullname());
+
+                    Stage stage = (Stage) usernameField.getScene().getWindow();
+                    stage.setScene(new Scene(root));
                     stage.show();
                 } else {
-                    // Đăng nhập thất bại
-                    showErrorAlert("username hoặc password không hợp lệ!");
+                    // Tài khoản không hợp lệ
+                    showErrorAlert("Tên đăng nhập hoặc mật khẩu không chính xác!");
                 }
-            } catch (Exception e) {
-                System.out.println("Lỗi khi kết nối cơ sở dữ liệu: " + e.getMessage());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showErrorAlert("Đã xảy ra lỗi khi kết nối cơ sở dữ liệu!");
         }
     }
+
 
     private void showErrorAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

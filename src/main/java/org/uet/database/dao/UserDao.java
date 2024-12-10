@@ -127,55 +127,56 @@ public class UserDao {
         }
     }
 
-    public ArrayList<User> searchUsers(String userId, String userName, String userClass) {
-        ArrayList<User> users = new ArrayList<>();
-        String query = "SELECT * FROM user WHERE 1=1";
-        User user = null;
+//    public ArrayList<User> searchUsers(String userId, String userName, String userClass) {
+//        ArrayList<User> users = new ArrayList<>();
+//        String query = "SELECT * FROM user WHERE 1=1";
+//        User user;
+//
+//        if (userId != null && !userId.isEmpty()) {
+//            query += " AND user_id = ?";
+//        }
+//        if (userName != null && !userName.isEmpty()) {
+//            query += " AND user_fullname LIKE ?";
+//        }
+//        if (userClass != null && !userClass.isEmpty()) {
+//            query += " AND user_class = ?";
+//        }
+//
+//        try (Connection connection = DBConnection.getConnection();
+//             PreparedStatement ps = connection.prepareStatement(query)) {
+//            int paramIndex = 1;
+//
+//            if (userId != null && !userId.isEmpty()) {
+//                ps.setString(paramIndex++, userId);
+//            }
+//            if (userName != null && !userName.isEmpty()) {
+//                ps.setString(paramIndex++, "%" + userName + "%");
+//            }
+//            if (userClass != null && !userClass.isEmpty()) {
+//                ps.setString(paramIndex++, userClass);
+//            }
+//
+//            ResultSet rs = ps.executeQuery();
+//
+//            while (rs.next()) {
+//                user = new User(
+//                        rs.getString("user_id"),
+//                        rs.getString("user_fullname"),
+//                        Gender.valueOf(rs.getString("user_gender")),
+//                        rs.getString("user_class"),
+//                        rs.getString("user_major"),
+//                        rs.getString("user_phone"),
+//                        rs.getString("user_email")
+//                );
+//                users.add(user);
+//            }
+//        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//        }
+//        return users;
+//    }
 
-        if (userId != null && !userId.isEmpty()) {
-            query += " AND user_id = ?";
-        }
-        if (userName != null && !userName.isEmpty()) {
-            query += " AND user_fullname LIKE ?";
-        }
-        if (userClass != null && !userClass.isEmpty()) {
-            query += " AND user_class = ?";
-        }
-
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(query)) {
-            int paramIndex = 1;
-
-            if (userId != null && !userId.isEmpty()) {
-                ps.setString(paramIndex++, userId);
-            }
-            if (userName != null && !userName.isEmpty()) {
-                ps.setString(paramIndex++, "%" + userName + "%");
-            }
-            if (userClass != null && !userClass.isEmpty()) {
-                ps.setString(paramIndex++, userClass);
-            }
-
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                user = new User(
-                        rs.getString("user_id"),
-                        rs.getString("user_fullname"),
-                        Gender.valueOf(rs.getString("user_gender")),
-                        rs.getString("user_class"),
-                        rs.getString("user_major"),
-                        rs.getString("user_phone"),
-                        rs.getString("user_email")
-                );
-                users.add(user);
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return users;
-    }
-
+    // Kiểm tra user đã trả sách hay chưa
     public boolean hasUnreturnedBooks(String userId) {
         String query = "SELECT 1 FROM library WHERE library_user_id = ? AND library_quantity > 0 AND library_status = 'Chưa trả' LIMIT 1";
         try (Connection connection = DBConnection.getConnection();
@@ -190,5 +191,27 @@ public class UserDao {
             e.printStackTrace();
         }
         return false;
+    }
+
+    // Lấy user hiện tại thông qua username đăng nhập
+    public User getCurrentUser(String username) throws SQLException {
+        String query = "SELECT * FROM user WHERE user_username = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new User(
+                        rs.getString("user_id"),
+                        rs.getString("user_fullname"),
+                        Gender.valueOf(rs.getString("user_gender")),
+                        rs.getString("user_class"),
+                        rs.getString("user_major"),
+                        rs.getString("user_phone"),
+                        rs.getString("user_email")
+                );
+            }
+        }
+        return null;
     }
 }
