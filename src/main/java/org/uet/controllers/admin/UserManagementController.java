@@ -1,5 +1,6 @@
 package org.uet.controllers.admin;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -109,8 +110,12 @@ public class UserManagementController {
     }
 
     private void loadSampleData() {
-        List<User> users = userDao.getAllUsers();
-        userData.addAll(users);
+        userDao.getAllUsersAsync().thenAccept(users -> {
+            Platform.runLater(() -> userData.addAll(users));
+        }).exceptionally(e -> {
+            Platform.runLater(() -> showAlert("Lỗi", "Không thể tải dữ liệu người dùng: " + e.getMessage(), Alert.AlertType.ERROR));
+            return null;
+        });
     }
 
     @FXML
@@ -200,21 +205,28 @@ public class UserManagementController {
     @FXML
     private void onDelete(ActionEvent event) {
         if (selectedUser != null) {
-            if (userDao.hasUnreturnedBooks(selectedUser.getId())) {
-                showAlert("Thông báo", "Không thể xoá người dùng! Người dùng đang mượn sách!", Alert.AlertType.WARNING);
-                return;
-            }
+            userDao.hasUnreturnedBooksAsync(selectedUser.getId()).thenAccept(hasUnreturnedBooks -> {
+                if (hasUnreturnedBooks) {
+                    Platform.runLater(() -> showAlert("Thông báo", "Không thể xoá người dùng! Người dùng đang mượn sách!", Alert.AlertType.WARNING));
+                    return;
+                }
 
-            userData.remove(selectedUser);
-            deleteFromDatabase(selectedUser);
+                Platform.runLater(() -> {
+                    userData.remove(selectedUser);
+                    deleteFromDatabase(selectedUser);
 
-            userTable.setItems(FXCollections.observableArrayList(userData));
-            userTable.refresh();
+                    userTable.setItems(FXCollections.observableArrayList(userData));
+                    userTable.refresh();
 
-            clearForm();
-            selectedUser = null;
+                    clearForm();
+                    selectedUser = null;
 
-            showAlert("Thông báo", "Xóa thành công!", Alert.AlertType.INFORMATION);
+                    showAlert("Thông báo", "Xóa thành công!", Alert.AlertType.INFORMATION);
+                });
+            }).exceptionally(e -> {
+                Platform.runLater(() -> showAlert("Lỗi", "Đã xảy ra lỗi khi kiểm tra sách chưa trả: " + e.getMessage(), Alert.AlertType.ERROR));
+                return null;
+            });
         } else {
             showAlert("Thông báo", "Hãy chọn một sinh viên để xóa!", Alert.AlertType.WARNING);
         }
@@ -269,21 +281,35 @@ public class UserManagementController {
 
 
     //-------------------UPDATE INTO DATABASE-------------------
-    private void saveToDatabase(User user) throws SQLException {
-        userDao.addUser(user);
-        System.out.println("Lưu vào cơ sở dữ liệu: " + user);
+    private void saveToDatabase(User user) {
+        userDao.addUserAsync(user).thenRun(() -> {
+            Platform.runLater(() -> {
+                showAlert("Thông báo", "Đã thêm user thành công.", Alert.AlertType.INFORMATION);
+                System.out.println("Lưu vào cơ sở dữ liệu: " + user);
+            });
+        }).exceptionally(e -> {
+            Platform.runLater(() -> System.out.println("Lỗi khi lưu vào cơ sở dữ liệu: " + e.getMessage()));
+            return null;
+        });
     }
 
-    private void updateInDatabase(User user) throws SQLException {
-        userDao.updateUser(user);
-        System.out.println("Cập nhật cơ sở dữ liệu: " + user);
+    private void updateInDatabase(User user) {
+        userDao.updateUserAsync(user).thenRun(() -> {
+            Platform.runLater(() -> System.out.println("Cập nhật cơ sở dữ liệu: " + user));
+        }).exceptionally(e -> {
+            Platform.runLater(() -> System.out.println("Lỗi khi cập nhật cơ sở dữ liệu: " + e.getMessage()));
+            return null;
+        });
     }
 
     private void deleteFromDatabase(User user) {
-        userDao.deleteUser(user.getId());
-        System.out.println("Xóa khỏi cơ sở dữ liệu: " + user);
-    }
-    //----------------------------------------------------
+        userDao.deleteUserAsync(user.getId()).thenRun(() -> {
+            Platform.runLater(() -> System.out.println("Xóa khỏi cơ sở dữ liệu: " + user));
+        }).exceptionally(e -> {
+            Platform.runLater(() -> System.out.println("Lỗi khi xóa khỏi cơ sở dữ liệu: " + e.getMessage()));
+            return null;
+        });
+    }    //----------------------------------------------------
 
 
     // Hiển thị thông báo Alert

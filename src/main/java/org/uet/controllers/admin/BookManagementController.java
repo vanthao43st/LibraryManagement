@@ -1,5 +1,6 @@
 package org.uet.controllers.admin;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -64,9 +65,19 @@ public class BookManagementController {
     }
 
     private void loadDocument() {
-        List<Book> books = bookDao.getAllBook();
-        bookData.setAll(books);
-        bookTable.setItems(bookData);
+        bookDao.getAllBooksAsync().thenAccept(books -> {
+            if (books != null) {
+                Platform.runLater(() -> {
+                    bookData.setAll(books);
+                    bookTable.setItems(bookData);
+                });
+            }
+        }).exceptionally(e -> {
+            Platform.runLater(() -> {
+                showAlert("Lỗi", "Không thể tải dữ liệu sách!", Alert.AlertType.ERROR);
+            });
+            return null;
+        });
     }
 
     @FXML
@@ -108,7 +119,7 @@ public class BookManagementController {
 
         try {
             Book book = getBook();
-            bookDao.addBook(book);
+            bookDao.addBookAsync(book);
             bookData.add(book);
             bookTable.refresh();
             bookTable.setItems(bookData);
@@ -166,11 +177,19 @@ public class BookManagementController {
             selectedBook.setQuantity(Integer.parseInt(bookQuantityField.getText()));
             selectedBook.setDescription(bookDescriptionField.getText());
 
-            bookDao.updateBook(selectedBook);
-            bookTable.refresh();
-
-            clearInputFields();
-            showAlert("Thành công", "Cập nhật tài liệu thành công!", Alert.AlertType.INFORMATION);
+            //cập nhật database sử dụng bất đồng bộ
+            bookDao.updateBookAsync(selectedBook).thenRun(() -> {
+                Platform.runLater(() -> {
+                    bookTable.refresh();
+                    clearInputFields();
+                    showAlert("Thành công", "Cập nhật tài liệu thành công!", Alert.AlertType.INFORMATION);
+                });
+            }).exceptionally(e -> {
+                Platform.runLater(() -> {
+                    showAlert("Lỗi", "Cập nhật thất bại: " + e.getMessage(), Alert.AlertType.ERROR);
+                });
+                return null;
+            });
         } catch (Exception e) {
             showAlert("Lỗi", "Nhập vào không hợp lệ. Vui lòng điền các trường chính xác!", Alert.AlertType.ERROR);
         }
@@ -183,15 +202,34 @@ public class BookManagementController {
             return;
         }
 
-        if (bookDao.isBorrowedBook(selectedBook.getCode())) {
-            showAlert("Thông báo", "Tài liệu đang được mượn! Không thể xoá được!", Alert.AlertType.WARNING);
-            return;
-        }
-
-        bookDao.deleteBook(selectedBook.getCode());
-        bookData.remove(selectedBook);
-        clearInputFields();
-        showAlert("Thành công", "Xoá sách thành công!", Alert.AlertType.INFORMATION);
+        // Kiểm tra xem tài liệu có đang được mượn không (bất đồng bộ)
+        bookDao.isBorrowedBookAsync(selectedBook.getCode()).thenAccept(isBorrowed -> {
+            Platform.runLater(() -> {
+                if (isBorrowed) {
+                    showAlert("Thông báo", "Tài liệu đang được mượn! Không thể xoá được!", Alert.AlertType.WARNING);
+                } else {
+                    // Xoá sách khỏi cơ sở dữ liệu (bất đồng bộ)
+                    bookDao.deleteBookAsync(selectedBook.getCode()).thenRun(() -> {
+                        Platform.runLater(() -> {
+                            bookData.remove(selectedBook); // Xoá sách khỏi danh sách hiển thị
+                            clearInputFields(); // Dọn dẹp trường nhập liệu
+                            showAlert("Thành công", "Xoá sách thành công!", Alert.AlertType.INFORMATION);
+                        });
+                    }).exceptionally(e -> {
+                        Platform.runLater(() -> {
+                            showAlert("Lỗi", "Không thể xoá sách!", Alert.AlertType.ERROR);
+                            System.out.println("Lỗi: " + e.getMessage());
+                        });
+                        return null;
+                    });
+                }
+            });
+        }).exceptionally(e -> {
+            Platform.runLater(() -> {
+                showAlert("Lỗi", "Không thể kiểm tra trạng thái mượn sách: " + e.getMessage(), Alert.AlertType.ERROR);
+            });
+            return null;
+        });
     }
 
     @FXML

@@ -113,7 +113,7 @@ public class LibraryManagementController {
             }
 
             // Kiểm tra sự tồn tại của document_code trong bảng book hoặc thesis
-            if (!libraryDao.isCodeExisted(documentCode)) {
+            if (!libraryDao.isDocumentCodeExisted(documentCode)) {
                 showAlert("Lỗi", "Tài liệu không tồn tại! Vui lòng nhập mã tài liệu hợp lệ.", Alert.AlertType.WARNING);
                 return;
             }

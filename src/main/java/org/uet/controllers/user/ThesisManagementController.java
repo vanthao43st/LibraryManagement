@@ -1,5 +1,6 @@
 package org.uet.controllers.user;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -15,7 +16,6 @@ import org.uet.database.dao.ThesisDao;
 import org.uet.entity.Thesis;
 
 import java.io.IOException;
-import java.util.List;
 
 public class ThesisManagementController {
 
@@ -56,9 +56,15 @@ public class ThesisManagementController {
     }
 
     private void loadTheses() {
-        List<Thesis> theses = thesisDao.getAllThesis();
-        thesisData.setAll(theses);
-        thesisTable.setItems(thesisData);
+        thesisDao.getAllThesisAsync().thenAccept(theses -> {
+            Platform.runLater(() -> {
+                thesisData.setAll(theses);
+                thesisTable.setItems(thesisData);
+            });
+        }).exceptionally(e -> {
+            Platform.runLater(() -> showAlert("Lỗi", "Không thể tải dữ liệu luận văn: " + e.getMessage(), Alert.AlertType.ERROR));
+            return null;
+        });
     }
 
     @FXML

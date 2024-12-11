@@ -1,5 +1,6 @@
 package org.uet.controllers.admin;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -63,11 +64,16 @@ public class ThesisManagementController {
     }
 
     private void loadTheses() {
-        List<Thesis> theses = thesisDao.getAllThesis();
-        thesisData.setAll(theses);
-        thesisTable.setItems(thesisData);
+        thesisDao.getAllThesisAsync().thenAccept(theses -> {
+            Platform.runLater(() -> {
+                thesisData.setAll(theses);
+                thesisTable.setItems(thesisData);
+            });
+        }).exceptionally(e -> {
+            Platform.runLater(() -> showAlert("Lỗi", "Không thể tải dữ liệu luận văn: " + e.getMessage(), Alert.AlertType.ERROR));
+            return null;
+        });
     }
-
     @FXML
     private void onTableClick(MouseEvent event) {
         selectedThesis = thesisTable.getSelectionModel().getSelectedItem();
@@ -113,12 +119,17 @@ public class ThesisManagementController {
 
         try {
             Thesis thesis = getThesis();
-            thesisDao.addThesis(thesis);
-            thesisData.add(thesis);
-            thesisTable.refresh();
-
-            clearInputFields();
-            showAlert("Thành công", "Đã thêm luận văn thành công!", Alert.AlertType.INFORMATION);
+            thesisDao.addThesisAsync(thesis).thenRun(() -> {
+                Platform.runLater(() -> {
+                    thesisData.add(thesis);
+                    thesisTable.refresh();
+                    clearInputFields();
+                    showAlert("Thành công", "Đã thêm luận văn thành công!", Alert.AlertType.INFORMATION);
+                });
+            }).exceptionally(e -> {
+                Platform.runLater(() -> showAlert("Lỗi", "Đã xảy ra lỗi khi thêm luận văn: " + e.getMessage(), Alert.AlertType.ERROR));
+                return null;
+            });
         } catch (Exception e) {
             showAlert("Lỗi", "Nhập vào không hợp lệ! Hãy kiểm tra các dữ liệu nhập vào!", Alert.AlertType.ERROR);
         }
@@ -181,11 +192,16 @@ public class ThesisManagementController {
             selectedThesis.setDescription(thesisDescriptionField.getText());
             selectedThesis.setQuantity(Integer.parseInt(thesisQuantityField.getText()));
 
-            thesisDao.updateThesis(selectedThesis);
-            thesisTable.refresh();
-
-            clearInputFields();
-            showAlert("Thành công", "Thesis updated successfully!", Alert.AlertType.INFORMATION);
+            thesisDao.updateThesisAsync(selectedThesis).thenRun(() -> {
+                Platform.runLater(() -> {
+                    thesisTable.refresh();
+                    clearInputFields();
+                    showAlert("Thành công", "Cập nhật luận văn thành công!", Alert.AlertType.INFORMATION);
+                });
+            }).exceptionally(e -> {
+                Platform.runLater(() -> showAlert("Lỗi", "Đã xảy ra lỗi khi cập nhật luận văn: " + e.getMessage(), Alert.AlertType.ERROR));
+                return null;
+            });
         } catch (Exception e) {
             showAlert("Lỗi", "Nhập vào không hợp lệ! Hãy kiểm tra các dữ liệu nhập vào!", Alert.AlertType.ERROR);
         }
@@ -198,10 +214,34 @@ public class ThesisManagementController {
             return;
         }
 
-        thesisDao.deleteThesis(selectedThesis.getCode());
-        thesisData.remove(selectedThesis);
-        clearInputFields();
-        showAlert("Thành công", "Đã xoá luận văn thành công!", Alert.AlertType.INFORMATION);
+        // Kiểm tra xem tài liệu có đang được mượn không (bất đồng bộ)
+        thesisDao.isBorrowedThesisAsync(selectedThesis.getCode()).thenAccept(isBorrowed -> {
+            Platform.runLater(() -> {
+                if (isBorrowed) {
+                    showAlert("Thông báo", "Tài liệu đang được mượn! Không thể xoá được!", Alert.AlertType.WARNING);
+                } else {
+                    // Xoá luận văn khỏi cơ sở dữ liệu (bất đồng bộ)
+                    thesisDao.deleteThesisAsync(selectedThesis.getCode()).thenRun(() -> {
+                        Platform.runLater(() -> {
+                            thesisData.remove(selectedThesis); // Xoá sách khỏi danh sách hiển thị
+                            clearInputFields(); // Dọn dẹp trường nhập liệu
+                            showAlert("Thành công", "Xoá luận văn thành công!", Alert.AlertType.INFORMATION);
+                        });
+                    }).exceptionally(e -> {
+                        Platform.runLater(() -> {
+                            showAlert("Lỗi", "Không thể xoá sách!", Alert.AlertType.ERROR);
+                            System.out.println("Lỗi: " + e.getMessage());
+                        });
+                        return null;
+                    });
+                }
+            });
+        }).exceptionally(e -> {
+            Platform.runLater(() -> {
+                showAlert("Lỗi", "Không thể kiểm tra trạng thái mượn luận văn: " + e.getMessage(), Alert.AlertType.ERROR);
+            });
+            return null;
+        });
     }
 
     @FXML

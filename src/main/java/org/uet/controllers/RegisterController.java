@@ -1,5 +1,6 @@
 package org.uet.controllers;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,6 +19,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
 
 public class RegisterController implements Initializable {
 
@@ -50,17 +52,18 @@ public class RegisterController implements Initializable {
         });
     }
 
-    public String generateUniqueUserId() {
-        Random random = new Random();
-        String userId;
-
-        do {
-            // Random một ID có 8 chữ số
-            userId = String.format("%08d", random.nextInt(100000000));
-
-        } while (userDao.doesUserIdExist(userId));
-
-        return userId;
+    public CompletableFuture<String> generateUniqueUserIdAsync() {
+        return CompletableFuture.supplyAsync(() -> {
+            Random random = new Random();
+            return String.format("%08d", random.nextInt(100000000));
+        }).thenCompose(userId ->
+                userDao.doesUserIdExistAsync(userId).thenCompose(exists -> {
+                    if (exists) {
+                        return generateUniqueUserIdAsync(); // Gọi lại nếu ID đã tồn tại
+                    }
+                    return CompletableFuture.completedFuture(userId); // Trả về ID nếu duy nhất
+                })
+        );
     }
 
     private void returnLoginPage(Button button) {
@@ -94,32 +97,36 @@ public class RegisterController implements Initializable {
             return;
         }
 
-        if (userDao.doesUsernameExist(usernameField.getText())) {
-            showAlert("Lỗi", "username đã tồn tại. Vui lòng nhập username khác!", Alert.AlertType.ERROR);
-            return;
-        }
+        userDao.doesUsernameExistAsync(usernameField.getText()).thenCompose(usernameExists -> {
+            if (usernameExists) {
+                Platform.runLater(() -> showAlert("Lỗi", "username đã tồn tại. Vui lòng nhập username khác!", Alert.AlertType.ERROR));
+                return CompletableFuture.completedFuture(null);
+            }
 
-        try {
-            userDao.addUser(
-                    new User(
-                            generateUniqueUserId(),
-                            fullNameField.getText(),
-                            Gender.valueOf(genderField.getValue()),
-                            classField.getText(),
-                            majorField.getValue(),
-                            phoneField.getText(),
-                            emailField.getText(),
-                            usernameField.getText(),
-                            passwordField.getText()
-                    )
-            );
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
+            return generateUniqueUserIdAsync().thenCompose(userId -> {
+                User newUser = new User(
+                        userId,
+                        fullNameField.getText(),
+                        Gender.valueOf(genderField.getValue()),
+                        classField.getText(),
+                        majorField.getValue(),
+                        phoneField.getText(),
+                        emailField.getText(),
+                        usernameField.getText(),
+                        passwordField.getText()
+                );
 
-        showAlert("Thông báo", "Đăng ký thành công.", Alert.AlertType.INFORMATION);
-
-        returnLoginPage(registerButton);
+                return userDao.addUserAsync(newUser).thenRun(() -> {
+                    Platform.runLater(() -> {
+                        showAlert("Thông báo", "Đăng ký thành công.", Alert.AlertType.INFORMATION);
+                        returnLoginPage(registerButton);
+                    });
+                });
+            });
+        }).exceptionally(e -> {
+            Platform.runLater(() -> showAlert("Lỗi", "Đã xảy ra lỗi: " + e.getMessage(), Alert.AlertType.ERROR));
+            return null;
+        });
     }
 
     private boolean inCompleteInfo() {

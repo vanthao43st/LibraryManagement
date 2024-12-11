@@ -1,5 +1,6 @@
 package org.uet.controllers.admin;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -13,9 +14,17 @@ public class StatisticManagementController {
     private static final StatisticDao statisticDao = new StatisticDao();
 
     public void setStatisticDetails() {
-        totalBooksLabel.setText(String.valueOf(statisticDao.getTotalDocuments()));
-        borrowedBooksLabel.setText(String.valueOf(statisticDao.getBorrowedDocuments()));
-        availableBooksLabel.setText(String.valueOf(statisticDao.getAvailableDocuments()));
+        statisticDao.getTotalDocumentsAsync().thenAccept(total -> {
+            Platform.runLater(() -> totalBooksLabel.setText(String.valueOf(total)));
+        });
+
+        statisticDao.getBorrowedDocumentsAsync().thenAccept(borrowed -> {
+            Platform.runLater(() -> borrowedBooksLabel.setText(String.valueOf(borrowed)));
+        });
+
+        statisticDao.getAvailableDocumentsAsync().thenAccept(available -> {
+            Platform.runLater(() -> availableBooksLabel.setText(String.valueOf(available)));
+        });
     }
 
     @FXML

@@ -121,8 +121,17 @@ public class BookAPIController {
     }
 
     private void saveToDatabase(Book book) throws SQLException {
-        bookDao.addBook(book);
-        System.out.println("Sách được lưu vào database: " + book);
+        bookDao.addBookAsync(book).thenRun(() -> {
+            Platform.runLater(() -> {
+                System.out.println("Sách được lưu vào database: " + book);
+                showAlert("Thành công", "Sách đã được lưu vào cơ sở dữ liệu.", Alert.AlertType.INFORMATION);
+            });
+        }).exceptionally(e -> {
+            Platform.runLater(() -> {
+                showAlert("Lỗi", "Không thể lưu sách vào cơ sở dữ liệu: " + e.getMessage(), Alert.AlertType.ERROR);
+            });
+            return null;
+        });
     }
 
     @FXML

@@ -1,5 +1,6 @@
 package org.uet.controllers.user;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -57,9 +58,19 @@ public class BookManagementController {
     }
 
     private void loadDocument() {
-        List<Book> books = bookDao.getAllBook();
-        bookData.setAll(books);
-        bookTable.setItems(bookData);
+        bookDao.getAllBooksAsync().thenAccept(books -> {
+            if (books != null) {
+                Platform.runLater(() -> {
+                    bookData.setAll(books);
+                    bookTable.setItems(bookData);
+                });
+            }
+        }).exceptionally(e -> {
+            Platform.runLater(() -> {
+                showAlert("Lỗi", "Không thể tải dữ liệu sách!", Alert.AlertType.ERROR);
+            });
+            return null;
+        });
     }
 
     @FXML

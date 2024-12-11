@@ -95,7 +95,7 @@ public class LibraryManagementController {
             String type = documentTypeField.getValue();
 
             // Kiểm tra sự tồn tại của document_code
-            if (!libraryDao.isCodeExisted(documentCode)) {
+            if (!libraryDao.isDocumentCodeExisted(documentCode)) {
                 showAlert("Lỗi", "Tài liệu không tồn tại! Vui lòng nhập mã tài liệu hợp lệ.", Alert.AlertType.WARNING);
                 return;
             }

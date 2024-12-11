@@ -92,12 +92,6 @@ public class LibraryDao {
     public boolean borrowDocument(String userId, String code, String type, int quantity) {
         // Kiểm tra xem tài liệu có phải là sách hoặc luận văn không
         boolean isBook = checkIfBook(code);
-//        boolean isThesis = !isBook && checkIfThesis(code);
-
-//        if (!isBook && !isThesis) {
-//            System.out.println("Mã không hợp lệ. Không tìm thấy sách hoặc luận văn tương ứng.");
-//            return false;
-//        }
 
         // Kiểm tra sự khả dụng của tài liệu trước khi thực hiện mượn
         if (!checkAvailability(code, quantity)) {
@@ -248,7 +242,7 @@ public class LibraryDao {
         }
     }
 
-    public boolean isCodeExisted(String code) {
+    public boolean isDocumentCodeExisted(String code) {
         String queryBook = "SELECT 1 FROM book WHERE book_code = ?";
         String queryThesis = "SELECT 1 FROM thesis WHERE thesis_code = ?";
         try (Connection connection = DBConnection.getConnection();

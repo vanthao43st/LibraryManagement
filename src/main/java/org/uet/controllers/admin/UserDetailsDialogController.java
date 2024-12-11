@@ -1,5 +1,6 @@
 package org.uet.controllers.admin;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -15,20 +16,28 @@ public class UserDetailsDialogController {
 
     public void setUserDetails(User user) {
         if (user != null) {
-            userIdLabel.setText(user.getId());
-            userNameLabel.setText(user.getFullname());
-            genderLabel.setText(user.getGender().toString());
-            classLabel.setText(user.getClassname());
-            majorLabel.setText(user.getMajor());
-            phoneLabel.setText(user.getPhonenumber());
-            emailLabel.setText(user.getEmail());
+            Platform.runLater(() -> {
+                userIdLabel.setText(user.getId());
+                userNameLabel.setText(user.getFullname());
+                genderLabel.setText(user.getGender().toString());
+                classLabel.setText(user.getClassname());
+                majorLabel.setText(user.getMajor());
+                phoneLabel.setText(user.getPhonenumber());
+                emailLabel.setText(user.getEmail());
+            });
 
-            // Check status in library
-            if (userDao.hasUnreturnedBooks(user.getId())) {
-                statusLabel.setText("Đang mượn sách.");
-            } else {
-                statusLabel.setText("Đã trả sách.");
-            }
+            userDao.hasUnreturnedBooksAsync(user.getId()).thenAccept(hasUnreturnedBooks -> {
+                Platform.runLater(() -> {
+                    if (hasUnreturnedBooks) {
+                        statusLabel.setText("Đang mượn sách.");
+                    } else {
+                        statusLabel.setText("Đã trả sách.");
+                    }
+                });
+            }).exceptionally(e -> {
+                Platform.runLater(() -> statusLabel.setText("Lỗi khi kiểm tra trạng thái."));
+                return null;
+            });
         }
     }
 

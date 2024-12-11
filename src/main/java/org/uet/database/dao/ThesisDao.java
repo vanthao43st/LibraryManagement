@@ -5,75 +5,20 @@ import org.uet.entity.Thesis;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 public class ThesisDao {
-    public ArrayList<Thesis> getAllThesis() {
-        ArrayList<Thesis> theses = new ArrayList<>();
-        String query = "SELECT * FROM thesis";
-        Thesis thesis;
+    public CompletableFuture<ArrayList<Thesis>> getAllThesisAsync() {
+        return CompletableFuture.supplyAsync(() -> {
+            ArrayList<Thesis> theses = new ArrayList<>();
+            String query = "SELECT * FROM thesis";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (Connection connection = DBConnection.getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(query);
+                 ResultSet resultSet = preparedStatement.executeQuery()) {
 
-            while (resultSet.next()) {
-                thesis = new Thesis();
-                thesis.setCode(resultSet.getString("thesis_code"));
-                thesis.setTitle(resultSet.getString("thesis_title"));
-                thesis.setDescription(resultSet.getString("thesis_description"));
-                thesis.setAuthor(resultSet.getString("thesis_author"));
-                thesis.setSupervisor(resultSet.getString("thesis_supervisor"));
-                thesis.setUniversity(resultSet.getString("thesis_university"));
-                thesis.setDegree(resultSet.getString("thesis_degree"));
-                thesis.setSubmissionYear(resultSet.getInt("thesis_submission_year"));
-                thesis.setMajor(resultSet.getString("thesis_major"));
-                thesis.setQuantity(resultSet.getInt("thesis_quantity"));
-
-                theses.add(thesis);
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-
-        return theses;
-    }
-
-    public void addThesis(Thesis thesis) throws SQLException {
-        String query = "INSERT INTO thesis (thesis_code, thesis_title, thesis_description, " +
-                "thesis_author, thesis_supervisor, thesis_university, " +
-                "thesis_degree, thesis_submission_year, thesis_major, thesis_quantity) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(query)) {
-
-            ps.setString(1, thesis.getCode());
-            ps.setString(2, thesis.getTitle());
-            ps.setString(3, thesis.getDescription());
-            ps.setString(4, thesis.getAuthor());
-            ps.setString(5, thesis.getSupervisor());
-            ps.setString(6, thesis.getUniversity());
-            ps.setString(7, thesis.getDegree());
-            ps.setInt(8, thesis.getSubmissionYear());
-            ps.setString(9, thesis.getMajor());
-            ps.setInt(10, thesis.getQuantity());
-
-            int rowsAffected = ps.executeUpdate();
-            System.out.println(rowsAffected + " row(s) inserted.");
-        }
-    }
-
-    public Thesis getThesisByCode(String thesisCode) {
-        Thesis thesis = null;
-        String query = "SELECT * FROM thesis WHERE thesis_code = ?";
-
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(query)) {
-
-            ps.setString(1, thesisCode);
-
-            try (ResultSet resultSet = ps.executeQuery()) {
-                if (resultSet.next()) {
-                    thesis = new Thesis();
+                while (resultSet.next()) {
+                    Thesis thesis = new Thesis();
                     thesis.setCode(resultSet.getString("thesis_code"));
                     thesis.setTitle(resultSet.getString("thesis_title"));
                     thesis.setDescription(resultSet.getString("thesis_description"));
@@ -84,104 +29,109 @@ public class ThesisDao {
                     thesis.setSubmissionYear(resultSet.getInt("thesis_submission_year"));
                     thesis.setMajor(resultSet.getString("thesis_major"));
                     thesis.setQuantity(resultSet.getInt("thesis_quantity"));
+
+                    theses.add(thesis);
                 }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
             }
 
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-
-        return thesis;
+            return theses;
+        });
     }
 
-    public void updateThesis(Thesis thesis) throws SQLException {
-        String query = "UPDATE thesis SET thesis_title = ?, thesis_description = ?, thesis_author = ?, " +
-                "thesis_supervisor = ?, thesis_university = ?, thesis_degree = ?, thesis_submission_year = ?, " +
-                "thesis_major = ?, thesis_quantity = ? " +
-                "WHERE thesis_code = ?";
+    public CompletableFuture<Void> addThesisAsync(Thesis thesis) {
+        return CompletableFuture.runAsync(() -> {
+            String query = "INSERT INTO thesis (thesis_code, thesis_title, thesis_description, " +
+                    "thesis_author, thesis_supervisor, thesis_university, " +
+                    "thesis_degree, thesis_submission_year, thesis_major, thesis_quantity) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(query)) {
+            try (Connection connection = DBConnection.getConnection();
+                 PreparedStatement ps = connection.prepareStatement(query)) {
 
-            ps.setString(1, thesis.getTitle());
-            ps.setString(2, thesis.getDescription());
-            ps.setString(3, thesis.getAuthor());
-            ps.setString(4, thesis.getSupervisor());
-            ps.setString(5, thesis.getUniversity());
-            ps.setString(6, thesis.getDegree());
-            ps.setInt(7, thesis.getSubmissionYear());
-            ps.setString(8, thesis.getMajor());
-            ps.setInt(9, thesis.getQuantity());
-            ps.setString(10, thesis.getCode());
+                ps.setString(1, thesis.getCode());
+                ps.setString(2, thesis.getTitle());
+                ps.setString(3, thesis.getDescription());
+                ps.setString(4, thesis.getAuthor());
+                ps.setString(5, thesis.getSupervisor());
+                ps.setString(6, thesis.getUniversity());
+                ps.setString(7, thesis.getDegree());
+                ps.setInt(8, thesis.getSubmissionYear());
+                ps.setString(9, thesis.getMajor());
+                ps.setInt(10, thesis.getQuantity());
 
-            int rowsAffected = ps.executeUpdate();
-            System.out.println(rowsAffected + " row(s) updated.");
-        }
+                int rowsAffected = ps.executeUpdate();
+                System.out.println(rowsAffected + " row(s) inserted.");
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        });
     }
 
-    public void deleteThesis(String thesisCode) {
-        String query = "DELETE FROM thesis WHERE thesis_code = ?";
+    public CompletableFuture<Void> updateThesisAsync(Thesis thesis) {
+        return CompletableFuture.runAsync(() -> {
+            String query = "UPDATE thesis SET thesis_title = ?, thesis_description = ?, thesis_author = ?, " +
+                    "thesis_supervisor = ?, thesis_university = ?, thesis_degree = ?, thesis_submission_year = ?, " +
+                    "thesis_major = ?, thesis_quantity = ? " +
+                    "WHERE thesis_code = ?";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            try (Connection connection = DBConnection.getConnection();
+                 PreparedStatement ps = connection.prepareStatement(query)) {
 
-            preparedStatement.setString(1, thesisCode);
+                ps.setString(1, thesis.getTitle());
+                ps.setString(2, thesis.getDescription());
+                ps.setString(3, thesis.getAuthor());
+                ps.setString(4, thesis.getSupervisor());
+                ps.setString(5, thesis.getUniversity());
+                ps.setString(6, thesis.getDegree());
+                ps.setInt(7, thesis.getSubmissionYear());
+                ps.setString(8, thesis.getMajor());
+                ps.setInt(9, thesis.getQuantity());
+                ps.setString(10, thesis.getCode());
 
-            int rowsAffected = preparedStatement.executeUpdate();
-            System.out.println(rowsAffected + " row(s) deleted.");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+                int rowsAffected = ps.executeUpdate();
+                System.out.println(rowsAffected + " row(s) updated.");
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        });
     }
 
-    public ArrayList<Thesis> searchTheses(String title, String author, String major) {
-        ArrayList<Thesis> result = new ArrayList<>();
-        String query = "SELECT * FROM thesis WHERE 1=1";
+    public CompletableFuture<Void> deleteThesisAsync(String thesisCode) {
+        return CompletableFuture.runAsync(() -> {
+            String query = "DELETE FROM thesis WHERE thesis_code = ?";
 
-        if (title != null && !title.isEmpty()) {
-            query += " AND thesis_title LIKE ?";
-        }
-        if (author != null && !author.isEmpty()) {
-            query += " AND thesis_author LIKE ?";
-        }
-        if (major != null && !major.isEmpty()) {
-            query += " AND thesis_major LIKE ?";
-        }
+            try (Connection connection = DBConnection.getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(query)) {
-            int paramIndex = 1;
+                preparedStatement.setString(1, thesisCode);
 
-            if (title != null && !title.isEmpty()) {
-                ps.setString(paramIndex++, "%" + title + "%");
+                int rowsAffected = preparedStatement.executeUpdate();
+                System.out.println(rowsAffected + " row(s) deleted.");
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
             }
-            if (author != null && !author.isEmpty()) {
-                ps.setString(paramIndex++, "%" + author + "%");
-            }
-            if (major != null && !major.isEmpty()) {
-                ps.setString(paramIndex++, "%" + major + "%");
-            }
+        });
+    }
 
-            ResultSet resultSet = ps.executeQuery();
 
-            while (resultSet.next()) {
-                Thesis thesis = new Thesis();
-                thesis.setCode(resultSet.getString("thesis_code"));
-                thesis.setTitle(resultSet.getString("thesis_title"));
-                thesis.setDescription(resultSet.getString("thesis_description"));
-                thesis.setAuthor(resultSet.getString("thesis_author"));
-                thesis.setSupervisor(resultSet.getString("thesis_supervisor"));
-                thesis.setUniversity(resultSet.getString("thesis_university"));
-                thesis.setDegree(resultSet.getString("thesis_degree"));
-                thesis.setSubmissionYear(resultSet.getInt("thesis_submission_year"));
-                thesis.setMajor(resultSet.getString("thesis_major"));
-                thesis.setQuantity(resultSet.getInt("thesis_quantity"));
-                result.add(thesis);
+    // Kiểm tra xem luận văn có đang được mượn không (bất đồng bộ)
+    public CompletableFuture<Boolean> isBorrowedThesisAsync(String documentCode) {
+        return CompletableFuture.supplyAsync(() -> {
+            String query = "SELECT 1 FROM library WHERE library_document_code = ? AND library_quantity > 0 AND library_status = 'Chưa trả' LIMIT 1";
+            try (Connection connection = DBConnection.getConnection();
+                 PreparedStatement ps = connection.prepareStatement(query)) {
+
+                ps.setString(1, documentCode);
+                ResultSet resultSet = ps.executeQuery();
+
+                return resultSet.next();
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        return result;
+            return false;
+        });
     }
 }
