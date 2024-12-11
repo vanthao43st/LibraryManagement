@@ -70,6 +70,7 @@ public class GoogleBooksAPI {
                 JsonNode volumeInfo = item.get("volumeInfo");
 
                 String id = item.has("id") ? item.get("id").asText() : UUID.randomUUID().toString();
+//                System.out.println(item.get("id"));
                 String title = volumeInfo.has("title") ? volumeInfo.get("title").asText() : "Unknown";
 
                 String author = "Unknown";

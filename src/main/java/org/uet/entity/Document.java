@@ -15,11 +15,11 @@ public abstract class Document {
         this.quantity = 0;
     }
 
-    public Document(String author, String code, String description, String title, int quantity) {
-        this.author = author;
+    public Document(String code, String title, String description, String author, int quantity) {
         this.code = code;
-        this.description = description;
         this.title = title;
+        this.description = description;
+        this.author = author;
         this.quantity = quantity;
     }
 

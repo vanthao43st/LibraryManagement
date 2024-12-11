@@ -174,7 +174,4 @@ public class LoginController implements Initializable {
             }
         });
     }
-
-    public void handleRegisterAction(ActionEvent event) {
-    }
 }
