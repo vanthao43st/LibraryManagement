@@ -13,9 +13,9 @@ public class StatisticManagementController {
     private static final StatisticDao statisticDao = new StatisticDao();
 
     public void setStatisticDetails() {
-        totalBooksLabel.setText(String.valueOf(statisticDao.getTotalBooks()));
-        borrowedBooksLabel.setText(String.valueOf(statisticDao.getBorrowedBooks()));
-        availableBooksLabel.setText(String.valueOf(statisticDao.getAvailableBooks()));
+        totalBooksLabel.setText(String.valueOf(statisticDao.getTotalDocuments()));
+        borrowedBooksLabel.setText(String.valueOf(statisticDao.getBorrowedDocuments()));
+        availableBooksLabel.setText(String.valueOf(statisticDao.getAvailableDocuments()));
     }
 
     @FXML

@@ -43,8 +43,6 @@ public class BookAPIController {
 
     private final ObservableList<Book> bookData = FXCollections.observableArrayList();
 
-    private static final BookDao bookDao = new BookDao();
-
     @FXML
     public void initialize() {
         codeColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getCode()));

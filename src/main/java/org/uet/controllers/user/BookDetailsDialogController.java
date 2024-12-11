@@ -21,7 +21,7 @@ public class BookDetailsDialogController {
         quantityLabel.setText(String.valueOf(book.getQuantity()));
 
         String description = book.getDescription();
-        String newDescription = "";
+        String newDescription;
         if (description!=null && description.length() > 200) {
             newDescription = description.substring(0,200) + " ...";
         } else {

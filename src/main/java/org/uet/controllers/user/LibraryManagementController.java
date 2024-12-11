@@ -172,14 +172,6 @@ public class LibraryManagementController {
         }
     }
 
-//    @FXML
-//    private void onDelete(ActionEvent event) {
-//        libraryDao.deleteLibraryRecord();
-//        loadLibraryData();
-//        clearForm();
-//        showAlert("Thành công", "Đã xoá các bản ghi không cần thiết!", Alert.AlertType.INFORMATION);
-//    }
-
     @FXML
     private void onSearch(ActionEvent event) {
         String criteria = searchCriteria.getValue();

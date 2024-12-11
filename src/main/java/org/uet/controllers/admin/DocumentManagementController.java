@@ -21,26 +21,8 @@ public class DocumentManagementController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Gắn sự kiện highlight cho các nút
-        attachHighlightToButton(showBookButton, "/Views/Admin/BookManagement.fxml");
-        attachHighlightToButton(showThesisButton, "/Views/Admin/ThesisManagement.fxml");
-    }
-
-    // Highlight nút khi được nhấn
-    private void attachHighlightToButton(Button button, String fxmlPath) {
-        button.setOnAction(actionEvent -> {
-            removeHighlightFromAllButtons(); // Loại bỏ highlight từ tất cả các nút
-            button.getStyleClass().add("highlighted-button"); // Thêm class highlight vào nút hiện tại
-            showComponent(fxmlPath);
-        });
-    }
-
-    // Loại bỏ highlight từ tất cả các nút
-    private void removeHighlightFromAllButtons() {
-        Button[] buttons = {showBookButton, showThesisButton};
-        for (Button btn : buttons) {
-            btn.getStyleClass().remove("highlighted-button");
-        }
+        showBookButton.setOnAction(actionEvent -> showComponent("/Views/Admin/BookManagement.fxml"));
+        showThesisButton.setOnAction(actionEvent -> showComponent("/Views/Admin/ThesisManagement.fxml"));
     }
 
     @FXML
@@ -59,5 +41,4 @@ public class DocumentManagementController implements Initializable {
         container.getChildren().clear();
         container.getChildren().add(node);
     }
-
 }

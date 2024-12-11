@@ -40,8 +40,6 @@ public class BookManagementController {
 
     private final ObservableList<Book> bookData = FXCollections.observableArrayList();
 
-    private Book selectedBook;
-
     private final BookDao bookDao = new BookDao();
 
     @FXML

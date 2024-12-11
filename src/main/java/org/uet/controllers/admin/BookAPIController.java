@@ -30,9 +30,6 @@ public class BookAPIController {
     private TextField searchField;
 
     @FXML
-    private Button searchButton, addButton, detailsButton;
-
-    @FXML
     private TableView<Book> bookTable;
 
     @FXML

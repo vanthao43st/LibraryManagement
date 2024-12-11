@@ -27,9 +27,6 @@ public class LibraryManagementController {
     private TextField searchField, userIdField, documentCodeField, quantityField;
 
     @FXML
-    private Button searchButton, borrowButton, returnButton, deleteButton, statisticButton;
-
-    @FXML
     private TableView<Library> libraryTable;
 
     @FXML

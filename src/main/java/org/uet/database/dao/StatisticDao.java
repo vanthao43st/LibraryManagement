@@ -7,14 +7,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class StatisticDao {
-    public int getTotalBooks() {
-        String query = "SELECT SUM(book_quantity) AS total_books FROM book";
+    public int getTotalDocuments() {
+        String query = "SELECT (" +
+                "    (SELECT SUM(book_quantity) FROM book) + " +
+                "    (SELECT SUM(thesis_quantity) FROM thesis) " +
+                ") AS total_items";
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(query);
              ResultSet rs = ps.executeQuery()) {
 
             if (rs.next()) {
-                return rs.getInt("total_books");
+                return rs.getInt("total_items");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -22,14 +25,14 @@ public class StatisticDao {
         return 0;
     }
 
-    public int getBorrowedBooks() {
-        String query = "SELECT SUM(library_quantity) AS borrowed_books FROM library WHERE library_status = 'Chưa trả'";
+    public int getBorrowedDocuments() {
+        String query = "SELECT SUM(library_quantity) AS borrowed_documents FROM library";
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(query);
              ResultSet rs = ps.executeQuery()) {
 
             if (rs.next()) {
-                return rs.getInt("borrowed_books");
+                return rs.getInt("borrowed_documents");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,9 +40,9 @@ public class StatisticDao {
         return 0;
     }
 
-    public int getAvailableBooks() {
-        int totalBooks = getTotalBooks();
-        int borrowedBooks = getBorrowedBooks();
-        return totalBooks - borrowedBooks;
+    public int getAvailableDocuments() {
+        int totalDocuments = getTotalDocuments();
+        int borrowedDocuments = getBorrowedDocuments();
+        return totalDocuments - borrowedDocuments;
     }
 }

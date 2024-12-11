@@ -26,8 +26,8 @@ public class ThesisDetailsDialogController {
 
         String description = thesis.getDescription();
         String newDescription;
-        if (description!=null && description.length() > 200) {
-            newDescription = description.substring(0,200) + " ...";
+        if (description != null && description.length() > 200) {
+            newDescription = description.substring(0, 200) + " ...";
         } else {
             newDescription = description;
         }

@@ -36,10 +36,10 @@ public class UserManagementController {
             classColumn, majorColumn, phoneColumn, emailColumn,
             usernameColumn, passwordColumn;
 
-    private static UserDao userDao = new UserDao();
+    private static final UserDao userDao = new UserDao();
 
     // Dữ liệu mẫu
-    private ObservableList<User> userData = FXCollections.observableArrayList();
+    private final ObservableList<User> userData = FXCollections.observableArrayList();
 
     // Theo dõi người dùng được chọn
     private User selectedUser;

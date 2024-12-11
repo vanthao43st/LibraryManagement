@@ -117,6 +117,8 @@ public class RegisterController implements Initializable {
             throw new RuntimeException(ex);
         }
 
+        showAlert("Thông báo", "Đăng ký thành công.", Alert.AlertType.INFORMATION);
+
         returnLoginPage(registerButton);
     }
 
