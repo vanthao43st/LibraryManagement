@@ -1,5 +1,6 @@
 package org.uet.controllers.user;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -13,13 +14,13 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.uet.database.dao.BookDao;
 import org.uet.entity.Book;
 import org.uet.service.GoogleBooksAPI;
 
 import java.io.IOException;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class BookAPIController {
 
@@ -63,40 +64,44 @@ public class BookAPIController {
         String keyword = searchField.getText().trim();
 
         if (criteria == null || keyword.isBlank()) {
-            showAlert("Lỗi", "Vui lòng chọn tiêu chí và nhập từ khóa tìm kiếm!", AlertType.WARNING);
+            showAlert("Lỗi", "Vui lòng chọn tiêu chí và nhập từ khóa tìm kiếm!", Alert.AlertType.WARNING);
             return;
         }
 
         bookData.clear();
 
-        //Search theo tieu chi
-        List<Book> books;
-        try {
-            switch (criteria) {
-                case "ISBN":
-                    books = GoogleBooksAPI.searchBookByISBN(keyword);
-                    break;
-                case "Title":
-                    books = GoogleBooksAPI.searchBookByTitle(keyword);
-                    break;
-                default:
-                    showAlert("Lỗi", "Tiêu chí không hợp lệ!", AlertType.ERROR);
-                    return;
-            }
+        // Xử lý tìm kiếm bất đồng bộ
+        CompletableFuture<ArrayList<Book>> searchFuture;
 
-            if (books == null || books.isEmpty()) {
-                showAlert("Thông báo", "Không tìm thấy kết quả nào phù hợp!", AlertType.INFORMATION);
+        switch (criteria) {
+            case "ISBN":
+                searchFuture = GoogleBooksAPI.searchBookByISBNAsync(keyword);
+                break;
+            case "Title":
+                searchFuture = GoogleBooksAPI.searchBookByTitleAsync(keyword);
+                break;
+            default:
+                showAlert("Lỗi", "Tiêu chí không hợp lệ!", Alert.AlertType.ERROR);
                 return;
-            }
-
-            // Thêm dữ liệu vào danh sách
-            bookData.addAll(books);
-            bookTable.setItems(bookData);
-
-        } catch (Exception e) {
-            showAlert("Lỗi", "Đã xảy ra lỗi khi tìm kiếm: " + e.getMessage(), AlertType.ERROR);
-            System.out.println(e.getMessage());
         }
+
+        // Xử lý kết quả khi hoàn thành
+        searchFuture.thenAccept(books -> {
+            if (books == null || books.isEmpty()) {
+                // Hiển thị thông báo không tìm thấy
+                Platform.runLater(() -> showAlert("Thông báo", "Không tìm thấy kết quả nào phù hợp!", Alert.AlertType.INFORMATION));
+            } else {
+                // Thêm dữ liệu vào danh sách và cập nhật bảng
+                Platform.runLater(() -> {
+                    bookData.addAll(books);
+                    bookTable.setItems(bookData);
+                });
+            }
+        }).exceptionally(e -> {
+            // Xử lý lỗi
+            Platform.runLater(() -> showAlert("Lỗi", "Đã xảy ra lỗi khi tìm kiếm: " + e.getMessage(), Alert.AlertType.ERROR));
+            return null;
+        });
     }
 
     @FXML
