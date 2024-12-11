@@ -1,18 +1,19 @@
 package org.uet.test;
 
-import org.uet.database.dao.DocumentDao;
+import org.uet.database.dao.BookDao;
+import org.uet.entity.Book;
 import org.uet.entity.Document;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class TestDocument {
-    private static final DocumentDao documentDao = new DocumentDao();
+    private static final BookDao BOOK_DAO = new BookDao();
 
     private static void getAllDocument() {
-        ArrayList<Document> documents = documentDao.getAllDocument();
-        for (Document document : documents) {
-            System.out.println(document.toString());
+        ArrayList<Book> books = BOOK_DAO.getAllBook();
+        for (Book book : books) {
+            System.out.println(book.toString());
         }
     }
 
@@ -22,21 +23,14 @@ public class TestDocument {
     }
 
     private static void updateDocument() throws SQLException {
-        Document document = new Document("0001", "Bài tập đại số tuyến tính",
+        Book book = new Book("0001", "Bài tập đại số tuyến tính",
                 "Ôn tập lý thuyết và thực hành thông qua các bài tập về đại số",
                 "Toán học", "Dennis Ritchie", 50000, 20);
-        documentDao.updateDocument(document);
+        BOOK_DAO.updateBook(book);
     }
 
     private static void deleteDocument() {
-        documentDao.deleteDocument("0005");
-    }
-
-    private static void searchDocuments() {
-        ArrayList<Document> documents = documentDao.searchDocuments("j", null, null);
-        for (Document document : documents) {
-            System.out.println(document.toString());
-        }
+        BOOK_DAO.deleteBook("0005");
     }
 
     public static void main(String[] args) throws SQLException {
@@ -44,6 +38,5 @@ public class TestDocument {
 //        addDocument();
         updateDocument();
 //        deleteDocument();
-//        searchDocuments();
     }
 }

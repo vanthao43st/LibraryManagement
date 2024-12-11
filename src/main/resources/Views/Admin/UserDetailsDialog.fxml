@@ -7,7 +7,7 @@
 <?import javafx.scene.control.Separator?>
 <DialogPane xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.uet.controllers.UserDetailsDialogController"
+            fx:controller="org.uet.controllers.admin.UserDetailsDialogController"
             style="-fx-background-color: #f9f9f9; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 8;">
     <content>
         <VBox spacing="15" style="-fx-padding: 20;">

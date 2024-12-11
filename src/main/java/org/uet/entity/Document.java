@@ -1,32 +1,25 @@
 package org.uet.entity;
 
-public class Document {
+public abstract class Document {
     private String code;
     private String title;
     private String description;
-    private String category;
     private String author;
-    private double price;
     private int quantity;
 
     public Document() {
-        this.code = "0001";
+        this.code = "";
         this.title = "";
         this.description = "";
-        this.category = "";
         this.author = "";
-        this.price = 0;
         this.quantity = 0;
     }
 
-    public Document(String code, String title, String description, String category,
-                    String author, double price, int quantity) {
+    public Document(String code, String title, String description, String author, int quantity) {
         this.code = code;
         this.title = title;
         this.description = description;
-        this.category = category;
         this.author = author;
-        this.price = price;
         this.quantity = quantity;
     }
 
@@ -54,28 +47,12 @@ public class Document {
         this.description = description;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public String getAuthor() {
         return author;
     }
 
     public void setAuthor(String author) {
         this.author = author;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     public int getQuantity() {
@@ -86,16 +63,5 @@ public class Document {
         this.quantity = quantity;
     }
 
-    @Override
-    public String toString() {
-        return "Document{" +
-                "code='" + code + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", category='" + category + '\'' +
-                ", author='" + author + '\'' +
-                ", price=" + price +
-                ", quantity=" + quantity +
-                '}';
-    }
+    public abstract String toString();
 }

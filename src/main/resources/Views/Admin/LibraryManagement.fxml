@@ -16,7 +16,7 @@
 <AnchorPane prefHeight="582.0" prefWidth="834.0"
             style="-fx-border-color: rgba(0, 0, 0, 0.3); -fx-border-width: 1; -fx-border-radius: 5;"
             xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.uet.controllers.LibraryManagementController">
+            fx:controller="org.uet.controllers.admin.LibraryManagementController">
     <BorderPane prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                 AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
@@ -57,6 +57,17 @@
                         <Label text="Quantity:"/>
                         <TextField fx:id="quantityField" prefWidth="200" promptText="Enter Quantity"/>
                     </VBox>
+                    <VBox spacing="10">
+                        <Label text="Document Type:"/>
+                        <ComboBox fx:id="documentTypeField" prefWidth="200" promptText="Select Type">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Sách"/>
+                                    <String fx:value="Luận văn"/>
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                    </VBox>
                 </HBox>
 
                 <!-- Table Section -->
@@ -64,6 +75,7 @@
                     <columns>
                         <TableColumn fx:id="userIdColumn" prefWidth="100.0" text="User ID"/>
                         <TableColumn fx:id="documentCodeColumn" prefWidth="150.0" text="Document Code"/>
+                        <TableColumn fx:id="documentTypeColumn" prefWidth="100.0" text="Type"/>
                         <TableColumn fx:id="quantityColumn" prefWidth="100.0" text="Quantity"/>
                         <TableColumn fx:id="borrowDateColumn" prefWidth="100.0" text="Borrow Date"/>
                         <TableColumn fx:id="dueDateColumn" prefWidth="100.0" text="Due Date"/>

@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<DialogPane prefHeight="281.0" prefWidth="385.0" style="-fx-background-color: #73dbd6; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 8;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.uet.controllers.StatisticManagementController">
+<DialogPane prefHeight="281.0" prefWidth="385.0" style="-fx-background-color: #73dbd6; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 8;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.uet.controllers.admin.StatisticManagementController">
     <content>
         <VBox spacing="15" style="-fx-padding: 20;">
             <!-- Tiêu đề -->

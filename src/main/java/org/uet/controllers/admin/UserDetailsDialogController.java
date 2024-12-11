@@ -1,4 +1,4 @@
-package org.uet.controllers;
+package org.uet.controllers.admin;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -16,11 +16,11 @@ public class UserDetailsDialogController {
     public void setUserDetails(User user) {
         if (user != null) {
             userIdLabel.setText(user.getId());
-            userNameLabel.setText(user.getName());
+            userNameLabel.setText(user.getFullname());
             genderLabel.setText(user.getGender().toString());
-            classLabel.setText(user.getClassName());
+            classLabel.setText(user.getClassname());
             majorLabel.setText(user.getMajor());
-            phoneLabel.setText(user.getPhoneNumber());
+            phoneLabel.setText(user.getPhonenumber());
             emailLabel.setText(user.getEmail());
 
             // Check status in library

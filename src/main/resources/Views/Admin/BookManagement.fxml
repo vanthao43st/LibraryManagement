@@ -19,7 +19,7 @@
 <AnchorPane prefHeight="582.0" prefWidth="834.0"
             style="-fx-border-color: black; -fx-border-width: 1; -fx-border-radius: 5; -fx-border-color: rgba(0, 0, 0, 0.3);"
             xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.uet.controllers.BookManagementController">
+            fx:controller="org.uet.controllers.admin.BookManagementController">
     <BorderPane prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                 AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns:fx="http://javafx.com/fxml">
 
@@ -58,35 +58,35 @@
 
                     <!-- Hàng 1 -->
                     <Label alignment="CENTER_RIGHT" text="Code:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                    <TextField fx:id="documentCodeField" prefWidth="200" GridPane.columnIndex="1"
+                    <TextField fx:id="bookCodeField" prefWidth="200" GridPane.columnIndex="1"
                                GridPane.rowIndex="0"/>
 
                     <Label alignment="CENTER_RIGHT" text="Title:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-                    <TextField fx:id="documentTitleField" prefHeight="26.0" prefWidth="301.0" GridPane.columnIndex="3"
+                    <TextField fx:id="bookTitleField" prefHeight="26.0" prefWidth="301.0" GridPane.columnIndex="3"
                                GridPane.rowIndex="0"/>
 
                     <!-- Hàng 2 -->
                     <Label alignment="CENTER_RIGHT" text="Category:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                    <TextField fx:id="documentCategoryField" prefHeight="26.0" prefWidth="283.0"
+                    <TextField fx:id="bookCategoryField" prefHeight="26.0" prefWidth="283.0"
                                GridPane.columnIndex="1"
                                GridPane.rowIndex="1"/>
 
                     <Label alignment="CENTER_RIGHT" text="Author:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                    <TextField fx:id="documentAuthorField" prefWidth="200" GridPane.columnIndex="3"
+                    <TextField fx:id="bookAuthorField" prefWidth="200" GridPane.columnIndex="3"
                                GridPane.rowIndex="1"/>
 
                     <!-- Hàng 3 -->
                     <Label alignment="CENTER_RIGHT" text="Price:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                    <TextField fx:id="documentPriceField" prefHeight="26.0" prefWidth="283.0" GridPane.columnIndex="1"
+                    <TextField fx:id="bookPriceField" prefHeight="26.0" prefWidth="283.0" GridPane.columnIndex="1"
                                GridPane.rowIndex="2"/>
 
                     <Label alignment="CENTER_RIGHT" text="Quantity:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-                    <TextField fx:id="documentQuantityField" prefWidth="200" GridPane.columnIndex="3"
+                    <TextField fx:id="bookQuantityField" prefWidth="200" GridPane.columnIndex="3"
                                GridPane.rowIndex="2"/>
 
                     <!-- Hàng 4 -->
                     <Label alignment="CENTER_RIGHT" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                    <TextField fx:id="documentDescriptionField" prefWidth="200" GridPane.columnIndex="1"
+                    <TextField fx:id="bookDescriptionField" prefWidth="200" GridPane.columnIndex="1"
                                GridPane.rowIndex="3"/>
                     <rowConstraints>
                         <RowConstraints/>
@@ -97,7 +97,7 @@
                 </GridPane>
 
                 <!-- Table Section -->
-                <TableView fx:id="documentTable" prefHeight="295.0" prefWidth="734.0">
+                <TableView fx:id="bookTable" prefHeight="295.0" prefWidth="734.0">
                     <columns>
                         <TableColumn fx:id="codeColumn" prefWidth="100.0" text="Code"/>
                         <TableColumn fx:id="titleColumn" prefWidth="150.0" text="Title"/>

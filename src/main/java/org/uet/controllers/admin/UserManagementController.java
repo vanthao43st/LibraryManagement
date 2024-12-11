@@ -1,4 +1,4 @@
-package org.uet.controllers;
+package org.uet.controllers.admin;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -12,7 +12,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.uet.database.dao.UserDao;
-import org.uet.entity.Document;
 import org.uet.entity.User;
 import org.uet.enums.Gender;
 
@@ -26,17 +25,16 @@ public class UserManagementController {
     private ComboBox<String> searchCriteria, userGenderField, userMajorField;
 
     @FXML
-    private TextField searchField, userIdField, userNameField, userClassField, userPhoneField, userEmailField;
-
-    @FXML
-    private Button searchButton, addButton, editButton, deleteButton, showDetailButton;
+    private TextField searchField, userIdField, userFullNameField, usernameField,
+            userClassField, userPhoneField, userEmailField, userPasswordField;
 
     @FXML
     private TableView<User> userTable;
 
     @FXML
     private TableColumn<User, String> idColumn, nameColumn, genderColumn,
-            classColumn, majorColumn, phoneColumn, emailColumn;
+            classColumn, majorColumn, phoneColumn, emailColumn,
+            usernameColumn, passwordColumn;
 
     private static UserDao userDao = new UserDao();
 
@@ -63,12 +61,14 @@ public class UserManagementController {
 
         // Liên kết cột TableView với các thuộc tính của User
         idColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getId()));
-        nameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getName()));
+        nameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getFullname()));
         genderColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getGender().toString()));
-        classColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getClassName()));
+        classColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getClassname()));
         majorColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getMajor()));
-        phoneColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPhoneNumber()));
+        phoneColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPhonenumber()));
         emailColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getEmail()));
+        usernameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getUsername()));
+        passwordColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPassword()));
 
         // Gán dữ liệu cho bảng
         userTable.setItems(userData);
@@ -85,23 +85,27 @@ public class UserManagementController {
         selectedUser = userTable.getSelectionModel().getSelectedItem();
         if (selectedUser != null) {
             userIdField.setText(selectedUser.getId());
-            userNameField.setText(selectedUser.getName());
+            userFullNameField.setText(selectedUser.getFullname());
             userGenderField.setValue(selectedUser.getGender().toString());
-            userClassField.setText(selectedUser.getClassName());
+            userClassField.setText(selectedUser.getClassname());
             userMajorField.setValue(selectedUser.getMajor());
-            userPhoneField.setText(selectedUser.getPhoneNumber());
+            userPhoneField.setText(selectedUser.getPhonenumber());
             userEmailField.setText(selectedUser.getEmail());
+            usernameField.setText(selectedUser.getUsername());
+            userPasswordField.setText(selectedUser.getPassword());
         }
     }
 
     private void clearForm() {
         userIdField.clear();
-        userNameField.clear();
+        userFullNameField.clear();
         userGenderField.setValue(null);
         userClassField.clear();
         userMajorField.setValue(null);
         userPhoneField.clear();
         userEmailField.clear();
+        userPasswordField.clear();
+        usernameField.clear();
     }
 
     private void loadSampleData() {
@@ -126,12 +130,14 @@ public class UserManagementController {
 
             User newUser = new User(
                     userIdField.getText(),
-                    userNameField.getText(),
+                    userFullNameField.getText(),
                     Gender.valueOf(userGenderField.getValue()),
                     userClassField.getText(),
                     userMajorField.getValue(),
                     userPhoneField.getText(),
-                    userEmailField.getText()
+                    userEmailField.getText(),
+                    usernameField.getText(),
+                    userPasswordField.getText()
             );
 
             // Thêm vào bảng và database
@@ -148,12 +154,14 @@ public class UserManagementController {
     // Kiểm tra các trường nhập liệu có bị để trống không
     private boolean inCompleteInfo() {
         return userIdField.getText().isBlank() ||
-                userNameField.getText().isBlank() ||
+                userFullNameField.getText().isBlank() ||
                 userGenderField.getValue() == null ||
                 userClassField.getText().isBlank() ||
                 userMajorField.getValue() == null ||
                 userPhoneField.getText().isBlank() ||
-                userEmailField.getText().isBlank();
+                userEmailField.getText().isBlank() ||
+                usernameField.getText().isBlank() ||
+                userPasswordField.getText().isBlank();
     }
 
     // Kiểm tra xem user có tồn tại trong bảng hay chưa thông qua ID
@@ -170,12 +178,14 @@ public class UserManagementController {
     private void onEdit(ActionEvent event) throws SQLException {
         if (selectedUser != null) {
             selectedUser.setId(userIdField.getText());
-            selectedUser.setName(userNameField.getText());
+            selectedUser.setFullname(userFullNameField.getText());
             selectedUser.setGender(Gender.valueOf(userGenderField.getValue()));
-            selectedUser.setClassName(userClassField.getText());
+            selectedUser.setClassname(userClassField.getText());
             selectedUser.setMajor(userMajorField.getValue());
-            selectedUser.setPhoneNumber(userPhoneField.getText());
+            selectedUser.setPhonenumber(userPhoneField.getText());
             selectedUser.setEmail(userEmailField.getText());
+            selectedUser.setUsername(usernameField.getText());
+            selectedUser.setPassword(userPasswordField.getText());
 
             userTable.refresh();
             updateInDatabase(selectedUser); // Cập nhật vào Database
@@ -231,12 +241,12 @@ public class UserManagementController {
                         }
                         break;
                     case "Tên":
-                        if (user.getName().toLowerCase().contains(keyword.toLowerCase())) {
+                        if (user.getFullname().toLowerCase().contains(keyword.toLowerCase())) {
                             filteredUsers.add(user);
                         }
                         break;
                     case "Lớp":
-                        if (user.getClassName().toLowerCase().contains(keyword.toLowerCase())) {
+                        if (user.getClassname().toLowerCase().contains(keyword.toLowerCase())) {
                             filteredUsers.add(user);
                         }
                         break;
@@ -296,7 +306,7 @@ public class UserManagementController {
 
     private void showUserDetails(User user) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/UserDetailsDialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Admin/UserDetailsDialog.fxml"));
             DialogPane dialogPane = loader.load();
 
             UserDetailsDialogController controller = loader.getController();

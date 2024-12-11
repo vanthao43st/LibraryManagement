@@ -1,4 +1,4 @@
-package org.uet.controllers;
+package org.uet.controllers.admin;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

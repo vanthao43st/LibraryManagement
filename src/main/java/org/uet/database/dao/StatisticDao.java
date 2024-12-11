@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 
 public class StatisticDao {
     public int getTotalBooks() {
-        String query = "SELECT SUM(document_quantity) AS total_books FROM document";
+        String query = "SELECT SUM(book_quantity) AS total_books FROM book";
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(query);
              ResultSet rs = ps.executeQuery()) {

@@ -19,8 +19,8 @@ public class TestUser {
 
     public static void getUserById() {
         String userId = "16020587";
-        User user = userDao.getUserById(userId);
-        System.out.println(user.toString());
+//        User user = userDao.getUserById(userId);
+//        System.out.println(user.toString());
     }
 
     public static void addUser() throws SQLException {
@@ -38,10 +38,10 @@ public class TestUser {
     }
 
     public static void searchUsers() {
-        ArrayList<User> users = userDao.searchUsers(null, "Trần Ngọc Khánh", null);
-        for (User user : users) {
-            System.out.println(user.toString());
-        }
+//        ArrayList<User> users = userDao.searchUsers(null, "Trần Ngọc Khánh", null);
+//        for (User user : users) {
+//            System.out.println(user.toString());
+//        }
     }
 
     public static void main(String[] args) throws SQLException {

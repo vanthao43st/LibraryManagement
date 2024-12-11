@@ -9,10 +9,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.uet.database.dao.DocumentDao;
-import org.uet.entity.Document;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class Main extends Application {
