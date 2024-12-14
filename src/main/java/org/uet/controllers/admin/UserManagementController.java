@@ -125,13 +125,13 @@ public class UserManagementController {
         try {
             // Kiểm tra các trường nhập liệu
             if (inCompleteInfo()) {
-                showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin vào tất cả các trường!", Alert.AlertType.WARNING);
+                showAlert("Cảnh báo", "Vui lòng nhập đầy đủ thông tin vào tất cả các trường!", Alert.AlertType.WARNING);
                 return;
             }
 
             String userId = userIdField.getText();
             if (isUserExisted(userId)) {
-                showAlert("Lỗi", "User đã tồn tại! Vui lòng nhập User khác.", Alert.AlertType.WARNING);
+                showAlert("Lỗi", "User ID đã tồn tại! Vui lòng nhập User ID khác.", Alert.AlertType.ERROR);
                 return;
             }
 
@@ -227,6 +227,7 @@ public class UserManagementController {
                     Platform.runLater(() -> {
                         userData.remove(selectedUser);
                         deleteFromDatabase(selectedUser);
+                        userIdField.setEditable(true);
 
                         userTable.setItems(FXCollections.observableArrayList(userData));
                         userTable.refresh();
@@ -242,7 +243,7 @@ public class UserManagementController {
                 });
             }
         } else {
-            showAlert("Thông báo", "Hãy chọn một sinh viên để xóa!", Alert.AlertType.WARNING);
+            showAlert("Thông báo", "Hãy chọn một sinh viên để xóa!", Alert.AlertType.INFORMATION);
         }
     }
 
@@ -298,7 +299,6 @@ public class UserManagementController {
     private void saveToDatabase(User user) {
         userDao.addUserAsync(user).thenRun(() -> {
             Platform.runLater(() -> {
-                showAlert("Thông báo", "Đã thêm user thành công.", Alert.AlertType.INFORMATION);
                 System.out.println("Lưu vào cơ sở dữ liệu: " + user);
             });
         }).exceptionally(e -> {

@@ -235,8 +235,9 @@ public class ThesisManagementController {
                         // Xoá luận văn khỏi cơ sở dữ liệu (bất đồng bộ)
                         thesisDao.deleteThesisAsync(selectedThesis.getCode()).thenRun(() -> {
                             Platform.runLater(() -> {
-                                thesisData.remove(selectedThesis); // Xoá sách khỏi danh sách hiển thị
-                                clearInputFields(); // Dọn dẹp trường nhập liệu
+                                thesisData.remove(selectedThesis);
+                                thesisCodeField.setEditable(true);
+                                clearInputFields();
                                 showAlert("Thành công", "Xoá luận văn thành công!", Alert.AlertType.INFORMATION);
                             });
                         }).exceptionally(e -> {

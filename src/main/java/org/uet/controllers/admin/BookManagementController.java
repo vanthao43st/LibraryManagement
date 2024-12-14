@@ -129,7 +129,7 @@ public class BookManagementController {
             clearInputFields();
             showAlert("Thành công", "Sách được thêm thành công!", Alert.AlertType.INFORMATION);
         } catch (Exception e) {
-            showAlert("Lỗi", "NHập vào không hợp lệ. Hãy nhập các trường chính xác!", Alert.AlertType.ERROR);
+            showAlert("Lỗi", "Nhập vào không hợp lệ. Hãy nhập các trường chính xác!", Alert.AlertType.ERROR);
         }
     }
 
@@ -222,8 +222,9 @@ public class BookManagementController {
                         // Xoá sách khỏi cơ sở dữ liệu (bất đồng bộ)
                         bookDao.deleteBookAsync(selectedBook.getCode()).thenRun(() -> {
                             Platform.runLater(() -> {
-                                bookData.remove(selectedBook); // Xoá sách khỏi danh sách hiển thị
-                                clearInputFields(); // Dọn dẹp trường nhập liệu
+                                bookData.remove(selectedBook);
+                                bookCodeField.setEditable(true);
+                                clearInputFields();
                                 showAlert("Thành công", "Xoá sách thành công!", Alert.AlertType.INFORMATION);
                             });
                         }).exceptionally(e -> {

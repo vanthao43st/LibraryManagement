@@ -41,7 +41,6 @@ public class UserDetailController {
 
         // Hiển thị thông tin người dùng hiện tại
         loadUserDetails();
-
     }
 
     public void loadUserDetails() {
