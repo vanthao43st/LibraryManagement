@@ -48,7 +48,7 @@ public class UserDetailController {
         CompletableFuture.runAsync(() -> {
             try {
                 // Lấy thông tin người dùng từ SessionManager
-                User currentUser = SessionManager.getInstance().getCurrentUser();
+                currentUser = SessionManager.getInstance().getCurrentUser();
                 if (currentUser != null) {
                     Platform.runLater(() -> {
                         // Gán giá trị cho các trường trong giao diện
