@@ -1,18 +1,18 @@
 package org.uet.entity;
 
 public class Library {
-    private String userId;
-    private String documentCode;
-    private String documentType;
-    private int quantity;
-    private String borrowDate;
-    private String returnDate;
-    private String dueDate;
-    private String status;
-    private int lateDays;
-    private double fine;
-    private String title;
-    private String description;
+    protected String userId;
+    protected String documentCode;
+    protected String documentType;
+    protected int quantity;
+    protected String borrowDate;
+    protected String returnDate;
+    protected String dueDate;
+    protected String status;
+    protected int lateDays;
+    protected double fine;
+    protected String title;
+    protected String description;
 
     public Library() {
         this.userId = "21010938";

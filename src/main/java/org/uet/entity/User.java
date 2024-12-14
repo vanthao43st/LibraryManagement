@@ -3,15 +3,15 @@ package org.uet.entity;
 import org.uet.enums.Gender;
 
 public class User {
-    private String id;
-    private String fullname;
-    private Gender gender;
-    private String classname;
-    private String major;
-    private String phonenumber;
-    private String email;
-    private String username;
-    private String password;
+    protected String id;
+    protected String fullname;
+    protected Gender gender;
+    protected String classname;
+    protected String major;
+    protected String phonenumber;
+    protected String email;
+    protected String username;
+    protected String password;
 
     public User() {
     }

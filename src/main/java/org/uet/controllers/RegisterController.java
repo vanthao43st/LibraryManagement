@@ -24,15 +24,15 @@ import java.util.concurrent.CompletableFuture;
 public class RegisterController implements Initializable {
 
     @FXML
-    private TextField usernameField, passwordField, fullNameField, classField, phoneField, emailField;
+    protected TextField usernameField, passwordField, fullNameField, classField, phoneField, emailField;
 
     @FXML
-    private ComboBox<String> genderField, majorField;
+    protected ComboBox<String> genderField, majorField;
 
     @FXML
-    private Button exitButton, registerButton;
+    protected Button exitButton, registerButton;
 
-    private final UserDao userDao = new UserDao();
+    protected final UserDao userDao = new UserDao();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -66,7 +66,7 @@ public class RegisterController implements Initializable {
         );
     }
 
-    private void returnLoginPage(Button button) {
+    protected void returnLoginPage(Button button) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Login.fxml"));
             Parent root = loader.load();
@@ -83,7 +83,7 @@ public class RegisterController implements Initializable {
     }
 
     // Hiển thị thông báo Alert
-    private void showAlert(String title, String message, Alert.AlertType type) {
+    protected void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setContentText(message);
@@ -129,7 +129,7 @@ public class RegisterController implements Initializable {
         });
     }
 
-    private boolean inCompleteInfo() {
+    protected boolean inCompleteInfo() {
         return fullNameField.getText().isBlank() ||
                 genderField.getValue() == null ||
                 classField.getText().isBlank() ||
