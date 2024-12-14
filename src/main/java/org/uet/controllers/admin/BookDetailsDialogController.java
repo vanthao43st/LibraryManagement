@@ -9,7 +9,7 @@ import org.uet.entity.Book;
 public class BookDetailsDialogController {
 
     @FXML
-    private Label codeLabel, titleLabel, descriptionLabel, categoryLabel, authorLabel, priceLabel, quantityLabel;
+    protected Label codeLabel, titleLabel, descriptionLabel, categoryLabel, authorLabel, priceLabel, quantityLabel;
 
     // Truyền dữ liệu từ bảng sang các trường trong hộp thoại
     public void setBookDetails(Book book) {
@@ -32,7 +32,7 @@ public class BookDetailsDialogController {
     }
 
     @FXML
-    private void onClose(ActionEvent event) {
+    protected void onClose(ActionEvent event) {
         ((Button) event.getSource()).getScene().getWindow().hide();
     }
 }

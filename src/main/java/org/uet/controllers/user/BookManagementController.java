@@ -23,26 +23,26 @@ import java.util.List;
 public class BookManagementController {
 
     @FXML
-    private TextField searchField;
+    protected TextField searchField;
 
     @FXML
-    private ComboBox<String> searchCriteria;
+    protected ComboBox<String> searchCriteria;
 
     @FXML
-    private TableView<Book> bookTable;
+    protected TableView<Book> bookTable;
 
     @FXML
-    private TableColumn<Book, String> codeColumn, titleColumn, categoryColumn, authorColumn, descriptionColumn;
+    protected TableColumn<Book, String> codeColumn, titleColumn, categoryColumn, authorColumn, descriptionColumn;
 
     @FXML
-    private TableColumn<Book, Double> priceColumn;
+    protected TableColumn<Book, Double> priceColumn;
 
     @FXML
-    private TableColumn<Book, Integer> quantityColumn;
+    protected TableColumn<Book, Integer> quantityColumn;
 
-    private final ObservableList<Book> bookData = FXCollections.observableArrayList();
+    protected final ObservableList<Book> bookData = FXCollections.observableArrayList();
 
-    private final BookDao bookDao = new BookDao();
+    protected final BookDao bookDao = new BookDao();
 
     @FXML
     public void initialize() {
@@ -61,7 +61,7 @@ public class BookManagementController {
         loadDocument();
     }
 
-    private void loadDocument() {
+    protected void loadDocument() {
         bookDao.getAllBooksAsync().thenAccept(books -> {
             if (books != null) {
                 Platform.runLater(() -> {
@@ -78,7 +78,7 @@ public class BookManagementController {
     }
 
     @FXML
-    private void onSearch(ActionEvent event) {
+    protected void onSearch(ActionEvent event) {
         String criteria = searchCriteria.getValue();
         String keyword = searchField.getText().trim();
 
@@ -117,7 +117,7 @@ public class BookManagementController {
         }
     }
 
-    private void showAlert(String title, String content, Alert.AlertType type) {
+    protected void showAlert(String title, String content, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -135,7 +135,7 @@ public class BookManagementController {
         showBookDetails(selectedBook);
     }
 
-    private void showBookDetails(Book book) {
+    protected void showBookDetails(Book book) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/User/BookDetailsDialog.fxml"));
             DialogPane dialogPane = loader.load();
@@ -157,7 +157,7 @@ public class BookManagementController {
         }
     }
 
-    private void enableDragging(Stage stage, DialogPane dialogPane) {
+    protected void enableDragging(Stage stage, DialogPane dialogPane) {
         final Delta dragDelta = new Delta();
 
         // Ghi lại vị trí khi nhấn chuột

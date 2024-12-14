@@ -17,7 +17,7 @@ public class DocumentManagementController implements Initializable {
     public Button showBookButton, showThesisButton;
 
     @FXML
-    private AnchorPane container;
+    protected AnchorPane container;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -37,7 +37,7 @@ public class DocumentManagementController implements Initializable {
         }
     }
 
-    private void setNode(Node node) {
+    protected void setNode(Node node) {
         container.getChildren().clear();
         container.getChildren().add(node);
     }

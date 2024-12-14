@@ -19,23 +19,23 @@ import java.util.concurrent.CompletableFuture;
 public class LibraryManagementController {
 
     @FXML
-    private ComboBox<String> searchCriteria, documentTypeField;
+    protected ComboBox<String> searchCriteria, documentTypeField;
 
     @FXML
-    private TextField searchField, documentCodeField, quantityField;
+    protected TextField searchField, documentCodeField, quantityField;
 
     @FXML
-    private TableView<Library> libraryTable;
+    protected TableView<Library> libraryTable;
 
     @FXML
-    private TableColumn<Library, String> documentCodeColumn, titleColumn, descriptionColumn, borrowDateColumn, dueDateColumn, statusColumn, documentTypeColumn;
+    protected TableColumn<Library, String> documentCodeColumn, titleColumn, descriptionColumn, borrowDateColumn, dueDateColumn, statusColumn, documentTypeColumn;
 
     @FXML
-    private TableColumn<Library, Integer> quantityColumn;
+    protected TableColumn<Library, Integer> quantityColumn;
 
-    private static final LibraryDao libraryDao = new LibraryDao();
+    protected static final LibraryDao libraryDao = new LibraryDao();
 
-    private final ObservableList<Library> libraryData = FXCollections.observableArrayList();
+    protected final ObservableList<Library> libraryData = FXCollections.observableArrayList();
 
     Library selectedLibrary;
 
@@ -66,7 +66,7 @@ public class LibraryManagementController {
     }
 
     @FXML
-    private void onTableClick(MouseEvent event) {
+    protected void onTableClick(MouseEvent event) {
         selectedLibrary = libraryTable.getSelectionModel().getSelectedItem();
         if (selectedLibrary != null) {
             documentCodeField.setText(selectedLibrary.getDocumentCode());
@@ -75,13 +75,13 @@ public class LibraryManagementController {
         }
     }
 
-    private void clearForm() {
+    protected void clearForm() {
         documentCodeField.clear();
         quantityField.clear();
         documentTypeField.setValue(null);
     }
 
-    private void loadLibraryData() {
+    protected void loadLibraryData() {
         libraryDao.getAllLibraryRecordsForUserAsync().thenAccept(records -> {
             Platform.runLater(() -> {
                 libraryData.setAll(records);
@@ -95,7 +95,7 @@ public class LibraryManagementController {
     }
 
     @FXML
-    private void onBorrow(ActionEvent event) {
+    protected void onBorrow(ActionEvent event) {
         try {
             if (incompleteInfo()) {
                 showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin vào tất cả các trường!", Alert.AlertType.WARNING);
@@ -161,7 +161,7 @@ public class LibraryManagementController {
     }
 
     @FXML
-    private void onReturn(ActionEvent event) {
+    protected void onReturn(ActionEvent event) {
         try {
             if (selectedLibrary == null) {
                 showAlert("Lỗi", "Vui lòng chọn tài liệu muốn trả!", Alert.AlertType.WARNING);
@@ -236,7 +236,7 @@ public class LibraryManagementController {
     }
 
     @FXML
-    private void onSearch(ActionEvent event) {
+    protected void onSearch(ActionEvent event) {
         String criteria = searchCriteria.getValue();
         String keyword = searchField.getText().trim();
 
@@ -255,13 +255,13 @@ public class LibraryManagementController {
         libraryTable.setItems(filteredData);
     }
 
-    private boolean incompleteInfo() {
+    protected boolean incompleteInfo() {
         return documentCodeField.getText().isBlank()
                 || quantityField.getText().isBlank()
                 || documentTypeField.getValue() == null;
     }
 
-    private void showAlert(String title, String message, Alert.AlertType type) {
+    protected void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);

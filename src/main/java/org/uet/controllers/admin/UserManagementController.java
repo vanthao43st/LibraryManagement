@@ -24,27 +24,27 @@ import java.util.Optional;
 public class UserManagementController {
 
     @FXML
-    private ComboBox<String> searchCriteria, userGenderField, userMajorField;
+    protected ComboBox<String> searchCriteria, userGenderField, userMajorField;
 
     @FXML
-    private TextField searchField, userIdField, userFullNameField, usernameField,
+    protected TextField searchField, userIdField, userFullNameField, usernameField,
             userClassField, userPhoneField, userEmailField, userPasswordField;
 
     @FXML
-    private TableView<User> userTable;
+    protected TableView<User> userTable;
 
     @FXML
-    private TableColumn<User, String> idColumn, nameColumn, genderColumn,
+    protected TableColumn<User, String> idColumn, nameColumn, genderColumn,
             classColumn, majorColumn, phoneColumn, emailColumn,
             usernameColumn, passwordColumn;
 
-    private static final UserDao userDao = new UserDao();
+    protected static final UserDao userDao = new UserDao();
 
     // Dữ liệu mẫu
-    private final ObservableList<User> userData = FXCollections.observableArrayList();
+    protected final ObservableList<User> userData = FXCollections.observableArrayList();
 
     // Theo dõi người dùng được chọn
-    private User selectedUser;
+    protected User selectedUser;
 
     @FXML
     public void initialize() {
@@ -83,7 +83,7 @@ public class UserManagementController {
     }
 
     @FXML
-    private void onTableClick(MouseEvent event) {
+    protected void onTableClick(MouseEvent event) {
         selectedUser = userTable.getSelectionModel().getSelectedItem();
         if (selectedUser != null) {
             userIdField.setEditable(false);
@@ -99,7 +99,7 @@ public class UserManagementController {
         }
     }
 
-    private void clearForm() {
+    protected void clearForm() {
         userIdField.clear();
         userFullNameField.clear();
         userGenderField.setValue(null);
@@ -111,7 +111,7 @@ public class UserManagementController {
         usernameField.clear();
     }
 
-    private void loadSampleData() {
+    protected void loadSampleData() {
         userDao.getAllUsersAsync().thenAccept(users -> {
             Platform.runLater(() -> userData.addAll(users));
         }).exceptionally(e -> {
@@ -121,7 +121,7 @@ public class UserManagementController {
     }
 
     @FXML
-    private void onAdd(ActionEvent event) {
+    protected void onAdd(ActionEvent event) {
         try {
             // Kiểm tra các trường nhập liệu
             if (inCompleteInfo()) {
@@ -159,7 +159,7 @@ public class UserManagementController {
     }
 
     // Kiểm tra các trường nhập liệu có bị để trống không
-    private boolean inCompleteInfo() {
+    protected boolean inCompleteInfo() {
         return userIdField.getText().isBlank() ||
                 userFullNameField.getText().isBlank() ||
                 userGenderField.getValue() == null ||
@@ -172,7 +172,7 @@ public class UserManagementController {
     }
 
     // Kiểm tra xem user có tồn tại trong bảng hay chưa thông qua ID
-    private boolean isUserExisted(String userId) {
+    protected boolean isUserExisted(String userId) {
         for (User user : userData) {
             if (user.getId().equals(userId)) {
                 return true;
@@ -182,7 +182,7 @@ public class UserManagementController {
     }
 
     @FXML
-    private void onEdit(ActionEvent event) throws SQLException {
+    protected void onEdit(ActionEvent event) throws SQLException {
         if (selectedUser != null) {
             selectedUser.setId(userIdField.getText());
             selectedUser.setFullname(userFullNameField.getText());
@@ -206,7 +206,7 @@ public class UserManagementController {
     }
 
     @FXML
-    private void onDelete(ActionEvent event) {
+    protected void onDelete(ActionEvent event) {
         if (selectedUser != null) {
             // Hiển thị hộp thoại xác nhận
             Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -248,7 +248,7 @@ public class UserManagementController {
     }
 
     @FXML
-    private void onSearch(ActionEvent event) {
+    protected void onSearch(ActionEvent event) {
         try {
             // Lấy tiêu chí và từ khóa tìm kiếm
             String criteria = searchCriteria.getValue();
@@ -296,7 +296,7 @@ public class UserManagementController {
 
 
     //-------------------UPDATE INTO DATABASE-------------------
-    private void saveToDatabase(User user) {
+    protected void saveToDatabase(User user) {
         userDao.addUserAsync(user).thenRun(() -> {
             Platform.runLater(() -> {
                 System.out.println("Lưu vào cơ sở dữ liệu: " + user);
@@ -307,7 +307,7 @@ public class UserManagementController {
         });
     }
 
-    private void updateInDatabase(User user) {
+    protected void updateInDatabase(User user) {
         userDao.updateUserAsync(user).thenRun(() -> {
             Platform.runLater(() -> System.out.println("Cập nhật cơ sở dữ liệu: " + user));
         }).exceptionally(e -> {
@@ -316,7 +316,7 @@ public class UserManagementController {
         });
     }
 
-    private void deleteFromDatabase(User user) {
+    protected void deleteFromDatabase(User user) {
         userDao.deleteUserAsync(user.getId()).thenRun(() -> {
             Platform.runLater(() -> System.out.println("Xóa khỏi cơ sở dữ liệu: " + user));
         }).exceptionally(e -> {
@@ -327,7 +327,7 @@ public class UserManagementController {
 
 
     // Hiển thị thông báo Alert
-    private void showAlert(String title, String message, Alert.AlertType type) {
+    protected void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setContentText(message);
@@ -344,7 +344,7 @@ public class UserManagementController {
         showUserDetails(selectedUser);
     }
 
-    private void showUserDetails(User user) {
+    protected void showUserDetails(User user) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Admin/UserDetailsDialog.fxml"));
             DialogPane dialogPane = loader.load();
@@ -366,7 +366,7 @@ public class UserManagementController {
         }
     }
 
-    private void enableDragging(Stage stage, DialogPane dialogPane) {
+    protected void enableDragging(Stage stage, DialogPane dialogPane) {
         final UserManagementController.Delta dragDelta = new UserManagementController.Delta();
 
         // Ghi lại vị trí khi nhấn chuột
