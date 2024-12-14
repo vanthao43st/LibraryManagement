@@ -59,6 +59,7 @@ public class GoogleBooksAPI {
 
                 for (JsonNode item : jsonNode.get("items")) {
                     JsonNode volumeInfo = item.get("volumeInfo");
+                    JsonNode saleInfo = item.get("saleInfo");
 
                     String id = item.has("id") ? item.get("id").asText() : UUID.randomUUID().toString();
                     String title = volumeInfo.has("title") ? volumeInfo.get("title").asText() : "Unknown";
@@ -66,7 +67,14 @@ public class GoogleBooksAPI {
                     String category = volumeInfo.has("categories") ? volumeInfo.get("categories").get(0).asText() : "Unknown";
                     String description = volumeInfo.has("description") ? volumeInfo.get("description").asText() : "Unknown";
 
-                    long price = 50000;
+                    long price = 50000; // Giá mặc định nếu không có thông tin
+                    if (saleInfo != null && saleInfo.has("retailPrice")) {
+                        JsonNode retailPriceNode = saleInfo.get("retailPrice");
+                        if (retailPriceNode.has("amount")) {
+                            price = retailPriceNode.get("amount").asLong();
+                        }
+                    }
+
                     books.add(new Book(id, title, description, author, category, price, 10));
                 }
             } catch (Exception e) {

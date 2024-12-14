@@ -20,54 +20,54 @@
 
             <!-- Content Information -->
             <GridPane hgap="20" vgap="15" style="-fx-padding: 10;">
-                <Label text="Thesis Code:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
+                <Label text="Mã luận văn:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
                        GridPane.rowIndex="0"/>
                 <Label fx:id="codeLabel" style="-fx-text-fill: #000;" GridPane.columnIndex="1" GridPane.rowIndex="0"
                        wrapText="true" prefWidth="300"/>
 
-                <Label text="Title:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
+                <Label text="Tiêu đề:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
                        GridPane.rowIndex="1"/>
                 <Label fx:id="titleLabel" style="-fx-text-fill: #000;" GridPane.columnIndex="1" GridPane.rowIndex="1"
                        wrapText="true" prefWidth="300"/>
 
-                <Label text="Description:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
+                <Label text="Mô tả:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
                        GridPane.rowIndex="2"/>
                 <Label fx:id="descriptionLabel" style="-fx-text-fill: #000;" GridPane.columnIndex="1"
                        GridPane.rowIndex="2" wrapText="true" prefWidth="300"/>
 
-                <Label text="Quantity:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
+                <Label text="Số lượng:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
                        GridPane.rowIndex="3"/>
                 <Label fx:id="quantityLabel" style="-fx-text-fill: #000;" GridPane.columnIndex="1"
                        GridPane.rowIndex="3" wrapText="true" prefWidth="300"/>
 
-                <Label text="Major:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
+                <Label text="Ngành học:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
                        GridPane.rowIndex="4"/>
                 <Label fx:id="majorLabel" style="-fx-text-fill: #000;" GridPane.columnIndex="1" GridPane.rowIndex="4"
                        wrapText="true" prefWidth="300"/>
 
-                <Label text="Author:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
+                <Label text="Tác giả:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
                        GridPane.rowIndex="5"/>
                 <Label fx:id="authorLabel" style="-fx-text-fill: #000;" GridPane.columnIndex="1" GridPane.rowIndex="5"
                        wrapText="true" prefWidth="300"/>
 
-                <Label text="Supervisor:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
+                <Label text="Người giám sát:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
                        GridPane.rowIndex="6"/>
                 <Label fx:id="supervisorLabel" style="-fx-text-fill: #000;" GridPane.columnIndex="1"
                        GridPane.rowIndex="6"
                        wrapText="true" prefWidth="300"/>
 
-                <Label text="University:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
+                <Label text="Trường:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
                        GridPane.rowIndex="7"/>
                 <Label fx:id="universityLabel" style="-fx-text-fill: #000;" GridPane.columnIndex="1"
                        GridPane.rowIndex="7"
                        wrapText="true" prefWidth="300"/>
 
-                <Label text="Degree:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
+                <Label text="Bằng:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0"
                        GridPane.rowIndex="8"/>
                 <Label fx:id="degreeLabel" style="-fx-text-fill: #000;" GridPane.columnIndex="1" GridPane.rowIndex="8"
                        wrapText="true" prefWidth="300"/>
 
-                <Label text="Submission Year:" style="-fx-text-fill: #000;-fx-font-weight: bold;"
+                <Label text="Năm nộp:" style="-fx-text-fill: #000;-fx-font-weight: bold;"
                        GridPane.columnIndex="0" GridPane.rowIndex="9"/>
                 <Label fx:id="submissionYearLabel" style="-fx-text-fill: #000;" GridPane.columnIndex="1"
                        GridPane.rowIndex="9"

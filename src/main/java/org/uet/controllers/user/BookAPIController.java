@@ -102,7 +102,7 @@ public class BookAPIController {
             Platform.runLater(() -> showAlert("Lỗi", "Đã xảy ra lỗi khi tìm kiếm: " + e.getMessage(), Alert.AlertType.ERROR));
             return null;
         });
-    }
+   }
 
     @FXML
     private void onShowDetails(ActionEvent event) {
