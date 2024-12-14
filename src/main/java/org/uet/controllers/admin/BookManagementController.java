@@ -23,31 +23,31 @@ import java.util.Optional;
 public class BookManagementController {
 
     @FXML
-    private TextField bookCodeField, bookTitleField,
+    protected TextField bookCodeField, bookTitleField,
             bookCategoryField, bookAuthorField,
             bookPriceField, bookQuantityField,
             bookDescriptionField, searchField;
 
     @FXML
-    private ComboBox<String> searchCriteria;
+    protected ComboBox<String> searchCriteria;
 
     @FXML
-    private TableView<Book> bookTable;
+    protected TableView<Book> bookTable;
 
     @FXML
-    private TableColumn<Book, String> codeColumn, titleColumn, categoryColumn, authorColumn, descriptionColumn;
+    protected TableColumn<Book, String> codeColumn, titleColumn, categoryColumn, authorColumn, descriptionColumn;
 
     @FXML
-    private TableColumn<Book, Double> priceColumn;
+    protected TableColumn<Book, Double> priceColumn;
 
     @FXML
-    private TableColumn<Book, Integer> quantityColumn;
+    protected TableColumn<Book, Integer> quantityColumn;
 
-    private final ObservableList<Book> bookData = FXCollections.observableArrayList();
+    protected final ObservableList<Book> bookData = FXCollections.observableArrayList();
 
-    private Book selectedBook;
+    protected Book selectedBook;
 
-    private final BookDao bookDao = new BookDao();
+    protected final BookDao bookDao = new BookDao();
 
     @FXML
     public void initialize() {
@@ -65,7 +65,7 @@ public class BookManagementController {
         bookTable.setOnMouseClicked(this::onTableClick);
     }
 
-    private void loadDocument() {
+    protected void loadDocument() {
         bookDao.getAllBooksAsync().thenAccept(books -> {
             if (books != null) {
                 Platform.runLater(() -> {
@@ -82,7 +82,7 @@ public class BookManagementController {
     }
 
     @FXML
-    private void onTableClick(MouseEvent event) {
+    protected void onTableClick(MouseEvent event) {
         selectedBook = bookTable.getSelectionModel().getSelectedItem();
         if (selectedBook != null) {
             bookCodeField.setEditable(false);
@@ -96,7 +96,7 @@ public class BookManagementController {
         }
     }
 
-    private void clearInputFields() {
+    protected void clearInputFields() {
         bookCodeField.clear();
         bookTitleField.clear();
         bookCategoryField.clear();
@@ -107,7 +107,7 @@ public class BookManagementController {
     }
 
     @FXML
-    private void onAdd(ActionEvent event) {
+    protected void onAdd(ActionEvent event) {
         if (inCompleteInfo()) {
             showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin vào tất cả các trường!", Alert.AlertType.WARNING);
             return;
@@ -133,7 +133,7 @@ public class BookManagementController {
         }
     }
 
-    private Book getBook() {
+    protected Book getBook() {
         String code = bookCodeField.getText();
         String title = bookTitleField.getText();
         String category = bookCategoryField.getText();
@@ -145,7 +145,7 @@ public class BookManagementController {
         return new Book(code, title, description, author, category, price, quantity);
     }
 
-    private boolean inCompleteInfo() {
+    protected boolean inCompleteInfo() {
         return bookCodeField.getText().isBlank() ||
                 bookTitleField.getText().isBlank() ||
                 bookCategoryField.getText().isBlank() ||
@@ -154,7 +154,7 @@ public class BookManagementController {
                 bookPriceField.getText().isBlank();
     }
 
-    private boolean isBookExisted(String bookCode) {
+    protected boolean isBookExisted(String bookCode) {
         for (Book book : bookData) {
             if (book.getCode().equals(bookCode)) {
                 return true;
@@ -164,7 +164,7 @@ public class BookManagementController {
     }
 
     @FXML
-    private void onEdit(ActionEvent event) {
+    protected void onEdit(ActionEvent event) {
         if (selectedBook == null) {
             showAlert("Cảnh báo", "Hãy chọn 1 sách để cập nhật!", Alert.AlertType.WARNING);
             return;
@@ -197,7 +197,7 @@ public class BookManagementController {
     }
 
     @FXML
-    private void onDelete(ActionEvent event) {
+    protected void onDelete(ActionEvent event) {
         if (selectedBook == null) {
             showAlert("Cảnh báo", "Hãy chọn 1 tài liệu để xoá!", Alert.AlertType.WARNING);
             return;
@@ -245,7 +245,7 @@ public class BookManagementController {
     }
 
     @FXML
-    private void onSearch(ActionEvent event) {
+    protected void onSearch(ActionEvent event) {
         String criteria = searchCriteria.getValue();
         String keyword = searchField.getText().trim();
 
@@ -284,7 +284,7 @@ public class BookManagementController {
         }
     }
 
-    private void showAlert(String title, String content, Alert.AlertType type) {
+    protected void showAlert(String title, String content, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -293,7 +293,7 @@ public class BookManagementController {
     }
 
     @FXML
-    public void onShowDetail(ActionEvent event) {
+    protected void onShowDetail(ActionEvent event) {
         Book selectedBook = bookTable.getSelectionModel().getSelectedItem();
         if (selectedBook == null) {
             showAlert("Thông báo", "Vui lòng chọn một cuốn sách!", Alert.AlertType.WARNING);
@@ -302,7 +302,7 @@ public class BookManagementController {
         showBookDetails(selectedBook);
     }
 
-    private void showBookDetails(Book book) {
+    protected void showBookDetails(Book book) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Admin/BookDetailsDialog.fxml"));
             DialogPane dialogPane = loader.load();
@@ -324,7 +324,7 @@ public class BookManagementController {
         }
     }
 
-    private void enableDragging(Stage stage, DialogPane dialogPane) {
+    protected void enableDragging(Stage stage, DialogPane dialogPane) {
         final BookManagementController.Delta dragDelta = new BookManagementController.Delta();
 
         // Ghi lại vị trí khi nhấn chuột

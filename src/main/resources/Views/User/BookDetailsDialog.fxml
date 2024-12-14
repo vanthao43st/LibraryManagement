@@ -50,6 +50,7 @@
                 <Label text="Số lượng:" style="-fx-text-fill: #000;-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
                 <Label fx:id="quantityLabel" style="-fx-text-fill: #000;" GridPane.columnIndex="1" GridPane.rowIndex="6"
                        wrapText="true" prefWidth="300"/>
+
             </GridPane>
 
             <!-- Nút đóng -->

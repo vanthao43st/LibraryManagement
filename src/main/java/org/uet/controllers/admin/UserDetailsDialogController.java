@@ -10,9 +10,9 @@ import org.uet.entity.User;
 public class UserDetailsDialogController {
 
     @FXML
-    private Label userIdLabel, userNameLabel, genderLabel, classLabel, majorLabel, phoneLabel, emailLabel, statusLabel;
+    protected Label userIdLabel, userNameLabel, genderLabel, classLabel, majorLabel, phoneLabel, emailLabel, statusLabel;
 
-    private final UserDao userDao = new UserDao();
+    protected final UserDao userDao = new UserDao();
 
     public void setUserDetails(User user) {
         if (user != null) {
@@ -42,7 +42,7 @@ public class UserDetailsDialogController {
     }
 
     @FXML
-    private void onClose() {
+    protected void onClose() {
         Stage stage = (Stage) userIdLabel.getScene().getWindow();
         stage.close();
     }
