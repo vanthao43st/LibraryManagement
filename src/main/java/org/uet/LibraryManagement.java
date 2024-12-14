@@ -12,7 +12,7 @@ import javafx.stage.StageStyle;
 
 import java.util.Objects;
 
-public class Main extends Application {
+public class LibraryManagement extends Application {
     private double xOffset = 0;
     private double yOffset = 0;
 
@@ -23,12 +23,9 @@ public class Main extends Application {
         );
         stage.setTitle("Library Management");
         stage.initStyle(StageStyle.TRANSPARENT);
-        root.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                xOffset = event.getSceneX();
-                yOffset = event.getSceneY();
-            }
+        root.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
         });
 
         root.setOnMouseDragged(event -> {

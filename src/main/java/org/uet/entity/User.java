@@ -14,17 +14,15 @@ public class User {
     private String password;
 
     public User() {
-    }
-
-    public User(String id, String fullname, Gender gender, String classname,
-                String major, String phonenumber, String email) {
-        this.id = id;
-        this.fullname = fullname;
-        this.gender = gender;
-        this.classname = classname;
-        this.major = major;
-        this.phonenumber = phonenumber;
-        this.email = email;
+        this.id = "";
+        this.fullname = "";
+        this.gender = Gender.MALE;
+        this.classname = "";
+        this.major = "";
+        this.phonenumber = "";
+        this.email = "abc@gmail.com";
+        this.username = "";
+        this.password = "123456";
     }
 
     public User(String id, String fullname, Gender gender, String classname,
