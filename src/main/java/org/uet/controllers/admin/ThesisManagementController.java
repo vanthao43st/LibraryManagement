@@ -80,6 +80,7 @@ public class ThesisManagementController {
     private void onTableClick(MouseEvent event) {
         selectedThesis = thesisTable.getSelectionModel().getSelectedItem();
         if (selectedThesis != null) {
+            thesisCodeField.setEditable(false);
             thesisCodeField.setText(selectedThesis.getCode());
             thesisTitleField.setText(selectedThesis.getTitle());
             thesisMajorField.setText(selectedThesis.getMajor());

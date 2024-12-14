@@ -37,6 +37,8 @@ public class LibraryManagementController {
 
     private final ObservableList<Library> libraryData = FXCollections.observableArrayList();
 
+    Library selectedLibrary;
+
     @FXML
     public void initialize() {
         // Initialize search criteria
@@ -65,7 +67,7 @@ public class LibraryManagementController {
 
     @FXML
     private void onTableClick(MouseEvent event) {
-        Library selectedLibrary = libraryTable.getSelectionModel().getSelectedItem();
+        selectedLibrary = libraryTable.getSelectionModel().getSelectedItem();
         if (selectedLibrary != null) {
             documentCodeField.setText(selectedLibrary.getDocumentCode());
             quantityField.setText(String.valueOf(selectedLibrary.getQuantity()));
@@ -100,11 +102,12 @@ public class LibraryManagementController {
                 return;
             }
 
+            String userId = SessionManager.getInstance().getCurrentUser().getId();
             String documentCode = documentCodeField.getText();
             String type = documentTypeField.getValue();
-            String userId = SessionManager.getInstance().getCurrentUser().getId();
             int quantity;
 
+            // Kiểm tra số lượng nhập
             try {
                 quantity = Integer.parseInt(quantityField.getText());
                 if (quantity <= 0) {
@@ -116,37 +119,41 @@ public class LibraryManagementController {
                 return;
             }
 
-            // Kiểm tra tài liệu có tồn tại hay không
-            libraryDao.isDocumentCodeExistedAsync(documentCode)
-                    .thenCompose(isDocumentExisted -> {
-                        if (!isDocumentExisted) {
-                            Platform.runLater(() -> showAlert("Lỗi", "Tài liệu không tồn tại! Vui lòng nhập mã tài liệu hợp lệ.", Alert.AlertType.WARNING));
-                            return CompletableFuture.completedFuture(false); // Dừng chuỗi xử lý
-                        }
-                        return libraryDao.checkIfBookAsync(documentCode);
-                    })
-                    .thenCompose(isBook -> {
-                        if (!isBook && type.equals("Sách") || (isBook && !type.equals("Sách"))) {
-                            Platform.runLater(() -> showAlert("Lỗi", "Loại tài liệu không hợp lệ! Hãy xem lại mã tài liệu!", Alert.AlertType.ERROR));
-                            return CompletableFuture.completedFuture(false); // Dừng chuỗi xử lý
-                        }
-                        return libraryDao.borrowDocumentAsync(userId, documentCode, type, quantity);
-                    })
-                    .thenAccept(success -> {
-                        if (success) {
-                            Platform.runLater(() -> {
-                                loadLibraryData();
-                                showAlert("Thành công", "Mượn tài liệu thành công!", Alert.AlertType.INFORMATION);
-                                clearForm();
-                            });
-                        } else {
-                            Platform.runLater(() -> showAlert("Lỗi", "Lỗi mượn tài liệu. Kiểm tra số lượng có sẵn!", Alert.AlertType.ERROR));
-                        }
-                    })
-                    .exceptionally(e -> {
-                        Platform.runLater(() -> showAlert("Lỗi", "Đã xảy ra lỗi: " + e.getMessage(), Alert.AlertType.ERROR));
-                        return null;
+            // Chạy các bước kiểm tra theo thứ tự
+            CompletableFuture<Void> checkFuture = CompletableFuture.runAsync(() -> {
+                //Kiểm tra tài liệu tồn tại
+                boolean isDocumentExisted = libraryDao.isDocumentCodeExistedAsync(documentCode).join();
+                if (!isDocumentExisted) {
+                    Platform.runLater(() -> showAlert("Lỗi", "Tài liệu không tồn tại! Vui lòng nhập mã tài liệu hợp lệ.", Alert.AlertType.WARNING));
+                    throw new RuntimeException("Tài liệu không tồn tại");
+                }
+            }).thenRun(() -> {
+                //Kiểm tra loại tài liệu
+                boolean isBook = libraryDao.checkIfBookAsync(documentCode).join();
+                if ((isBook && !type.equals("Sách")) || (!isBook && !type.equals("Luận văn"))) {
+                    Platform.runLater(() -> showAlert("Lỗi", "Loại tài liệu không hợp lệ! Hãy xem lại mã hoặc loại tài liệu!", Alert.AlertType.WARNING));
+                    throw new RuntimeException("Loại tài liệu không hợp lệ");
+                }
+            }).thenRun(() -> {
+                //Mượn tài liệu
+                boolean success = libraryDao.borrowDocumentAsync(userId, documentCode, type, quantity).join();
+                if (success) {
+                    Platform.runLater(() -> {
+                        loadLibraryData();
+                        showAlert("Thành công", "Mượn tài liệu thành công!", Alert.AlertType.INFORMATION);
+                        clearForm();
                     });
+                } else {
+                    Platform.runLater(() -> showAlert("Lỗi", "Lỗi mượn tài liệu. Kiểm tra số lượng có sẵn!", Alert.AlertType.ERROR));
+                    throw new RuntimeException("Lỗi mượn tài liệu");
+                }
+            });
+
+            // Xử lý lỗi
+            checkFuture.exceptionally(e -> {
+                System.out.println("Đã xảy ra lỗi trong quá trình mượn tài liệu: " + e.getMessage());
+                return null;
+            });
 
         } catch (Exception e) {
             showAlert("Lỗi", "Đã xảy ra lỗi: " + e.getMessage(), Alert.AlertType.ERROR);
@@ -156,20 +163,24 @@ public class LibraryManagementController {
     @FXML
     private void onReturn(ActionEvent event) {
         try {
-            if (incompleteInfo()) {
-                showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin vào tất cả các trường!", Alert.AlertType.WARNING);
+            if (selectedLibrary == null) {
+                showAlert("Lỗi", "Vui lòng chọn tài liệu muốn trả!", Alert.AlertType.WARNING);
                 return;
             }
 
-            String documentCode = documentCodeField.getText();
             String userId = SessionManager.getInstance().getCurrentUser().getId();
+            String documentCode = documentCodeField.getText();
             String returnDate = java.time.LocalDate.now().toString();
-            int quantity;
+            String type = documentTypeField.getValue();
 
+            int quantity;
             try {
                 quantity = Integer.parseInt(quantityField.getText());
                 if (quantity <= 0) {
-                    showAlert("Lỗi", "Số lượng trả phải lớn hơn 0!", Alert.AlertType.WARNING);
+                    showAlert("Lỗi", "Số lượng trả phải lớn hơn 0!", Alert.AlertType.ERROR);
+                    return;
+                } else if (quantity > selectedLibrary.getQuantity()) {
+                    showAlert("Lỗi", "Số lượng trả vượt quá số lượng mượn!", Alert.AlertType.ERROR);
                     return;
                 }
             } catch (NumberFormatException e) {
@@ -177,29 +188,48 @@ public class LibraryManagementController {
                 return;
             }
 
-            libraryDao.getLibraryIdAsync(userId, documentCode, quantity)
-                    .thenCompose(libraryId -> {
-                        if (libraryId == null) {
-                            Platform.runLater(() -> showAlert("Lỗi", "Không tìm thấy bản ghi trong thư viện!", Alert.AlertType.WARNING));
-                            return CompletableFuture.completedFuture(false);
-                        }
-                        return libraryDao.returnDocumentAsync(userId, documentCode, quantity, returnDate, libraryId);
-                    })
-                    .thenAccept(success -> {
-                        if (success) {
-                            Platform.runLater(() -> {
-                                loadLibraryData();
-                                showAlert("Thành công", "Trả tài liệu thành công!", Alert.AlertType.INFORMATION);
-                                clearForm();
-                            });
-                        } else {
-                            Platform.runLater(() -> showAlert("Lỗi", "Lỗi trả tài liệu!", Alert.AlertType.ERROR));
-                        }
-                    })
-                    .exceptionally(e -> {
-                        Platform.runLater(() -> showAlert("Lỗi", "Đã xảy ra lỗi: " + e.getMessage(), Alert.AlertType.ERROR));
-                        return null;
-                    });
+            CompletableFuture<Void> checkFuture = CompletableFuture.runAsync(() -> {
+                //Kiểm tra tài liệu tồn tại
+                boolean isDocumentExisted = libraryDao.isDocumentCodeExistedAsync(documentCode).join();
+                if (!isDocumentExisted) {
+                    Platform.runLater(() -> showAlert("Lỗi", "Tài liệu không tồn tại! Vui lòng nhập mã tài liệu hợp lệ.", Alert.AlertType.WARNING));
+                    throw new RuntimeException("Tài liệu không tồn tại");
+                }
+            }).thenRun(() -> {
+                //Kiểm tra loại tài liệu
+                boolean isBook = libraryDao.checkIfBookAsync(documentCode).join();
+                if ((isBook && !type.equals("Sách")) || (!isBook && !type.equals("Luận văn"))) {
+                    Platform.runLater(() -> showAlert("Lỗi", "Loại tài liệu không hợp lệ! Hãy xem lại mã hoặc loại tài liệu!", Alert.AlertType.WARNING));
+                    throw new RuntimeException("Loại tài liệu không hợp lệ");
+                }
+            }).thenRun(() -> {
+                // Lấy library_id
+                Integer libraryId = libraryDao.getLibraryIdAsync(userId, documentCode, selectedLibrary.getQuantity()).join();
+                if (libraryId == null) {
+                    Platform.runLater(() -> showAlert("Lỗi", "Không tìm thấy bản ghi trong thư viện!", Alert.AlertType.WARNING));
+                    throw new RuntimeException("Không tìm thấy bản ghi trong thư viện");
+                }
+
+                // Tiến hành trả tài liệu
+                boolean success = libraryDao.returnDocumentAsync(userId, documentCode, quantity, returnDate, libraryId).join();
+                if (!success) {
+                    Platform.runLater(() -> showAlert("Lỗi", "Lỗi trả tài liệu!", Alert.AlertType.ERROR));
+                    throw new RuntimeException("Lỗi trả tài liệu");
+                }
+
+                Platform.runLater(() -> {
+                    loadLibraryData();
+                    showAlert("Thành công", "Trả tài liệu thành công!", Alert.AlertType.INFORMATION);
+                    clearForm();
+                });
+            });
+
+            // Xử lý lỗi
+            checkFuture.exceptionally(e -> {
+                System.out.println("Lỗi khi trả tài liệu: " + e.getMessage());
+                return null;
+            });
+
         } catch (Exception e) {
             showAlert("Lỗi", "Đã xảy ra lỗi: " + e.getMessage(), Alert.AlertType.ERROR);
         }

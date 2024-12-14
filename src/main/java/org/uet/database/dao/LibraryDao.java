@@ -151,11 +151,6 @@ public class LibraryDao {
                     Date dueDate = resultSet.getDate("library_due_date");
                     Date returnDateObj = Date.valueOf(returnDate);
 
-                    if (returnQuantity > borrowedQuantity) {
-                        System.out.println("Số lượng trả vượt quá số lượng mượn.");
-                        return false;
-                    }
-
                     long lateDays = 0;
                     double fine = 0;
                     String status = "Đã trả";

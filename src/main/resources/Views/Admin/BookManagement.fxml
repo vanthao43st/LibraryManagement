@@ -16,30 +16,24 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="582.0" prefWidth="834.0"
-            style="-fx-border-color: black; -fx-border-width: 1; -fx-border-radius: 5; -fx-border-color: rgba(0, 0, 0, 0.3);"
-            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.uet.controllers.admin.BookManagementController">
-    <BorderPane prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns:fx="http://javafx.com/fxml">
+<AnchorPane prefHeight="582.0" prefWidth="834.0" style="-fx-border-color: black; -fx-border-width: 1; -fx-border-radius: 5; -fx-border-color: rgba(0, 0, 0, 0.3);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.uet.controllers.admin.BookManagementController">
+    <BorderPane prefHeight="582.0" prefWidth="834.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns:fx="http://javafx.com/fxml">
 
         <!-- Top: Search Section -->
         <top>
-            <HBox alignment="CENTER_LEFT" prefHeight="79.0" prefWidth="800.0" spacing="10"
-                  style="-fx-background-color: #f4f4f4; -fx-padding: 10;">
-                <Label prefHeight="18.0" prefWidth="84.0" text="Search by:"/>
+            <HBox alignment="CENTER_LEFT" prefHeight="79.0" prefWidth="800.0" spacing="10" style="-fx-background-color: #f4f4f4; -fx-padding: 10;">
+                <Label prefHeight="18.0" prefWidth="84.0" text="Search by:" />
                 <ComboBox fx:id="searchCriteria" prefWidth="150.0" promptText="Select criteria">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="Code"/>
-                            <String fx:value="Title"/>
-                            <String fx:value="Category"/>
+                            <String fx:value="Code" />
+                            <String fx:value="Title" />
+                            <String fx:value="Category" />
                         </FXCollections>
                     </items>
                 </ComboBox>
-                <TextField fx:id="searchField" prefHeight="26.0" prefWidth="341.0" promptText="Enter keyword ..."/>
-                <Button fx:id="searchButton" onAction="#onSearch"
-                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Search"/>
+                <TextField fx:id="searchField" prefHeight="26.0" prefWidth="341.0" promptText="Enter keyword ..." />
+                <Button fx:id="searchButton" onAction="#onSearch" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Search" />
             </HBox>
         </top>
 
@@ -50,62 +44,54 @@
                 <GridPane alignment="CENTER" hgap="20" maxWidth="800" prefHeight="162.0" prefWidth="766.0" vgap="20">
                     <!-- Cấu hình cột -->
                     <columnConstraints>
-                        <ColumnConstraints maxWidth="200.0" minWidth="84.20001068115235" prefWidth="84.20001068115235"/>
-                        <ColumnConstraints maxWidth="302.59998931884763" minWidth="200.0" prefWidth="283.2"/>
-                        <ColumnConstraints maxWidth="200.0" minWidth="65.59999389648436" prefWidth="81.60000000000002"/>
-                        <ColumnConstraints maxWidth="300.0" minWidth="200.0" prefWidth="294.0000061035156"/>
+                        <ColumnConstraints maxWidth="200.0" minWidth="84.20001068115235" prefWidth="84.20001068115235" />
+                        <ColumnConstraints maxWidth="302.59998931884763" minWidth="200.0" prefWidth="283.2" />
+                        <ColumnConstraints maxWidth="200.0" minWidth="65.59999389648436" prefWidth="81.60000000000002" />
+                        <ColumnConstraints maxWidth="300.0" minWidth="200.0" prefWidth="294.0000061035156" />
                     </columnConstraints>
 
                     <!-- Hàng 1 -->
-                    <Label alignment="CENTER_RIGHT" text="Code:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                    <TextField fx:id="bookCodeField" prefWidth="200" GridPane.columnIndex="1"
-                               GridPane.rowIndex="0"/>
+                    <Label alignment="CENTER_RIGHT" text="Code:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <TextField fx:id="bookCodeField" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                    <Label alignment="CENTER_RIGHT" text="Title:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-                    <TextField fx:id="bookTitleField" prefHeight="26.0" prefWidth="301.0" GridPane.columnIndex="3"
-                               GridPane.rowIndex="0"/>
+                    <Label alignment="CENTER_RIGHT" text="Title:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                    <TextField fx:id="bookTitleField" prefHeight="26.0" prefWidth="301.0" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
                     <!-- Hàng 2 -->
-                    <Label alignment="CENTER_RIGHT" text="Category:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                    <TextField fx:id="bookCategoryField" prefHeight="26.0" prefWidth="283.0"
-                               GridPane.columnIndex="1"
-                               GridPane.rowIndex="1"/>
+                    <Label alignment="CENTER_RIGHT" text="Category:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <TextField fx:id="bookCategoryField" prefHeight="26.0" prefWidth="283.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                    <Label alignment="CENTER_RIGHT" text="Author:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                    <TextField fx:id="bookAuthorField" prefWidth="200" GridPane.columnIndex="3"
-                               GridPane.rowIndex="1"/>
+                    <Label alignment="CENTER_RIGHT" text="Author:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                    <TextField fx:id="bookAuthorField" prefWidth="200" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
                     <!-- Hàng 3 -->
-                    <Label alignment="CENTER_RIGHT" text="Price:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                    <TextField fx:id="bookPriceField" prefHeight="26.0" prefWidth="283.0" GridPane.columnIndex="1"
-                               GridPane.rowIndex="2"/>
+                    <Label alignment="CENTER_RIGHT" text="Price:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <TextField fx:id="bookPriceField" prefHeight="26.0" prefWidth="283.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                    <Label alignment="CENTER_RIGHT" text="Quantity:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-                    <TextField fx:id="bookQuantityField" prefWidth="200" GridPane.columnIndex="3"
-                               GridPane.rowIndex="2"/>
+                    <Label alignment="CENTER_RIGHT" text="Quantity:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                    <TextField fx:id="bookQuantityField" prefWidth="200" GridPane.columnIndex="3" GridPane.rowIndex="2" />
 
                     <!-- Hàng 4 -->
-                    <Label alignment="CENTER_RIGHT" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                    <TextField fx:id="bookDescriptionField" prefWidth="200" GridPane.columnIndex="1"
-                               GridPane.rowIndex="3"/>
+                    <Label alignment="CENTER_RIGHT" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <TextField fx:id="bookDescriptionField" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                     <rowConstraints>
-                        <RowConstraints/>
-                        <RowConstraints/>
-                        <RowConstraints/>
-                        <RowConstraints/>
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
                     </rowConstraints>
                 </GridPane>
 
                 <!-- Table Section -->
                 <TableView fx:id="bookTable" prefHeight="295.0" prefWidth="734.0">
                     <columns>
-                        <TableColumn fx:id="codeColumn" prefWidth="100.0" text="Code"/>
-                        <TableColumn fx:id="titleColumn" prefWidth="150.0" text="Title"/>
-                        <TableColumn fx:id="categoryColumn" prefWidth="100.0" text="Category"/>
-                        <TableColumn fx:id="authorColumn" prefWidth="100.0" text="Author"/>
-                        <TableColumn fx:id="priceColumn" prefWidth="150.0" text="Price"/>
-                        <TableColumn fx:id="quantityColumn" prefWidth="150.0" text="Quantity"/>
-                        <TableColumn fx:id="descriptionColumn" prefWidth="150.0" text="Description"/>
+                        <TableColumn fx:id="codeColumn" prefWidth="100.0" text="Code" />
+                        <TableColumn fx:id="titleColumn" prefWidth="150.0" text="Title" />
+                        <TableColumn fx:id="categoryColumn" prefWidth="100.0" text="Category" />
+                        <TableColumn fx:id="authorColumn" prefWidth="100.0" text="Author" />
+                        <TableColumn fx:id="priceColumn" prefWidth="150.0" text="Price" />
+                        <TableColumn fx:id="quantityColumn" prefWidth="150.0" text="Quantity" />
+                        <TableColumn fx:id="descriptionColumn" prefWidth="150.0" text="Description" />
                     </columns>
                 </TableView>
             </VBox>
@@ -114,14 +100,10 @@
         <!-- Bottom: Buttons Section -->
         <bottom>
             <HBox alignment="CENTER" prefHeight="50.0" prefWidth="800.0" spacing="10" style="-fx-padding: 10;">
-                <Button fx:id="addButton" onAction="#onAdd" prefHeight="26.0" prefWidth="82.0"
-                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Add Book"/>
-                <Button fx:id="editButton" onAction="#onEdit" prefHeight="26.0" prefWidth="79.0"
-                        style="-fx-background-color: #FFA500; -fx-text-fill: white;" text="Edit Book"/>
-                <Button fx:id="deleteButton" onAction="#onDelete"
-                        style="-fx-background-color: #FF6347; -fx-text-fill: white;" text="Delete Book"/>
-                <Button onAction="#onShowDetail"
-                        style="-fx-background-color: #FF6347; -fx-text-fill: white;" text="Show Detail Book"/>
+                <Button fx:id="addButton" onAction="#onAdd" prefHeight="26.0" prefWidth="82.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Add Book" />
+                <Button fx:id="editButton" onAction="#onEdit" prefHeight="26.0" prefWidth="79.0" style="-fx-background-color: #FFA500; -fx-text-fill: white;" text="Edit Book" />
+                <Button fx:id="deleteButton" onAction="#onDelete" style="-fx-background-color: #FF6347; -fx-text-fill: white;" text="Delete Book" />
+                <Button onAction="#onShowDetail" style="-fx-background-color: #FF6347; -fx-text-fill: white;" text="Show Detail Book" />
             </HBox>
         </bottom>
     </BorderPane>

@@ -85,6 +85,7 @@ public class BookManagementController {
     private void onTableClick(MouseEvent event) {
         selectedBook = bookTable.getSelectionModel().getSelectedItem();
         if (selectedBook != null) {
+            bookCodeField.setEditable(false);
             bookCodeField.setText(selectedBook.getCode());
             bookTitleField.setText(selectedBook.getTitle());
             bookCategoryField.setText(selectedBook.getCategory());
@@ -122,8 +123,8 @@ public class BookManagementController {
             Book book = getBook();
             bookDao.addBookAsync(book);
             bookData.add(book);
-            bookTable.refresh();
             bookTable.setItems(bookData);
+            bookTable.refresh();
 
             clearInputFields();
             showAlert("Thành công", "Sách được thêm thành công!", Alert.AlertType.INFORMATION);
@@ -141,7 +142,7 @@ public class BookManagementController {
         int quantity = Integer.parseInt(bookQuantityField.getText());
         String description = bookDescriptionField.getText();
 
-        return new Book(code, title, description, category, author, price, quantity);
+        return new Book(code, title, description, author, category, price, quantity);
     }
 
     private boolean inCompleteInfo() {
@@ -170,7 +171,6 @@ public class BookManagementController {
         }
 
         try {
-            selectedBook.setCode(bookCodeField.getText());
             selectedBook.setTitle(bookTitleField.getText());
             selectedBook.setCategory(bookCategoryField.getText());
             selectedBook.setAuthor(bookAuthorField.getText());

@@ -86,6 +86,7 @@ public class UserManagementController {
     private void onTableClick(MouseEvent event) {
         selectedUser = userTable.getSelectionModel().getSelectedItem();
         if (selectedUser != null) {
+            userIdField.setEditable(false);
             userIdField.setText(selectedUser.getId());
             userFullNameField.setText(selectedUser.getFullname());
             userGenderField.setValue(selectedUser.getGender().toString());
