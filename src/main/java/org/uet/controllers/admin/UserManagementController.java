@@ -19,6 +19,7 @@ import org.uet.enums.Gender;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class UserManagementController {
 
@@ -197,36 +198,48 @@ public class UserManagementController {
 
             clearForm();
             selectedUser = null;
+            showAlert("Thông báo", "Cập nhật người dùng thành công.", Alert.AlertType.INFORMATION);
         } else {
-            showAlert("Thông báo", "Hãy chọn một sinh viên để sửa!", Alert.AlertType.WARNING);
+            showAlert("Cảnh báo", "Hãy chọn một sinh viên để sửa!", Alert.AlertType.WARNING);
         }
     }
 
     @FXML
     private void onDelete(ActionEvent event) {
         if (selectedUser != null) {
-            userDao.hasUnreturnedBooksAsync(selectedUser.getId()).thenAccept(hasUnreturnedBooks -> {
-                if (hasUnreturnedBooks) {
-                    Platform.runLater(() -> showAlert("Thông báo", "Không thể xoá người dùng! Người dùng đang mượn sách!", Alert.AlertType.WARNING));
-                    return;
-                }
+            // Hiển thị hộp thoại xác nhận
+            Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmationAlert.setTitle("Xác nhận xoá");
+            confirmationAlert.setHeaderText("Bạn có chắc chắn muốn xoá người dùng này?");
+            confirmationAlert.setContentText("Hành động này không thể hoàn tác.");
 
-                Platform.runLater(() -> {
-                    userData.remove(selectedUser);
-                    deleteFromDatabase(selectedUser);
+            // Chờ người dùng xác nhận
+            Optional<ButtonType> result = confirmationAlert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                // Kiểm tra xem người dùng có sách chưa trả hay không
+                userDao.hasUnreturnedBooksAsync(selectedUser.getId()).thenAccept(hasUnreturnedBooks -> {
+                    if (hasUnreturnedBooks) {
+                        Platform.runLater(() -> showAlert("Thông báo", "Không thể xoá người dùng! Người dùng đang mượn sách!", Alert.AlertType.WARNING));
+                        return;
+                    }
 
-                    userTable.setItems(FXCollections.observableArrayList(userData));
-                    userTable.refresh();
+                    Platform.runLater(() -> {
+                        userData.remove(selectedUser);
+                        deleteFromDatabase(selectedUser);
 
-                    clearForm();
-                    selectedUser = null;
+                        userTable.setItems(FXCollections.observableArrayList(userData));
+                        userTable.refresh();
 
-                    showAlert("Thông báo", "Xóa thành công!", Alert.AlertType.INFORMATION);
+                        clearForm();
+                        selectedUser = null;
+
+                        showAlert("Thông báo", "Xóa thành công!", Alert.AlertType.INFORMATION);
+                    });
+                }).exceptionally(e -> {
+                    Platform.runLater(() -> showAlert("Lỗi", "Đã xảy ra lỗi khi kiểm tra sách chưa trả: " + e.getMessage(), Alert.AlertType.ERROR));
+                    return null;
                 });
-            }).exceptionally(e -> {
-                Platform.runLater(() -> showAlert("Lỗi", "Đã xảy ra lỗi khi kiểm tra sách chưa trả: " + e.getMessage(), Alert.AlertType.ERROR));
-                return null;
-            });
+            }
         } else {
             showAlert("Thông báo", "Hãy chọn một sinh viên để xóa!", Alert.AlertType.WARNING);
         }

@@ -116,18 +116,19 @@ public class LibraryManagementController {
                 return;
             }
 
+            // Kiểm tra tài liệu có tồn tại hay không
             libraryDao.isDocumentCodeExistedAsync(documentCode)
                     .thenCompose(isDocumentExisted -> {
                         if (!isDocumentExisted) {
                             Platform.runLater(() -> showAlert("Lỗi", "Tài liệu không tồn tại! Vui lòng nhập mã tài liệu hợp lệ.", Alert.AlertType.WARNING));
-                            return CompletableFuture.completedFuture(false);
+                            return CompletableFuture.completedFuture(false); // Dừng chuỗi xử lý
                         }
                         return libraryDao.checkIfBookAsync(documentCode);
                     })
                     .thenCompose(isBook -> {
-                        if ((isBook && !type.equals("Sách")) || (!isBook && !type.equals("Luận văn"))) {
-                            Platform.runLater(() -> showAlert("Lỗi", "Loại tài liệu không hợp lệ! Hãy xem lại mã tài liệu!", Alert.AlertType.WARNING));
-                            return CompletableFuture.completedFuture(false);
+                        if (!isBook && type.equals("Sách") || (isBook && !type.equals("Sách"))) {
+                            Platform.runLater(() -> showAlert("Lỗi", "Loại tài liệu không hợp lệ! Hãy xem lại mã tài liệu!", Alert.AlertType.ERROR));
+                            return CompletableFuture.completedFuture(false); // Dừng chuỗi xử lý
                         }
                         return libraryDao.borrowDocumentAsync(userId, documentCode, type, quantity);
                     })

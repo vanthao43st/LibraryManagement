@@ -18,6 +18,7 @@ import org.uet.entity.Library;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class LibraryManagementController {
@@ -235,20 +236,30 @@ public class LibraryManagementController {
 
     @FXML
     private void onDelete(ActionEvent event) {
-        libraryDao.deleteLibraryRecordAsync()
-                .thenRun(() -> {
-                    Platform.runLater(() -> {
-                        loadLibraryData();
-                        clearForm();
-                        showAlert("Thành công", "Đã xoá các bản ghi không cần thiết!", Alert.AlertType.INFORMATION);
+        // Hiển thị hộp thoại xác nhận
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Xác nhận xoá");
+        confirmationAlert.setHeaderText("Bạn có chắc chắn muốn xoá các bản ghi này?");
+        confirmationAlert.setContentText("Hành động này không thể hoàn tác.");
+
+        // Chờ người dùng xác nhận
+        Optional<ButtonType> result = confirmationAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            libraryDao.deleteLibraryRecordAsync()
+                    .thenRun(() -> {
+                        Platform.runLater(() -> {
+                            loadLibraryData();
+                            clearForm();
+                            showAlert("Thành công", "Đã xoá các bản ghi không cần thiết!", Alert.AlertType.INFORMATION);
+                        });
+                    })
+                    .exceptionally(e -> {
+                        Platform.runLater(() -> {
+                            showAlert("Lỗi", "Đã xảy ra lỗi khi xoá các bản ghi: " + e.getMessage(), Alert.AlertType.ERROR);
+                        });
+                        return null;
                     });
-                })
-                .exceptionally(e -> {
-                    Platform.runLater(() -> {
-                        showAlert("Lỗi", "Đã xảy ra lỗi khi xoá các bản ghi: " + e.getMessage(), Alert.AlertType.ERROR);
-                    });
-                    return null;
-                });
+        }
     }
 
     @FXML

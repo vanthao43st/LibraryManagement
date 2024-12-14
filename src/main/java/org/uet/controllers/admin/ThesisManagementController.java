@@ -18,6 +18,7 @@ import org.uet.entity.Thesis;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class ThesisManagementController {
 
@@ -74,6 +75,7 @@ public class ThesisManagementController {
             return null;
         });
     }
+
     @FXML
     private void onTableClick(MouseEvent event) {
         selectedThesis = thesisTable.getSelectionModel().getSelectedItem();
@@ -214,34 +216,44 @@ public class ThesisManagementController {
             return;
         }
 
-        // Kiểm tra xem tài liệu có đang được mượn không (bất đồng bộ)
-        thesisDao.isBorrowedThesisAsync(selectedThesis.getCode()).thenAccept(isBorrowed -> {
-            Platform.runLater(() -> {
-                if (isBorrowed) {
-                    showAlert("Thông báo", "Tài liệu đang được mượn! Không thể xoá được!", Alert.AlertType.WARNING);
-                } else {
-                    // Xoá luận văn khỏi cơ sở dữ liệu (bất đồng bộ)
-                    thesisDao.deleteThesisAsync(selectedThesis.getCode()).thenRun(() -> {
-                        Platform.runLater(() -> {
-                            thesisData.remove(selectedThesis); // Xoá sách khỏi danh sách hiển thị
-                            clearInputFields(); // Dọn dẹp trường nhập liệu
-                            showAlert("Thành công", "Xoá luận văn thành công!", Alert.AlertType.INFORMATION);
+        // Hiển thị hộp thoại xác nhận
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Xác nhận xoá");
+        confirmationAlert.setHeaderText("Bạn có chắc chắn muốn xoá luận văn này?");
+        confirmationAlert.setContentText("Hành động này không thể hoàn tác.");
+
+        // Chờ người dùng xác nhận
+        Optional<ButtonType> result = confirmationAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Kiểm tra xem tài liệu có đang được mượn không (bất đồng bộ)
+            thesisDao.isBorrowedThesisAsync(selectedThesis.getCode()).thenAccept(isBorrowed -> {
+                Platform.runLater(() -> {
+                    if (isBorrowed) {
+                        showAlert("Thông báo", "Tài liệu đang được mượn! Không thể xoá được!", Alert.AlertType.WARNING);
+                    } else {
+                        // Xoá luận văn khỏi cơ sở dữ liệu (bất đồng bộ)
+                        thesisDao.deleteThesisAsync(selectedThesis.getCode()).thenRun(() -> {
+                            Platform.runLater(() -> {
+                                thesisData.remove(selectedThesis); // Xoá sách khỏi danh sách hiển thị
+                                clearInputFields(); // Dọn dẹp trường nhập liệu
+                                showAlert("Thành công", "Xoá luận văn thành công!", Alert.AlertType.INFORMATION);
+                            });
+                        }).exceptionally(e -> {
+                            Platform.runLater(() -> {
+                                showAlert("Lỗi", "Không thể xoá sách!", Alert.AlertType.ERROR);
+                                System.out.println("Lỗi: " + e.getMessage());
+                            });
+                            return null;
                         });
-                    }).exceptionally(e -> {
-                        Platform.runLater(() -> {
-                            showAlert("Lỗi", "Không thể xoá sách!", Alert.AlertType.ERROR);
-                            System.out.println("Lỗi: " + e.getMessage());
-                        });
-                        return null;
-                    });
-                }
+                    }
+                });
+            }).exceptionally(e -> {
+                Platform.runLater(() -> {
+                    showAlert("Lỗi", "Không thể kiểm tra trạng thái mượn luận văn: " + e.getMessage(), Alert.AlertType.ERROR);
+                });
+                return null;
             });
-        }).exceptionally(e -> {
-            Platform.runLater(() -> {
-                showAlert("Lỗi", "Không thể kiểm tra trạng thái mượn luận văn: " + e.getMessage(), Alert.AlertType.ERROR);
-            });
-            return null;
-        });
+        }
     }
 
     @FXML

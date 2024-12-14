@@ -18,6 +18,7 @@ import org.uet.entity.Book;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class BookManagementController {
 
@@ -202,34 +203,45 @@ public class BookManagementController {
             return;
         }
 
-        // Kiểm tra xem tài liệu có đang được mượn không (bất đồng bộ)
-        bookDao.isBorrowedBookAsync(selectedBook.getCode()).thenAccept(isBorrowed -> {
-            Platform.runLater(() -> {
-                if (isBorrowed) {
-                    showAlert("Thông báo", "Tài liệu đang được mượn! Không thể xoá được!", Alert.AlertType.WARNING);
-                } else {
-                    // Xoá sách khỏi cơ sở dữ liệu (bất đồng bộ)
-                    bookDao.deleteBookAsync(selectedBook.getCode()).thenRun(() -> {
-                        Platform.runLater(() -> {
-                            bookData.remove(selectedBook); // Xoá sách khỏi danh sách hiển thị
-                            clearInputFields(); // Dọn dẹp trường nhập liệu
-                            showAlert("Thành công", "Xoá sách thành công!", Alert.AlertType.INFORMATION);
+        // Hiển thị hộp thoại xác nhận
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Xác nhận xoá");
+        confirmationAlert.setHeaderText("Bạn có chắc chắn muốn xoá tài liệu này?");
+        confirmationAlert.setContentText("Hành động này không thể hoàn tác.");
+
+        // Chờ người dùng xác nhận
+        Optional<ButtonType> result = confirmationAlert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Kiểm tra xem tài liệu có đang được mượn không (bất đồng bộ)
+            bookDao.isBorrowedBookAsync(selectedBook.getCode()).thenAccept(isBorrowed -> {
+                Platform.runLater(() -> {
+                    if (isBorrowed) {
+                        showAlert("Thông báo", "Tài liệu đang được mượn! Không thể xoá được!", Alert.AlertType.WARNING);
+                    } else {
+                        // Xoá sách khỏi cơ sở dữ liệu (bất đồng bộ)
+                        bookDao.deleteBookAsync(selectedBook.getCode()).thenRun(() -> {
+                            Platform.runLater(() -> {
+                                bookData.remove(selectedBook); // Xoá sách khỏi danh sách hiển thị
+                                clearInputFields(); // Dọn dẹp trường nhập liệu
+                                showAlert("Thành công", "Xoá sách thành công!", Alert.AlertType.INFORMATION);
+                            });
+                        }).exceptionally(e -> {
+                            Platform.runLater(() -> {
+                                showAlert("Lỗi", "Không thể xoá sách!", Alert.AlertType.ERROR);
+                                System.out.println("Lỗi: " + e.getMessage());
+                            });
+                            return null;
                         });
-                    }).exceptionally(e -> {
-                        Platform.runLater(() -> {
-                            showAlert("Lỗi", "Không thể xoá sách!", Alert.AlertType.ERROR);
-                            System.out.println("Lỗi: " + e.getMessage());
-                        });
-                        return null;
-                    });
-                }
+                    }
+                });
+            }).exceptionally(e -> {
+                Platform.runLater(() -> {
+                    showAlert("Lỗi", "Không thể kiểm tra trạng thái mượn sách: " + e.getMessage(), Alert.AlertType.ERROR);
+                });
+                return null;
             });
-        }).exceptionally(e -> {
-            Platform.runLater(() -> {
-                showAlert("Lỗi", "Không thể kiểm tra trạng thái mượn sách: " + e.getMessage(), Alert.AlertType.ERROR);
-            });
-            return null;
-        });
+        }
     }
 
     @FXML

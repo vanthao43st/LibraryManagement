@@ -99,7 +99,7 @@ public class UserDetailController {
             // Gọi hàm cập nhật trong cơ sở dữ liệu
             updateInDatabase(currentUser);
 
-            showAlert("Thành công", "Thông tin người dùng đã được cập nhật!", Alert.AlertType.INFORMATION);
+            showAlert("Thành công", "Thông tin đã được cập nhật!", Alert.AlertType.INFORMATION);
         } else {
             showAlert("Cảnh báo", "Không có người dùng để chỉnh sửa!", Alert.AlertType.WARNING);
         }
