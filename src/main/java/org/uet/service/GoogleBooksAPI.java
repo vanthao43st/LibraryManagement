@@ -25,7 +25,7 @@ public class GoogleBooksAPI {
         return fetchBookDataAsync("intitle:" + title);
     }
 
-    private static CompletableFuture<ArrayList<Book>> fetchBookDataAsync(String query) {
+    protected static CompletableFuture<ArrayList<Book>> fetchBookDataAsync(String query) {
         return CompletableFuture.supplyAsync(() -> {
             ArrayList<Book> books = new ArrayList<>();
             try {
