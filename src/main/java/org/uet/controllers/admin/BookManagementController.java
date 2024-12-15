@@ -225,6 +225,8 @@ public class BookManagementController {
                                 bookData.remove(selectedBook);
                                 bookCodeField.setEditable(true);
                                 clearInputFields();
+                                bookTable.refresh();
+                                bookTable.setItems(FXCollections.observableArrayList(bookData));
                                 showAlert("Thành công", "Xoá sách thành công!", Alert.AlertType.INFORMATION);
                             });
                         }).exceptionally(e -> {

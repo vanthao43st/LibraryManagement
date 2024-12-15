@@ -238,6 +238,8 @@ public class ThesisManagementController {
                                 thesisData.remove(selectedThesis);
                                 thesisCodeField.setEditable(true);
                                 clearInputFields();
+                                thesisTable.refresh();
+                                thesisTable.setItems(FXCollections.observableArrayList(thesisData));
                                 showAlert("Thành công", "Xoá luận văn thành công!", Alert.AlertType.INFORMATION);
                             });
                         }).exceptionally(e -> {

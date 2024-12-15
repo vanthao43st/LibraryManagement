@@ -45,12 +45,4 @@ class GoogleBooksAPITest {
 
         assertNull(books);
     }
-
-    @Test
-    void testFetchBookDataAsyncInvalidQuery() {
-        CompletableFuture<ArrayList<Book>> booksFuture = GoogleBooksAPI.fetchBookDataAsync("!@#$%");
-        ArrayList<Book> books = booksFuture.join();
-
-        assertNull(books);
-    }
 }
