@@ -124,7 +124,6 @@ public class BookAPIController {
         bookDao.addBookAsync(book).thenRun(() -> {
             Platform.runLater(() -> {
                 System.out.println("Sách được lưu vào database: " + book);
-                showAlert("Thành công", "Sách đã được lưu vào cơ sở dữ liệu.", Alert.AlertType.INFORMATION);
             });
         }).exceptionally(e -> {
             Platform.runLater(() -> {
