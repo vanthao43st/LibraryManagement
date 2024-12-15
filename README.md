@@ -13,7 +13,7 @@ Dự án này là một hệ thống quản lý thư viện, bao gồm các tín
 - Quản lý thêm, sửa, xoá thông tin người dùng.
 - Thêm, sửa xoá tài liệu (**Sách**, **Luận văn**).
 - Mượn, trả tài liệu và thống kê mượn trả.
-- Tích hợp GoogleBooksAPI.
+- Tích hợp GoogleBooksAPI để tra cứu tài liệu.
 - Thực hiện kiểm thử qua **Unit Tests**.
 
 ---
