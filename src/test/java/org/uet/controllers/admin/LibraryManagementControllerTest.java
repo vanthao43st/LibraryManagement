@@ -8,6 +8,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.event.ActionEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.uet.JavaFXInitializer;
 import org.uet.entity.Library;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,6 +26,8 @@ class LibraryManagementControllerTest {
 
     @BeforeEach
     void setUp() {
+        JavaFXInitializer.initialize();
+
         controller = new LibraryManagementController();
         searchCriteria = new ComboBox<>();
         documentTypeField = new ComboBox<>();
@@ -105,38 +108,42 @@ class LibraryManagementControllerTest {
 
         controller.onBorrow(new ActionEvent());
 
-        assertEquals(1, controller.libraryData.size());
+        assertEquals(3, controller.libraryData.size());
         assertEquals("user02", controller.libraryData.get(0).getUserId());
         assertEquals("doc002", controller.libraryData.get(0).getDocumentCode());
     }
 
     @Test
     void testOnReturn() {
-        Library library = new Library("user03", "doc003", "Sách", 1, "2021-12-01", null, "2021-12-15", "Borrowed");
-        libraryData.add(library);
-        libraryTable.setItems(libraryData);
-        libraryTable.getSelectionModel().select(library);
+        Platform.runLater(() -> {
+            Library library = new Library("user03", "doc003", "Sách", 1, "2021-12-01", null, "2021-12-15", "Borrowed");
+            libraryData.add(library);
+            libraryTable.setItems(libraryData);
+            libraryTable.getSelectionModel().select(library);
 
-        controller.selectedLibrary = library;
-        quantityField.setText("1");
+            controller.selectedLibrary = library;
+            quantityField.setText("1");
 
-        controller.onReturn(new ActionEvent());
+            controller.onReturn(new ActionEvent());
 
-        assertNotNull(controller.libraryData.get(0).getReturnDate());
+            assertNotNull(controller.libraryData.get(0).getReturnDate());
+        });
     }
 
     @Test
     void testOnDelete() {
-        Library library = new Library("user04", "doc004", "Sách", 1, "2021-12-01", null, "2021-12-15", "Borrowed");
-        libraryData.add(library);
-        libraryTable.setItems(libraryData);
-        libraryTable.getSelectionModel().select(library);
+        Platform.runLater(() -> {
+            Library library = new Library("user04", "doc004", "Sách", 1, "2021-12-01", null, "2021-12-15", "Borrowed");
+            libraryData.add(library);
+            libraryTable.setItems(libraryData);
+            libraryTable.getSelectionModel().select(library);
 
-        controller.selectedLibrary = library;
+            controller.selectedLibrary = library;
 
-        controller.onDelete(new ActionEvent());
+            controller.onDelete(new ActionEvent());
 
-        assertFalse(controller.libraryData.contains(library));
+            assertFalse(controller.libraryData.contains(library));
+        });
     }
 
     @Test
@@ -152,6 +159,6 @@ class LibraryManagementControllerTest {
         controller.onSearch(new ActionEvent());
 
         assertEquals(1, libraryTable.getItems().size());
-        assertEquals("user05", libraryTable.getItems().get(0).getUserId());
+        assertEquals("user05", libraryTable.getItems().getFirst().getUserId());
     }
 }

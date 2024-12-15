@@ -60,8 +60,8 @@ class BookDaoTest {
                 "99999999",
                 "Updated Book Title",
                 "Updated book description",
-                "Updated Category",
                 "Updated Author",
+                "Updated Category",
                 19.99,
                 20
         );

@@ -10,6 +10,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.uet.JavaFXInitializer;
+
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 
@@ -23,6 +25,8 @@ class UserHomeControllerTest {
 
     @BeforeEach
     void setUp() {
+        JavaFXInitializer.initialize();
+
         controller = new UserHomeController();
         welcomeLabel = new Label();
         documentButton = new Button();
@@ -72,22 +76,26 @@ class UserHomeControllerTest {
 
     @Test
     void testOnMousePressed() {
-        // Giả lập sự kiện nhấn chuột để kiểm tra hàm onMousePressed
-        MouseEvent mouseEvent = new MouseEvent(MouseEvent.MOUSE_PRESSED, 0, 0, 0, 0, null, 0, false, false, false, false, false, false, false, false, false, false, null);
-        controller.onMousePressed(mouseEvent);
-        Stage stage = (Stage) container.getScene().getWindow();
-        assertEquals(stage.getX() - mouseEvent.getScreenX(), controller.xOffset);
-        assertEquals(stage.getY() - mouseEvent.getScreenY(), controller.yOffset);
+        Platform.runLater(() -> {
+            // Giả lập sự kiện nhấn chuột để kiểm tra hàm onMousePressed
+            MouseEvent mouseEvent = new MouseEvent(MouseEvent.MOUSE_PRESSED, 0, 0, 0, 0, null, 0, false, false, false, false, false, false, false, false, false, false, null);
+            controller.onMousePressed(mouseEvent);
+            Stage stage = (Stage) container.getScene().getWindow();
+            assertEquals(stage.getX() - mouseEvent.getScreenX(), controller.xOffset);
+            assertEquals(stage.getY() - mouseEvent.getScreenY(), controller.yOffset);
+        });
     }
 
     @Test
     void testOnMouseDragged() {
-        // Giả lập sự kiện kéo chuột để kiểm tra hàm onMouseDragged
-        MouseEvent mouseEvent = new MouseEvent(MouseEvent.MOUSE_DRAGGED, 0, 0, 0, 0, null, 0, false, false, false, false, false, false, false, false, false, false, null);
-        controller.onMouseDragged(mouseEvent);
-        Stage stage = (Stage) container.getScene().getWindow();
-        assertEquals(mouseEvent.getScreenX() + controller.xOffset, stage.getX());
-        assertEquals(mouseEvent.getScreenY() + controller.yOffset, stage.getY());
+        Platform.runLater(() -> {
+            // Giả lập sự kiện kéo chuột để kiểm tra hàm onMouseDragged
+            MouseEvent mouseEvent = new MouseEvent(MouseEvent.MOUSE_DRAGGED, 0, 0, 0, 0, null, 0, false, false, false, false, false, false, false, false, false, false, null);
+            controller.onMouseDragged(mouseEvent);
+            Stage stage = (Stage) container.getScene().getWindow();
+            assertEquals(mouseEvent.getScreenX() + controller.xOffset, stage.getX());
+            assertEquals(mouseEvent.getScreenY() + controller.yOffset, stage.getY());
+        });
     }
 
     @Test

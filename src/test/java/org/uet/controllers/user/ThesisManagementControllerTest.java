@@ -11,6 +11,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.uet.JavaFXInitializer;
 import org.uet.entity.Thesis;
 
 import java.io.IOException;
@@ -30,6 +31,8 @@ class ThesisManagementControllerTest {
 
     @BeforeEach
     void setUp() {
+        JavaFXInitializer.initialize();
+
         controller = new ThesisManagementController();
         searchField = new TextField();
         searchCriteria = new ComboBox<>();

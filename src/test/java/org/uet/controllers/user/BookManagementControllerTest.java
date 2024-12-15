@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.uet.JavaFXInitializer;
 import org.uet.entity.Book;
 
 import java.io.IOException;
@@ -32,6 +33,8 @@ class BookManagementControllerTest {
 
     @BeforeEach
     void setUp() {
+        JavaFXInitializer.initialize();
+
         controller = new BookManagementController();
         searchField = new TextField();
         searchCriteria = new ComboBox<>();

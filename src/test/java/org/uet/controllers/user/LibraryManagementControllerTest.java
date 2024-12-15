@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.uet.JavaFXInitializer;
 import org.uet.entity.Library;
 
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ class LibraryManagementControllerTest {
 
     @BeforeEach
     void setUp() {
+        JavaFXInitializer.initialize();
+
         controller = new LibraryManagementController();
         searchCriteria = new ComboBox<>();
         documentTypeField = new ComboBox<>();

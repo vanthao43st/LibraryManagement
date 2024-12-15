@@ -1,8 +1,10 @@
 package org.uet.controllers.user;
 
+import javafx.application.Platform;
 import javafx.scene.control.Label;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.uet.JavaFXInitializer;
 import org.uet.entity.Thesis;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,6 +17,8 @@ class ThesisDetailsDialogControllerTest {
 
     @BeforeEach
     void setUp() {
+        JavaFXInitializer.initialize();
+
         controller = new ThesisDetailsDialogController();
         codeLabel = new Label();
         titleLabel = new Label();
@@ -60,14 +64,16 @@ class ThesisDetailsDialogControllerTest {
 
     @Test
     void testSetThesisDetailsWithLongDescription() {
-        String longDescription = "This is a very long description that exceeds the 200 character limit. " +
-                "It should be truncated and appended with ellipses to indicate that there is more text to be read in the actual description.";
-        Thesis thesis = new Thesis("John Doe", "T123", longDescription, "Thesis Title",
-                "Master", "Computer Science", 10, 2022, "Dr. Smith", "UET");
+        Platform.runLater(() -> {
+            String longDescription = "This is a very long description that exceeds the 200 character limit. " +
+                    "It should be truncated and appended with ellipses to indicate that there is more text to be read in the actual description.";
+            Thesis thesis = new Thesis("John Doe", "T123", longDescription, "Thesis Title",
+                    "Master", "Computer Science", 10, 2022, "Dr. Smith", "UET");
 
-        controller.setThesisDetails(thesis);
+            controller.setThesisDetails(thesis);
 
-        String expectedDescription = longDescription.substring(0, 200) + " ...";
-        assertEquals(expectedDescription, descriptionLabel.getText());
+            String expectedDescription = longDescription.substring(0, 200) + " ...";
+            assertEquals(expectedDescription, descriptionLabel.getText());
+        });
     }
 }

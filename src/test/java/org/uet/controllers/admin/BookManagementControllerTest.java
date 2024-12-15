@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.uet.JavaFXInitializer;
 import org.uet.database.dao.BookDao;
 import org.uet.entity.Book;
 
@@ -30,6 +31,9 @@ class BookManagementControllerTest {
 
     @BeforeEach
     void setUp() {
+        // Khởi tạo JavaFX Toolkit
+        JavaFXInitializer.initialize();
+
         controller = new BookManagementController();
         bookCodeField = new TextField();
         bookTitleField = new TextField();

@@ -1,13 +1,17 @@
 package org.uet.controllers.admin;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.uet.JavaFXInitializer;
 import org.uet.entity.Book;
 import javafx.scene.control.cell.TextFieldTableCell;
 
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,6 +27,8 @@ class BookAPIControllerTest {
 
     @BeforeEach
     void setUp() {
+        JavaFXInitializer.initialize();
+
         controller = new BookAPIController();
         searchCriteria = new ComboBox<>();
         searchField = new TextField();
@@ -85,23 +91,34 @@ class BookAPIControllerTest {
 
     @Test
     void testOnAdd_ValidBook() throws Exception {
-        Book book = new Book("1234567890", "Test Book", "Description", "Category", "Author", 9.99, 10);
-        bookTable.getItems().add(book);
-        bookTable.getSelectionModel().select(book);
+        Platform.runLater(() -> {
+            // Thêm sách vào tableView và chọn nó
+            Book book = new Book("1200", "Test Book", "Description", "Category", "Author", 9.99, 10);
+            bookTable.getItems().add(book);
+            bookTable.getSelectionModel().select(book);
 
-        controller.onAdd(new javafx.event.ActionEvent());
+            // Gọi phương thức cần kiểm tra
+            try {
+                controller.onAdd(new javafx.event.ActionEvent());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
-        assertTrue(controller.bookData.contains(book));
+            // Kiểm tra sách đã được thêm vào bookData
+            assertTrue(controller.bookData.contains(book));
+        });
     }
 
     @Test
     void testOnShowDetails_ValidBook() {
-        Book book = new Book("1234567890", "Test Book", "Description", "Category", "Author", 9.99, 10);
-        bookTable.getItems().add(book);
-        bookTable.getSelectionModel().select(book);
+        Platform.runLater(() -> {
+            Book book = new Book("1234567890", "Test Book", "Description", "Category", "Author", 9.99, 10);
+            bookTable.getItems().add(book);
+            bookTable.getSelectionModel().select(book);
 
-        controller.onShowDetails(new javafx.event.ActionEvent());
+            controller.onShowDetails(new javafx.event.ActionEvent());
 
-        assertNotNull(book);
+            assertNotNull(book);
+        });
     }
 }

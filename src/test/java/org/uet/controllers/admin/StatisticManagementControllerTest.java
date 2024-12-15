@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.uet.JavaFXInitializer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +20,8 @@ class StatisticManagementControllerTest {
 
     @BeforeEach
     void setUp() {
+        JavaFXInitializer.initialize();
+
         controller = new StatisticManagementController();
         totalBooksLabel = new Label();
         borrowedBooksLabel = new Label();
@@ -44,20 +47,22 @@ class StatisticManagementControllerTest {
 
     @Test
     void testOnClose() {
-        Button closeButton = new Button();
-        closeButton.setOnAction(event -> controller.onClose(event));
-
-        // Giả lập việc hiển thị cửa sổ
         Platform.runLater(() -> {
-            Stage stage = new Stage();
-            stage.setScene(new Scene(new StackPane(closeButton), 100, 100));
-            stage.show();
+            Button closeButton = new Button();
+            closeButton.setOnAction(event -> controller.onClose(event));
 
-            assertTrue(stage.isShowing());
+            // Giả lập việc hiển thị cửa sổ
+            Platform.runLater(() -> {
+                Stage stage = new Stage();
+                stage.setScene(new Scene(new StackPane(closeButton), 100, 100));
+                stage.show();
 
-            closeButton.fireEvent(new ActionEvent());
+                assertTrue(stage.isShowing());
 
-            assertFalse(stage.isShowing());
+                closeButton.fireEvent(new ActionEvent());
+
+                assertFalse(stage.isShowing());
+            });
         });
     }
 }

@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.uet.JavaFXInitializer;
 import org.uet.database.dao.UserDao;
 import org.uet.entity.User;
 import org.uet.enums.Gender;
@@ -25,6 +26,8 @@ class RegisterControllerTest {
 
     @BeforeEach
     void setUp() {
+        JavaFXInitializer.initialize();
+
         userDao = new UserDao();
         controller = new RegisterController();
         usernameField = new TextField();

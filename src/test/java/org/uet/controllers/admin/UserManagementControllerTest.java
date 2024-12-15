@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.uet.JavaFXInitializer;
 import org.uet.entity.User;
 import org.uet.enums.Gender;
 
@@ -35,6 +36,8 @@ class UserManagementControllerTest {
 
     @BeforeEach
     void setUp() {
+        JavaFXInitializer.initialize();
+
         controller = new UserManagementController();
         searchField = new TextField();
         userIdField = new TextField();
@@ -134,68 +137,76 @@ class UserManagementControllerTest {
 
     @Test
     void testIsUserExisted() {
-        User user = new User("123", "John Doe", Gender.MALE, "Class A", "Computer Science", "1234567890", "john@example.com", "johndoe", "password");
-        userData.add(user);
-        userTable.setItems(userData);
+        Platform.runLater(() -> {
+            User user = new User("123", "John Doe", Gender.MALE, "Class A", "Computer Science", "1234567890", "john@example.com", "johndoe", "password");
+            userData.add(user);
+            userTable.setItems(userData);
 
-        assertTrue(controller.isUserExisted("123"));
-        assertFalse(controller.isUserExisted("124"));
+            assertTrue(controller.isUserExisted("123"));
+            assertFalse(controller.isUserExisted("124"));
+        });
     }
 
     @Test
     void testOnAdd() {
-        userIdField.setText("124");
-        userFullNameField.setText("Jane Doe");
-        userGenderField.setValue("FEMALE");
-        userClassField.setText("Class B");
-        userMajorField.setValue("Kỹ thuật phần mềm");
-        userPhoneField.setText("0987654321");
-        userEmailField.setText("jane@example.com");
-        usernameField.setText("janedoe");
-        userPasswordField.setText("password123");
+        Platform.runLater(() -> {
+            userIdField.setText("124");
+            userFullNameField.setText("Jane Doe");
+            userGenderField.setValue("FEMALE");
+            userClassField.setText("Class B");
+            userMajorField.setValue("Kỹ thuật phần mềm");
+            userPhoneField.setText("0987654321");
+            userEmailField.setText("jane@example.com");
+            usernameField.setText("janedoe");
+            userPasswordField.setText("password123");
 
-        controller.onAdd(new ActionEvent());
+            controller.onAdd(new ActionEvent());
 
-        assertEquals(1, controller.userData.size());
-        assertEquals("124", controller.userData.get(0).getId());
-        assertEquals("Jane Doe", controller.userData.get(0).getFullname());
-        assertEquals(Gender.FEMALE, controller.userData.get(0).getGender());
-        assertEquals("Class B", controller.userData.get(0).getClassname());
-        assertEquals("Kỹ thuật phần mềm", controller.userData.get(0).getMajor());
-        assertEquals("0987654321", controller.userData.get(0).getPhonenumber());
-        assertEquals("jane@example.com", controller.userData.get(0).getEmail());
-        assertEquals("janedoe", controller.userData.get(0).getUsername());
-        assertEquals("password123", controller.userData.get(0).getPassword());
+            assertEquals(1, controller.userData.size());
+            assertEquals("124", controller.userData.get(0).getId());
+            assertEquals("Jane Doe", controller.userData.get(0).getFullname());
+            assertEquals(Gender.FEMALE, controller.userData.get(0).getGender());
+            assertEquals("Class B", controller.userData.get(0).getClassname());
+            assertEquals("Kỹ thuật phần mềm", controller.userData.get(0).getMajor());
+            assertEquals("0987654321", controller.userData.get(0).getPhonenumber());
+            assertEquals("jane@example.com", controller.userData.get(0).getEmail());
+            assertEquals("janedoe", controller.userData.get(0).getUsername());
+            assertEquals("password123", controller.userData.get(0).getPassword());
+        });
     }
 
     @Test
     void testOnDelete() {
-        User user = new User("123", "John Doe", Gender.MALE, "Class A", "Computer Science", "1234567890", "john@example.com", "johndoe", "password");
-        userData.add(user);
-        userTable.setItems(userData);
-        userTable.getSelectionModel().select(user);
+        Platform.runLater(() -> {
+            User user = new User("123", "John Doe", Gender.MALE, "Class A", "Computer Science", "1234567890", "john@example.com", "johndoe", "password");
+            userData.add(user);
+            userTable.setItems(userData);
+            userTable.getSelectionModel().select(user);
 
-        controller.selectedUser = user;
+            controller.selectedUser = user;
 
-        controller.onDelete(new ActionEvent());
+            controller.onDelete(new ActionEvent());
 
-        assertFalse(controller.userData.contains(user));
+            assertFalse(controller.userData.contains(user));
+        });
     }
 
     @Test
     void testOnSearch() {
-        User user1 = new User("123", "John Doe", Gender.MALE, "Class A", "Computer Science", "1234567890", "john@example.com", "johndoe", "password");
-        User user2 = new User("124", "Jane Doe", Gender.FEMALE, "Class B", "Software Engineering", "0987654321", "jane@example.com", "janedoe", "password123");
-        userData.addAll(user1, user2);
-        userTable.setItems(userData);
+        Platform.runLater(() -> {
+            User user1 = new User("123", "John Doe", Gender.MALE, "Class A", "Computer Science", "1234567890", "john@example.com", "johndoe", "password");
+            User user2 = new User("124", "Jane Doe", Gender.FEMALE, "Class B", "Software Engineering", "0987654321", "jane@example.com", "janedoe", "password123");
+            userData.addAll(user1, user2);
+            userTable.setItems(userData);
 
-        searchCriteria.setValue("Tên");
-        searchField.setText("John");
+            searchCriteria.setValue("Tên");
+            searchField.setText("John");
 
-        controller.onSearch(new ActionEvent());
+            controller.onSearch(new ActionEvent());
 
-        assertEquals(1, userTable.getItems().size());
-        assertEquals("John Doe", userTable.getItems().get(0).getFullname());
+            assertEquals(1, userTable.getItems().size());
+            assertEquals("John Doe", userTable.getItems().get(0).getFullname());
+        });
     }
 
     @Test

@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.uet.JavaFXInitializer;
 import org.uet.database.connection.DBConnection;
 import org.uet.database.dao.UserDao;
 import org.uet.entity.SessionManager;
@@ -29,6 +30,8 @@ class LoginControllerTest {
 
     @BeforeEach
     void setUp() {
+        JavaFXInitializer.initialize();
+
         controller = new LoginController();
         usernameField = new TextField();
         passwordField = new PasswordField();

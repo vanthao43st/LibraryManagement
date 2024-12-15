@@ -2,6 +2,7 @@ package org.uet.controllers.user;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import org.uet.JavaFXInitializer;
 import org.uet.enums.Gender;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -26,6 +27,8 @@ class UserDetailControllerTest {
 
     @BeforeEach
     void setUp() {
+        JavaFXInitializer.initialize();
+
         controller = new UserDetailController();
         userIdField = new TextField();
         userFullNameField = new TextField();

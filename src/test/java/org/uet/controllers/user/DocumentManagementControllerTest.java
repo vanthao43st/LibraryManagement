@@ -6,6 +6,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.uet.JavaFXInitializer;
+
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 
@@ -17,6 +19,8 @@ class DocumentManagementControllerTest {
 
     @BeforeEach
     void setUp() {
+        JavaFXInitializer.initialize();
+
         controller = new DocumentManagementController();
         showBookButton = new Button();
         showThesisButton = new Button();

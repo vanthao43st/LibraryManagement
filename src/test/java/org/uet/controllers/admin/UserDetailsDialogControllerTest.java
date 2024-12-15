@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.uet.JavaFXInitializer;
 import org.uet.entity.User;
 import org.uet.enums.Gender;
 
@@ -17,6 +18,8 @@ class UserDetailsDialogControllerTest {
 
     @BeforeEach
     void setUp() {
+        JavaFXInitializer.initialize();
+
         controller = new UserDetailsDialogController();
         userIdLabel = new Label();
         userNameLabel = new Label();
