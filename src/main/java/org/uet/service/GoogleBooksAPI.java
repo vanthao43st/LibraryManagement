@@ -15,7 +15,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class GoogleBooksAPI {
-    private static final String API_URL = "https://www.googleapis.com/books/v1/volumes?q=";
+    protected static final String API_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
     public static CompletableFuture<ArrayList<Book>> searchBookByISBNAsync(String isbn) {
         return fetchBookDataAsync("isbn:" + isbn);
@@ -25,7 +25,7 @@ public class GoogleBooksAPI {
         return fetchBookDataAsync("intitle:" + title);
     }
 
-    private static CompletableFuture<ArrayList<Book>> fetchBookDataAsync(String query) {
+    protected static CompletableFuture<ArrayList<Book>> fetchBookDataAsync(String query) {
         return CompletableFuture.supplyAsync(() -> {
             ArrayList<Book> books = new ArrayList<>();
             try {

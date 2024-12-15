@@ -16,15 +16,15 @@ import java.util.concurrent.CompletableFuture;
 public class UserDetailController {
 
     @FXML
-    private TextField userIdField, userFullNameField, userClassField,
+    protected TextField userIdField, userFullNameField, userClassField,
             userPhoneField, userEmailField, usernameField, userPasswordField, userStatusField;
 
     @FXML
-    private ComboBox<String> userGenderField, userMajorField;
+    protected ComboBox<String> userGenderField, userMajorField;
 
-    private User currentUser;
+    protected User currentUser;
 
-    private static UserDao userDao = new UserDao();
+    protected static UserDao userDao = new UserDao();
 
     @FXML
     public void initialize() {

@@ -30,18 +30,18 @@ public class LoginController implements Initializable {
     private static final String ADMIN_PASSWORD = "admin";
 
     private double xOffset = 0;
-    private double yOffset = 0;
+    protected double yOffset = 0;
 
     @FXML
-    private Button closeButton, registerButton;
+    protected Button closeButton, registerButton;
 
     @FXML
-    private TextField usernameField;
+    protected TextField usernameField;
 
     @FXML
-    private PasswordField passwordField;
+    protected PasswordField passwordField;
 
-    private static final UserDao userDao = new UserDao();
+    protected static final UserDao userDao = new UserDao();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -72,7 +72,7 @@ public class LoginController implements Initializable {
     }
 
     @FXML
-    private void handleLoginAction() {
+    protected void handleLoginAction() {
         String username = usernameField.getText().trim();
         String password = passwordField.getText().trim();
 
@@ -144,7 +144,7 @@ public class LoginController implements Initializable {
     }
 
 
-    private void showErrorAlert(String message) {
+    protected void showErrorAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Đăng nhập thất bại");
         alert.setHeaderText(message);
@@ -152,7 +152,7 @@ public class LoginController implements Initializable {
         alert.showAndWait();
     }
 
-    private void addDraggableFeature() {
+    protected void addDraggableFeature() {
         usernameField.sceneProperty().addListener((observable, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.windowProperty().addListener((windowObservable, oldWindow, newWindow) -> {
