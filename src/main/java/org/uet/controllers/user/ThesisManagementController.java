@@ -21,24 +21,24 @@ import java.io.IOException;
 public class ThesisManagementController {
 
     @FXML
-    private TextField searchField;
+    protected TextField searchField;
 
     @FXML
-    private ComboBox<String> searchCriteria;
+    protected ComboBox<String> searchCriteria;
 
     @FXML
-    private TableView<Thesis> thesisTable;
+    protected TableView<Thesis> thesisTable;
 
     @FXML
-    private TableColumn<Thesis, String> codeColumn, titleColumn,
+    protected TableColumn<Thesis, String> codeColumn, titleColumn,
             majorColumn, authorColumn, supervisorColumn, universityColumn, degreeColumn, descriptionColumn;
 
     @FXML
-    private TableColumn<Thesis, Integer> submissionYearColumn, quantityColumn;
+    protected TableColumn<Thesis, Integer> submissionYearColumn, quantityColumn;
 
-    private final ObservableList<Thesis> thesisData = FXCollections.observableArrayList();
+    protected final ObservableList<Thesis> thesisData = FXCollections.observableArrayList();
 
-    private final ThesisDao thesisDao = new ThesisDao();
+    protected final ThesisDao thesisDao = new ThesisDao();
 
     @FXML
     public void initialize() {
@@ -59,7 +59,7 @@ public class ThesisManagementController {
         loadTheses();
     }
 
-    private void loadTheses() {
+    protected void loadTheses() {
         thesisDao.getAllThesisAsync().thenAccept(theses -> {
             Platform.runLater(() -> {
                 thesisData.setAll(theses);
@@ -72,7 +72,7 @@ public class ThesisManagementController {
     }
 
     @FXML
-    private void onSearch(ActionEvent event) {
+    protected void onSearch(ActionEvent event) {
         String criteria = searchCriteria.getValue();
         String keyword = searchField.getText().trim();
 
@@ -111,7 +111,7 @@ public class ThesisManagementController {
         }
     }
 
-    private void showAlert(String title, String content, Alert.AlertType type) {
+    protected void showAlert(String title, String content, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -129,7 +129,7 @@ public class ThesisManagementController {
         showThesisDetails(selectedThesis);
     }
 
-    private void showThesisDetails(Thesis thesis) {
+    protected void showThesisDetails(Thesis thesis) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/User/ThesisDetailsDialog.fxml"));
             DialogPane dialogPane = loader.load();
@@ -151,7 +151,7 @@ public class ThesisManagementController {
         }
     }
 
-    private void enableDragging(Stage stage, DialogPane dialogPane) {
+    protected void enableDragging(Stage stage, DialogPane dialogPane) {
         final Delta dragDelta = new Delta();
 
         // Ghi lại vị trí khi nhấn chuột

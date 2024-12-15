@@ -23,28 +23,28 @@ import java.util.Optional;
 public class ThesisManagementController {
 
     @FXML
-    private TextField thesisCodeField, thesisTitleField, thesisMajorField, thesisAuthorField,
+    protected TextField thesisCodeField, thesisTitleField, thesisMajorField, thesisAuthorField,
             thesisSupervisorField, thesisUniversityField, thesisDegreeField,
             thesisSubmissionYearField, thesisDescriptionField, searchField, thesisQuantityField;
 
     @FXML
-    private ComboBox<String> searchCriteria;
+    protected ComboBox<String> searchCriteria;
 
     @FXML
-    private TableView<Thesis> thesisTable;
+    protected TableView<Thesis> thesisTable;
 
     @FXML
-    private TableColumn<Thesis, String> codeColumn, titleColumn,
+    protected TableColumn<Thesis, String> codeColumn, titleColumn,
             majorColumn, authorColumn, supervisorColumn, universityColumn, degreeColumn, descriptionColumn;
 
     @FXML
-    private TableColumn<Thesis, Integer> submissionYearColumn, quantityColumn;
+    protected TableColumn<Thesis, Integer> submissionYearColumn, quantityColumn;
 
-    private final ObservableList<Thesis> thesisData = FXCollections.observableArrayList();
+    protected final ObservableList<Thesis> thesisData = FXCollections.observableArrayList();
 
-    private Thesis selectedThesis;
+    protected Thesis selectedThesis;
 
-    private final ThesisDao thesisDao = new ThesisDao();
+    protected final ThesisDao thesisDao = new ThesisDao();
 
     @FXML
     public void initialize() {
@@ -64,7 +64,7 @@ public class ThesisManagementController {
         thesisTable.setOnMouseClicked(this::onTableClick);
     }
 
-    private void loadTheses() {
+    protected void loadTheses() {
         thesisDao.getAllThesisAsync().thenAccept(theses -> {
             Platform.runLater(() -> {
                 thesisData.setAll(theses);
@@ -77,7 +77,7 @@ public class ThesisManagementController {
     }
 
     @FXML
-    private void onTableClick(MouseEvent event) {
+    protected void onTableClick(MouseEvent event) {
         selectedThesis = thesisTable.getSelectionModel().getSelectedItem();
         if (selectedThesis != null) {
             thesisCodeField.setEditable(false);
@@ -94,7 +94,7 @@ public class ThesisManagementController {
         }
     }
 
-    private void clearInputFields() {
+    protected void clearInputFields() {
         thesisCodeField.clear();
         thesisTitleField.clear();
         thesisMajorField.clear();
@@ -108,7 +108,7 @@ public class ThesisManagementController {
     }
 
     @FXML
-    private void onAdd(ActionEvent event) {
+    protected void onAdd(ActionEvent event) {
         if (inCompleteInfo()) {
             showAlert("Lỗi", "Hãy điền vào đầy đủ các trường!", Alert.AlertType.WARNING);
             return;
@@ -138,7 +138,7 @@ public class ThesisManagementController {
         }
     }
 
-    private Thesis getThesis() {
+    protected Thesis getThesis() {
         String code = thesisCodeField.getText();
         String title = thesisTitleField.getText();
         String major = thesisMajorField.getText();
@@ -154,7 +154,7 @@ public class ThesisManagementController {
                 quantity, submissionYear, supervisor, university);
     }
 
-    private boolean inCompleteInfo() {
+    protected boolean inCompleteInfo() {
         return thesisCodeField.getText().isBlank() ||
                 thesisTitleField.getText().isBlank() ||
                 thesisMajorField.getText().isBlank() ||
@@ -167,7 +167,7 @@ public class ThesisManagementController {
                 thesisQuantityField.getText().isBlank();
     }
 
-    private boolean isThesisExisted(String thesisCode) {
+    protected boolean isThesisExisted(String thesisCode) {
         for (Thesis thesis : thesisData) {
             if (thesis.getCode().equals(thesisCode)) {
                 return true;
@@ -177,7 +177,7 @@ public class ThesisManagementController {
     }
 
     @FXML
-    private void onEdit(ActionEvent event) {
+    protected void onEdit(ActionEvent event) {
         if (selectedThesis == null) {
             showAlert("Cảnh báo", "Hãy chọn 1 luận văn để cập nhật!", Alert.AlertType.WARNING);
             return;
@@ -211,7 +211,7 @@ public class ThesisManagementController {
     }
 
     @FXML
-    private void onDelete(ActionEvent event) {
+    protected void onDelete(ActionEvent event) {
         if (selectedThesis == null) {
             showAlert("Cảnh báo", "Hãy chọn luận văn để xoá!", Alert.AlertType.WARNING);
             return;
@@ -238,6 +238,8 @@ public class ThesisManagementController {
                                 thesisData.remove(selectedThesis);
                                 thesisCodeField.setEditable(true);
                                 clearInputFields();
+                                thesisTable.refresh();
+                                thesisTable.setItems(FXCollections.observableArrayList(thesisData));
                                 showAlert("Thành công", "Xoá luận văn thành công!", Alert.AlertType.INFORMATION);
                             });
                         }).exceptionally(e -> {
@@ -259,7 +261,7 @@ public class ThesisManagementController {
     }
 
     @FXML
-    private void onSearch(ActionEvent event) {
+    protected void onSearch(ActionEvent event) {
         String criteria = searchCriteria.getValue();
         String keyword = searchField.getText().trim();
 
@@ -298,7 +300,7 @@ public class ThesisManagementController {
         }
     }
 
-    private void showAlert(String title, String content, Alert.AlertType type) {
+    protected void showAlert(String title, String content, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -316,7 +318,7 @@ public class ThesisManagementController {
         showThesisDetails(selectedThesis);
     }
 
-    private void showThesisDetails(Thesis thesis) {
+    protected void showThesisDetails(Thesis thesis) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Admin/ThesisDetailsDialog.fxml"));
             DialogPane dialogPane = loader.load();
@@ -338,7 +340,7 @@ public class ThesisManagementController {
         }
     }
 
-    private void enableDragging(Stage stage, DialogPane dialogPane) {
+    protected void enableDragging(Stage stage, DialogPane dialogPane) {
         final ThesisManagementController.Delta dragDelta = new ThesisManagementController.Delta();
 
         // Ghi lại vị trí khi nhấn chuột

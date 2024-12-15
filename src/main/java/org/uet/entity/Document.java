@@ -1,11 +1,11 @@
 package org.uet.entity;
 
 public abstract class Document {
-    private String code;
-    private String title;
-    private String description;
-    private String author;
-    private int quantity;
+    protected String code;
+    protected String title;
+    protected String description;
+    protected String author;
+    protected int quantity;
 
     public Document() {
         this.code = "";

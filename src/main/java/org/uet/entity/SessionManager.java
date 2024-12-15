@@ -2,11 +2,11 @@ package org.uet.entity;
 
 public class SessionManager {
 
-    private static SessionManager instance;
+    protected static SessionManager instance;
 
-    private User currentUser;
+    protected User currentUser;
 
-    private SessionManager() {}
+    protected SessionManager() {}
 
     public static synchronized SessionManager getInstance() {
         if (instance == null) {

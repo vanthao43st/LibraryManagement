@@ -1,11 +1,11 @@
 package org.uet.entity;
 
 public class Thesis extends Document {
-    private String supervisor;
-    private String university;
-    private String degree;
-    private int submissionYear;
-    private String major;
+    protected String supervisor;
+    protected String university;
+    protected String degree;
+    protected int submissionYear;
+    protected String major;
 
     public Thesis() {
         super();

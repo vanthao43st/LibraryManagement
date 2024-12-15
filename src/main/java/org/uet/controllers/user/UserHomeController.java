@@ -26,17 +26,17 @@ public class UserHomeController implements Initializable {
     public Label welcomeLabel;
 
     @FXML
-    private Button documentButton, userButton, libraryButton, bookApiButton, closeButton;
+    protected Button documentButton, userButton, libraryButton, bookApiButton, closeButton;
 
     @FXML
-    private Tooltip tooltip1, tooltip2, tooltip3, tooltip4;
+    protected Tooltip tooltip1, tooltip2, tooltip3, tooltip4;
 
     @FXML
-    private AnchorPane container;
+    protected AnchorPane container;
 
     // Tọa độ chuột để tính toán di chuyển
-    private double xOffset = 0;
-    private double yOffset = 0;
+    protected double xOffset = 0;
+    protected double yOffset = 0;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -77,21 +77,21 @@ public class UserHomeController implements Initializable {
     }
 
     // Ghi lại tọa độ chuột khi nhấn
-    private void onMousePressed(MouseEvent event) {
+    protected void onMousePressed(MouseEvent event) {
         Stage stage = (Stage) container.getScene().getWindow();
         xOffset = stage.getX() - event.getScreenX();
         yOffset = stage.getY() - event.getScreenY();
     }
 
     // Cập nhật vị trí ứng dụng khi kéo
-    private void onMouseDragged(MouseEvent event) {
+    protected void onMouseDragged(MouseEvent event) {
         Stage stage = (Stage) container.getScene().getWindow();
         stage.setX(event.getScreenX() + xOffset);
         stage.setY(event.getScreenY() + yOffset);
     }
 
     // Highlight nút khi được nhấn
-    private void attachHighlightToButton(Button button, String fxmlPath) {
+    protected void attachHighlightToButton(Button button, String fxmlPath) {
         button.setOnAction(actionEvent -> {
             removeHighlightFromAllButtons(); // Loại bỏ highlight từ tất cả các nút
             button.getStyleClass().add("highlighted-button"); // Thêm class highlight vào nút hiện tại
@@ -100,7 +100,7 @@ public class UserHomeController implements Initializable {
     }
 
     // Loại bỏ highlight từ tất cả các nút
-    private void removeHighlightFromAllButtons() {
+    protected void removeHighlightFromAllButtons() {
         Button[] buttons = {documentButton, userButton, libraryButton, bookApiButton};
         for (Button btn : buttons) {
             btn.getStyleClass().remove("highlighted-button");
@@ -108,7 +108,7 @@ public class UserHomeController implements Initializable {
     }
 
 
-    private void setNode(Node node) {
+    protected void setNode(Node node) {
         container.getChildren().clear();
         container.getChildren().add(node);
     }

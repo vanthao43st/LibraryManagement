@@ -9,7 +9,7 @@ import org.uet.entity.Thesis;
 public class ThesisDetailsDialogController {
 
     @FXML
-    private Label codeLabel, titleLabel, descriptionLabel, quantityLabel, majorLabel,
+    protected Label codeLabel, titleLabel, descriptionLabel, quantityLabel, majorLabel,
             authorLabel, supervisorLabel, universityLabel, degreeLabel, submissionYearLabel;
 
     // Method to set thesis details to the dialog fields
@@ -36,7 +36,7 @@ public class ThesisDetailsDialogController {
     }
 
     @FXML
-    private void onClose(ActionEvent event) {
+    protected void onClose(ActionEvent event) {
         ((Button) event.getSource()).getScene().getWindow().hide();
     }
 }

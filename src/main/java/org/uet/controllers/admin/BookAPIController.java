@@ -27,24 +27,24 @@ import java.util.concurrent.CompletableFuture;
 public class BookAPIController {
 
     @FXML
-    private ComboBox<String> searchCriteria;
+    protected ComboBox<String> searchCriteria;
 
     @FXML
-    private TextField searchField;
+    protected TextField searchField;
 
     @FXML
-    private TableView<Book> bookTable;
+    protected TableView<Book> bookTable;
 
     @FXML
-    private TableColumn<Book, String> codeColumn, titleColumn, descriptionColumn, categoryColumn, authorColumn;
+    protected TableColumn<Book, String> codeColumn, titleColumn, descriptionColumn, categoryColumn, authorColumn;
 
     @FXML
-    private TableColumn<Book, Double> priceColumn;
+    protected TableColumn<Book, Double> priceColumn;
 
     @FXML
-    private TableColumn<Book, Integer> quantityColumn;
+    protected TableColumn<Book, Integer> quantityColumn;
 
-    private final ObservableList<Book> bookData = FXCollections.observableArrayList();
+    protected final ObservableList<Book> bookData = FXCollections.observableArrayList();
 
     private static final BookDao bookDao = new BookDao();
 
@@ -63,7 +63,7 @@ public class BookAPIController {
     }
 
     @FXML
-    private void onSearch(ActionEvent event) {
+    protected void onSearch(ActionEvent event) {
         String criteria = searchCriteria.getValue();
         String keyword = searchField.getText().trim();
 
@@ -109,7 +109,7 @@ public class BookAPIController {
     }
 
     @FXML
-    private void onAdd(ActionEvent event) throws SQLException {
+    protected void onAdd(ActionEvent event) throws SQLException {
         Book selectedBook = bookTable.getSelectionModel().getSelectedItem();
         if (selectedBook == null) {
             showAlert("Lỗi", "Vui lòng chọn một cuốn sách để thêm!", AlertType.WARNING);
@@ -120,7 +120,7 @@ public class BookAPIController {
         showAlert("Thành công", "Sách đã được thêm vào cơ sở dữ liệu!", AlertType.INFORMATION);
     }
 
-    private void saveToDatabase(Book book) throws SQLException {
+    protected void saveToDatabase(Book book) throws SQLException {
         bookDao.addBookAsync(book).thenRun(() -> {
             Platform.runLater(() -> {
                 System.out.println("Sách được lưu vào database: " + book);
@@ -135,7 +135,7 @@ public class BookAPIController {
     }
 
     @FXML
-    private void onShowDetails(ActionEvent event) {
+    protected void onShowDetails(ActionEvent event) {
         Book selectedBook = bookTable.getSelectionModel().getSelectedItem();
         if (selectedBook == null) {
             showAlert("Thông báo", "Vui lòng chọn một cuốn sách!", AlertType.WARNING);
@@ -144,7 +144,7 @@ public class BookAPIController {
         showBookDetails(selectedBook);
     }
 
-    private void showBookDetails(Book book) {
+    protected void showBookDetails(Book book) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Admin/BookDetailsDialog.fxml"));
             DialogPane dialogPane = loader.load();
@@ -166,14 +166,14 @@ public class BookAPIController {
         }
     }
 
-    private void showAlert(String title, String message, AlertType type) {
+    protected void showAlert(String title, String message, AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();
     }
 
-    private void enableDragging(Stage stage, DialogPane dialogPane) {
+    protected void enableDragging(Stage stage, DialogPane dialogPane) {
         final Delta dragDelta = new Delta();
 
         // Ghi lại vị trí khi nhấn chuột

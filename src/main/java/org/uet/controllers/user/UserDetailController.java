@@ -16,15 +16,15 @@ import java.util.concurrent.CompletableFuture;
 public class UserDetailController {
 
     @FXML
-    private TextField userIdField, userFullNameField, userClassField,
+    protected TextField userIdField, userFullNameField, userClassField,
             userPhoneField, userEmailField, usernameField, userPasswordField, userStatusField;
 
     @FXML
-    private ComboBox<String> userGenderField, userMajorField;
+    protected ComboBox<String> userGenderField, userMajorField;
 
-    private User currentUser;
+    protected User currentUser;
 
-    private static UserDao userDao = new UserDao();
+    protected static UserDao userDao = new UserDao();
 
     @FXML
     public void initialize() {
@@ -84,7 +84,7 @@ public class UserDetailController {
     }
 
     @FXML
-    private void onEdit() {
+    protected void onEdit() {
         if (currentUser != null) {
             // Cập nhật thông tin người dùng từ form
             currentUser.setFullname(userFullNameField.getText());
@@ -105,7 +105,7 @@ public class UserDetailController {
     }
 
     //-------------------UPDATE INTO DATABASE-------------------
-    private void updateInDatabase(User user) {
+    protected void updateInDatabase(User user) {
         userDao.updateUserAsync(user).thenRun(() -> {
             Platform.runLater(() -> System.out.println("Cập nhật cơ sở dữ liệu: " + user));
         }).exceptionally(e -> {
@@ -116,7 +116,7 @@ public class UserDetailController {
     //---------------------------------------------------------
 
     // Hiển thị thông báo Alert
-    private void showAlert(String title, String message, Alert.AlertType type) {
+    protected void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setContentText(message);

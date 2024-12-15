@@ -1,8 +1,8 @@
 package org.uet.entity;
 
 public class Book extends Document {
-    private String category;
-    private double price;
+    protected String category;
+    protected double price;
 
     public Book() {
         super();
