@@ -67,7 +67,7 @@ public class GoogleBooksAPI {
                     String category = volumeInfo.has("categories") ? volumeInfo.get("categories").get(0).asText() : "Unknown";
                     String description = volumeInfo.has("description") ? volumeInfo.get("description").asText() : "Unknown";
 
-                    long price = 50000; // Giá mặc định nếu không có thông tin
+                    long price = 50000;
                     if (saleInfo != null && saleInfo.has("retailPrice")) {
                         JsonNode retailPriceNode = saleInfo.get("retailPrice");
                         if (retailPriceNode.has("amount")) {
