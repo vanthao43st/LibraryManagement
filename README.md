@@ -1,5 +1,3 @@
----
-
 # Library Management Project
 
 ## 📝 Mô tả dự án
